@@ -1,0 +1,4 @@
+LIBRARY CarlosCheckers
+EXPORTS
+  enginecommand=_enginecommand@8
+  getmove=_getmove@36
