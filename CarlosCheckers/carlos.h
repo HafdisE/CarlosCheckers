@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <windows.h>
+#include "montecarlo.h"
 
 #define OCCUPIED 0
 #define WHITE 1

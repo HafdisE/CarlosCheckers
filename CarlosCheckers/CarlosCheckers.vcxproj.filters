@@ -18,9 +18,21 @@
     <ClInclude Include="carlos.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="montecarlo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="checkers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="carlos.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="checkers.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="montecarlo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
