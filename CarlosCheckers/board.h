@@ -12,10 +12,11 @@
 
 class Board {
 public:
-	Board();
+	Board() : blackbit(4095), whitebit(4293918848), kingbit(0) {};
+	Board::Board(const Board& other) : blackbit(other.blackbit), whitebit(other.whitebit), kingbit(other.kingbit) {}
 	short getPiece(short cell_id);
 	std::size_t hash() const;
-
+	
 	bool operator==(const Board &other) const
 	{
 		return (kingbit == other.kingbit && whitebit == other.whitebit && blackbit == other.blackbit);

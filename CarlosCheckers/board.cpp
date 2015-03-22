@@ -1,11 +1,5 @@
 #include "board.h"
 
-Board::Board() {
-	blackbit = 4095;
-	whitebit = 4293918848;
-	kingbit = 0;
-}
-
 std::size_t Board::hash() const {
 	return 1337;
 }

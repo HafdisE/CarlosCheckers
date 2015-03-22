@@ -27,30 +27,28 @@ struct counter {
 };
 
 
-
-
 //this is our player the montecarlo search refers to for info on the current state and which player we are
 //it should be updated based on messages from the engine
 class Checkers {
 public:
-	Checkers(int player);
+	Checkers(short player) : player(player) {}
 	void updateState(struct CBmove *move);
 	void updateState(State state);
 	Board getBoard() const;
 	State getState() const;
 	int getPlayer() const;
 	/* last item is a CBmove that has ismove = 0. Returns all legal moves for given state. */
-	struct CBmove** getLegalMoves(State* state);
+	vector<CBmove*> getLegalMoves(State* state, short player);
 	State applyMove(State state, struct CBmove *move);
 	short goalTest(State* state, short player);
 	counter countPieces(Board* board);
 
 private:
-	int player; //WHITE or BLACK
+	short player; //WHITE or BLACK
 	State current_state;
 	unordered_map<State, short> repeat_check;
 	/* only return diagonals that are free/occupied by enemy pieces and are legal for the piece */
-	vector<short> getDiagonals(short cell_id, Board* board);
+	void getDiagonals(short cell_id, Board* board, vector<short>& vec);
 	void getUp(short cell_id, Board* board, vector<short>& vec);
 	void getDown(short cell_id, Board* board, vector<short>& vec);
 	/* returns true if the cell is free... duh */

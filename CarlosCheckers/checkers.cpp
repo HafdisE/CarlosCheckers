@@ -2,11 +2,6 @@
 
 /* board hashing */
 
-
-Checkers::Checkers(int player) {
-	this->player = player;
-}
-
 Board Checkers::getBoard() const {
 	return current_state.getBoard();
 }
@@ -79,8 +74,22 @@ State Checkers::applyMove(State state, struct CBmove *move) {
 	return state;
 }
 
-struct CBmove** Checkers::getLegalMoves(State* state) {
-	return NULL;
+vector<CBmove*> Checkers::getLegalMoves(State* state, short player) {
+	vector<CBmove*> v;
+	Board* board = &(state->getBoard());
+	vector<short> moves;
+	for (int i = 1; i < 32; i++) {
+		if ((board->getPiece(i) & player) == player) {
+			short cell_id = i;
+			getDiagonals(cell_id, board, moves);
+			while (moves.size() > 0) {
+
+				moves.clear();
+			}
+		}
+		
+	}
+	return v;
 }
 
 bool Checkers::jumpable(short me, short direction, short cell_id, Board* board) {
@@ -128,17 +137,15 @@ void Checkers::getDown(short cell_id, Board* board, vector<short>& vec) {
 	}
 }
 
-vector<short> Checkers::getDiagonals(short cell_id, Board* board) {
+void Checkers::getDiagonals(short cell_id, Board* board, vector<short>& vec) {
 	short piece = board->getPiece(cell_id);
-	vector<short> diagonals;
-	if (is_free(cell_id, board)) return diagonals; //wasn't occupied. the fuck are you doing.	
+	if (is_free(cell_id, board)) return; //wasn't occupied. the fuck are you doing.	
 	if (piece & WHITE) {
-		if (piece & KING) getUp(cell_id, board, diagonals);
-		getDown(cell_id, board, diagonals);
+		if (piece & KING) getUp(cell_id, board, vec);
+		getDown(cell_id, board, vec);
 	}
 	else {
-		if (piece & KING) getDown(cell_id, board, diagonals);
-		getUp(cell_id, board, diagonals);
+		if (piece & KING) getDown(cell_id, board, vec);
+		getUp(cell_id, board, vec);
 	}
-	return diagonals;
 }

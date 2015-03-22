@@ -1,9 +1,5 @@
 #include "state.h"
 
-State::State() {
-
-}
-
 Board State::getBoard() const {
 	return board;
 }

@@ -3,7 +3,9 @@
 
 class State {
 public:
-	State();
+	State(){}
+	State(const State& state) : board(state.board), is_tie(state.is_tie), moves_since_last_capture(state.moves_since_last_capture) {}
+	State(Board board) : board(board){}
 	Board getBoard() const;
 	short getMovesSinceLastCapture() const;
 	void setTie();
