@@ -20,14 +20,50 @@ int Checkers::getPlayer() const {
 }
 
 void Checkers::updateState(State state) {
+	short moves = current_state.getMovesSinceLastCapture();
 	current_state = state;
+	tieCheck(moves, current_state.getMovesSinceLastCapture());
 }
 
 void Checkers::updateState(struct CBmove *move) {
+	short moves = current_state.getMovesSinceLastCapture();
 	current_state = applyMove(current_state, move);
+	tieCheck(moves, current_state.getMovesSinceLastCapture());
 }
 
-counter Checkers::countPieces(Board* board) {
+void Checkers::tieCheck(short count, short new_count) {
+	if (count != new_count) {
+		repeat_check.clear();
+	}
+	else {
+		repeat_check[current_state]++;
+		if (repeat_check[current_state] == 3) {
+			current_state.setTie();
+		}
+	}
+}
+
+short goalTest(State* state, short player) {
+	Board b = state->getBoard();
+	counter c = countPieces(&b);
+	if ((c.black == 0 && player == BLACK) || (c.white == 0 && player == WHITE)) {
+		return LOSS;
+	}
+
+	if ((c.black == 0 && player == WHITE) || (c.white == 0 && player == BLACK)) {
+		return WIN;
+	}
+
+	if (state->getMovesSinceLastCapture() >= 50) {
+		return DRAW;
+	}
+
+	//TODO: THE OTHER DRAW CONDITIONS
+
+	return UNKNOWN;
+}
+
+counter countPieces(Board* board) {
 	counter count;
 	short piece;
 	for (int i = 1; i <= 32; i++) {

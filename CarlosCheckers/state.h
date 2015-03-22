@@ -6,8 +6,11 @@ public:
 	State();
 	Board getBoard() const;
 	short getMovesSinceLastCapture() const;
+	void setTie();
+	bool getTie();
 private:
 	Board board;
+	bool is_tie;
 	short moves_since_last_capture;
 };
 
