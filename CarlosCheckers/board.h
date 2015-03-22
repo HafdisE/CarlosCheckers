@@ -15,6 +15,11 @@ public:
 	Board();
 	short getPiece(short cell_id);
 	std::size_t hash() const;
+
+	bool operator==(const Board &other) const
+	{
+		return (kingbit == other.kingbit && whitebit == other.whitebit && blackbit == other.blackbit);
+	}
 private:
 	int kingbit;
 	int whitebit;

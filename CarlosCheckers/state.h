@@ -8,6 +8,12 @@ public:
 	short getMovesSinceLastCapture() const;
 	void setTie();
 	bool getTie();
+
+	bool operator==(const State &other) const
+	{
+		return (board == other.board);
+	}
+
 private:
 	Board board;
 	bool is_tie;

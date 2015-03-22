@@ -102,7 +102,7 @@ bool Checkers::jumpable(short me, short direction, short cell_id, Board* board) 
 bool Checkers::is_free(short cell_id, Board* board) {
 	short piece = board->getPiece(cell_id);
 	if (piece == -1) return false; //illegal position
-	return (piece ^ FREE);
+	return !!(piece ^ FREE);
 }
 
 
