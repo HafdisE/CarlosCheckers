@@ -25,14 +25,9 @@ struct counter {
 	short white = 0;
 	short black = 0;
 };
-/* last item is a CBmove that has ismove = 0. Returns all legal moves for given state. */
-struct CBmove** getLegalMoves(State* state);
 
-State applyMove(State state, struct CBmove *move);
 
-short goalTest(State* state, short player);
 
-counter countPieces(Board* board);
 
 //this is our player the montecarlo search refers to for info on the current state and which player we are
 //it should be updated based on messages from the engine
@@ -44,6 +39,11 @@ public:
 	Board getBoard() const;
 	State getState() const;
 	int getPlayer() const;
+	/* last item is a CBmove that has ismove = 0. Returns all legal moves for given state. */
+	struct CBmove** getLegalMoves(State* state);
+	State applyMove(State state, struct CBmove *move);
+	short goalTest(State* state, short player);
+	counter countPieces(Board* board);
 
 private:
 	int player; //WHITE or BLACK

@@ -43,7 +43,7 @@ void Checkers::tieCheck(short count, short new_count) {
 	}
 }
 
-short goalTest(State* state, short player) {
+short Checkers::goalTest(State* state, short player) {
 	Board b = state->getBoard();
 	counter c = countPieces(&b);
 	if ((c.black == 0 && player == BLACK) || (c.white == 0 && player == WHITE)) {
@@ -63,7 +63,7 @@ short goalTest(State* state, short player) {
 	return UNKNOWN;
 }
 
-counter countPieces(Board* board) {
+counter Checkers::countPieces(Board* board) {
 	counter count;
 	short piece;
 	for (int i = 1; i <= 32; i++) {
@@ -75,11 +75,11 @@ counter countPieces(Board* board) {
 	return count;
 }
 
-State applyMove(State state, struct CBmove *move) {
+State Checkers::applyMove(State state, struct CBmove *move) {
 	return state;
 }
 
-struct CBmove** getLegalMoves(State* state) {
+struct CBmove** Checkers::getLegalMoves(State* state) {
 	return NULL;
 }
 

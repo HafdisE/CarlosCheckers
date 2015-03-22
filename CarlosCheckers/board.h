@@ -20,6 +20,7 @@ public:
 	{
 		return (kingbit == other.kingbit && whitebit == other.whitebit && blackbit == other.blackbit);
 	}
+
 private:
 	int kingbit;
 	int whitebit;
