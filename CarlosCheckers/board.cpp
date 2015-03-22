@@ -1,7 +1,7 @@
 #include "board.h"
 
 std::size_t Board::hash() const {
-	return 1337;
+	return ((kingbit >> 1)^(whitebit << 1))*17 + blackbit*33;
 }
 
 

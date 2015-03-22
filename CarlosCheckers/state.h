@@ -29,13 +29,6 @@ namespace std {
 	{
 		std::size_t operator()(const State& k) const
 		{
-			using std::size_t;
-			using std::hash;
-
-			// Compute individual hash values for first,
-			// second and third and combine them using XOR
-			// and bit shifting:
-
 			return k.getBoard().hash();
 		}
 	};

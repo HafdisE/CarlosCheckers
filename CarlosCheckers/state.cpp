@@ -12,8 +12,6 @@ bool State::getTie() {
 	return is_tie;
 }
 
-
-
 short State::getMovesSinceLastCapture() const {
 	return moves_since_last_capture;
 }
