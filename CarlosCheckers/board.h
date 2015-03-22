@@ -20,19 +20,3 @@ private:
 	int whitebit;
 	int blackbit;
 };
-
-namespace std {
-
-	template <>
-	struct hash<Board>
-	{
-		std::size_t operator()(const Board& k) const
-		{
-			using std::size_t;
-			using std::hash;
-
-			return k.hash();
-		}
-	};
-
-}

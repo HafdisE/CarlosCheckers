@@ -1,8 +1,8 @@
 #include "board.h"
 
 Board::Board() {
-	whitebit = 4095;
-	blackbit = 4293918848;
+	blackbit = 4095;
+	whitebit = 4293918848;
 	kingbit = 0;
 }
 
@@ -12,6 +12,7 @@ std::size_t Board::hash() const {
 
 
 short Board::getPiece(short cell_id) {
+	if (cell_id > 32 || cell_id < 1) return -1;
 	short shift = cell_id - 1;
 	short piece = ((kingbit >> shift) & 1) << 2;
 	piece |= ((whitebit >> shift) & 1) << 1;

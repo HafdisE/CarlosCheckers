@@ -4,10 +4,6 @@ State::State() {
 
 }
 
-State::~State() {
-
-}
-
 Board State::getBoard() const {
 	return board;
 }

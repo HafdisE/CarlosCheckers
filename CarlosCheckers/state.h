@@ -4,7 +4,6 @@
 class State {
 public:
 	State();
-	~State();
 	Board getBoard() const;
 	short getMovesSinceLastCapture() const;
 private:
@@ -26,8 +25,7 @@ namespace std {
 			// second and third and combine them using XOR
 			// and bit shifting:
 
-			return ((hash<Board>()(k.getBoard())
-				^ ((k.getMovesSinceLastCapture()*33) >> 1)));
+			return k.getBoard().hash();
 		}
 	};
 
