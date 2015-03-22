@@ -53,7 +53,7 @@ short Checkers::goalTest(State* state, short player) {
 		return DRAW;
 	}
 
-	//TODO: THE OTHER DRAW CONDITIONS
+	//TODO: THE OTHER DRAW CONDITION
 
 	return UNKNOWN;
 }

@@ -69,6 +69,7 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="carlos.cpp" />
     <ClCompile Include="checkers.cpp" />
+    <ClCompile Include="logger.cpp" />
     <ClCompile Include="montecarlo.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
@@ -76,6 +77,7 @@
     <ClInclude Include="board.h" />
     <ClInclude Include="carlos.h" />
     <ClInclude Include="checkers.h" />
+    <ClInclude Include="logger.h" />
     <ClInclude Include="montecarlo.h" />
     <ClInclude Include="state.h" />
   </ItemGroup>

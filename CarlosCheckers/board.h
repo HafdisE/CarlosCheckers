@@ -14,9 +14,13 @@ class Board {
 public:
 	Board() : blackbit(4095), whitebit(4293918848), kingbit(0) {};
 	Board::Board(const Board& other) : blackbit(other.blackbit), whitebit(other.whitebit), kingbit(other.kingbit) {}
+	/* get piece at cell_id. accepts ranges 1 <= x <= 32, anything outside that range has it return -1 */
 	short getPiece(short cell_id);
+	/* couldn't be arsed to overload the hash function. Makes no difference either way tbh. 
+	   Might make this static or switch to the proper hash function overloading.. */
 	std::size_t hash() const;
 	
+	/* equals operator overload */
 	bool operator==(const Board &other) const
 	{
 		return (kingbit == other.kingbit && whitebit == other.whitebit && blackbit == other.blackbit);
