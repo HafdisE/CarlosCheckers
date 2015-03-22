@@ -55,12 +55,13 @@ bool free_or_jumpable(short moving_piece_id, short direction, short cell_id,  Bo
 	if ((piece & WHITE) != (me & WHITE)) { //pieces aren't same type
 		//so we can check if there is space behind them to jump to
 		if (direction == UP) {
-			if (!IS_OCCUPIED(board->getPiece(NW(cell_id))) || !IS_OCCUPIED(board->getPiece(NE(cell_id)))) return true;
+			short nw = board->getPiece(NW(cell_id)), ne = board->getPiece(NE(cell_id));
+			if ((!IS_OCCUPIED(nw) && nw != -1) || (!IS_OCCUPIED(ne) && ne != -1)) return true;
 		}
 		else {
-			if (!IS_OCCUPIED(board->getPiece(SW(cell_id))) || !IS_OCCUPIED(board->getPiece(SE(cell_id)))) return true;
+			short sw = board->getPiece(SW(cell_id)), se = board->getPiece(SE(cell_id));
+			if ((!IS_OCCUPIED(sw) && sw != -1) || (!IS_OCCUPIED(se) && se != -1)) return true;
 		}
-		
 	}
 	
 	return false;

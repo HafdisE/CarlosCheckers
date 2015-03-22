@@ -27,7 +27,8 @@ State applyMove(State state, struct CBmove *move);
 
 /* only return diagonals that are free/occupied by enemy pieces and are legal for the piece */
 vector<short> getDiagonals(short cell_id, Board* board);
-
+/* returns true if the cell is free to move to or contains an enemy you can jump over */
+bool free_or_jumpable(short moving_piece_id, short direction, short cell_id, Board* board);
 
 counter countPieces(Board* board);
 
