@@ -71,6 +71,7 @@
     <ClCompile Include="checkers.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="montecarlo.cpp" />
+    <ClCompile Include="node.cpp" />
     <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +80,7 @@
     <ClInclude Include="checkers.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="montecarlo.h" />
+    <ClInclude Include="node.h" />
     <ClInclude Include="state.h" />
   </ItemGroup>
   <ItemGroup>
