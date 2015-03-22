@@ -1,17 +1,38 @@
-#include <vector>
+#include <string>
 
-using namespace std;
+#define OCCUPIED 0
+#define WHITE 1
+#define BLACK 2
+#define MAN 4
+#define KING 8
+#define FREE 16
+#define CHANGECOLOR 3
+#define MAXDEPTH 99
+#define MAXMOVES 28
 
-/* board logic stuff */
+class Board {
+public:
+	Board();
+	short getPiece(short cell_id);
+	std::size_t hash() const;
+private:
+	int kingbit;
+	int whitebit;
+	int blackbit;
+};
 
-/* structs */
+namespace std {
 
-struct Board {};
+	template <>
+	struct hash<Board>
+	{
+		std::size_t operator()(const Board& k) const
+		{
+			using std::size_t;
+			using std::hash;
 
-/* interface */
+			return k.hash();
+		}
+	};
 
-/* Returns a vector of all legal moves on the current board for the given player */
-vector<struct CBmove> getlegalmoves(struct Board *board, int player);
-
-/* Returns the result of making a given move */
-Board *makemove(struct CBmove *move, struct Board *board);
+}

@@ -1,46 +1,40 @@
 #include "checkers.h"
 
-Board::Board() {
+/* board hashing */
 
-}
-
-Board::~Board() {
-
-}
 
 Checkers::Checkers(int player) {
 	this->player = player;
-	current_board = newBoard();
 }
 
-Checkers::~Checkers() {
-
+Board Checkers::getBoard() const {
+	return current_state.getBoard();
 }
 
-Board Checkers::getBoard() {
-	return current_board;
+State Checkers::getState() const {
+	return current_state;
 }
 
-int Checkers::getPlayer() {
+int Checkers::getPlayer() const {
 	return player;
 }
 
-void Checkers::updateBoard(Board board) {
-	current_board = board;
+void Checkers::updateState(State state) {
+	current_state = state;
 }
 
-void Checkers::updateBoard(struct CBmove *move) {
-	current_board = applyMove(current_board, move);
+void Checkers::updateState(struct CBmove *move) {
+	current_state = applyMove(current_state, move);
 }
 
-Board applyMove(Board board, struct CBmove *move) {
-	return board;
+State applyMove(State state, struct CBmove *move) {
+	return state;
 }
 
-Board newBoard() {
-	return Board();
-}
-
-struct CBmove** getLegalMoves(Board board) {
+struct CBmove** getLegalMoves(State state) {
 	return NULL;
+}
+
+vector<short> getDiagonals(short cell_id, short piece) {
+	return vector<short>();
 }
