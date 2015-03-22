@@ -56,6 +56,7 @@ public:
 private:
 	short player; //WHITE or BLACK
 	State current_state;
+	/* TODO: move this to monte carlo things */
 	unordered_map<State, short> repeat_check;
 	/* only return diagonals that are free/occupied by enemy pieces and are legal for the piece */
 	static void getDiagonals(short cell_id, Board* board, vector<short>& vec);
