@@ -80,7 +80,9 @@
     <ClInclude Include="checkers.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="montecarlo.h" />
-    <ClInclude Include="node.h" />
+    <ClInclude Include="node.h">
+      <DeploymentContent>false</DeploymentContent>
+    </ClInclude>
     <ClInclude Include="state.h" />
   </ItemGroup>
   <ItemGroup>
