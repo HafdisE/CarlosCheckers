@@ -271,6 +271,15 @@ vector<movp> Checkers::getMoves(short cell_id, Board* board) {
 	return moves;
 }
 
+coord Checkers::toCoord(short cell_id) {
+	coord ret;
+
+	ret.x = 0;
+	ret.y = 0;
+
+	return ret;
+}
+
 
 bool promotionCheck(short cell_id, short piece) {
 	return ((piece & MAN) && (((piece & WHITE) && cell_id < 5) || ((piece & BLACK) && cell_id > 28)));
