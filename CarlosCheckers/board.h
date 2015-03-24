@@ -16,6 +16,7 @@ public:
 	Board::Board(const Board& other) : blackbit(other.blackbit), whitebit(other.whitebit), kingbit(other.kingbit) {}
 	/* get piece at cell_id. accepts ranges 1 <= x <= 32, anything outside that range has it return -1 */
 	short getPiece(short cell_id);
+	void setPiece(short cell_id, short type);
 	/* couldn't be arsed to overload the hash function. Makes no difference either way tbh. 
 	   Might make this static or switch to the proper hash function overloading.. */
 	std::size_t hash() const;

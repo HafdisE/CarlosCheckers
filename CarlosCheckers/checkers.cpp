@@ -20,7 +20,7 @@ void Checkers::updateState(State state) {
 	tieCheck(moves, current_state.getMovesSinceLastCapture());
 }
 
-void Checkers::updateState(struct CBmove *move) {
+void Checkers::updateState(CBmove2 move) {
 	short moves = current_state.getMovesSinceLastCapture();
 	current_state = applyMove(current_state, move);
 	tieCheck(moves, current_state.getMovesSinceLastCapture());
@@ -70,91 +70,208 @@ counter Checkers::countPieces(Board* board) {
 	return count;
 }
 
-State Checkers::applyMove(State state, struct CBmove *move) {
+State Checkers::applyMove(State state, CBmove2 move) {
 	return state;
 }
 
-vector<CBmove*> Checkers::getLegalMoves(State* state, short player) {
-	vector<CBmove*> v;
-	Board board = state->getBoard();
+vector<CBmove2> Checkers::getLegalMoves(State* state, short player) {
+	vector<CBmove2> normal, captures;
+	vector<movp> path;
+	Board board = state->getBoard(); 
+	bool captured = false;
 	for (int i = 1; i < 32; i++) {
-		getMovePath(&board, i, player, &v);		
+		generateMoves(&board, board, i, player, &normal, &captures, &path, &captured);
 	}
-	return v;
+	return (captured ? captures : normal);
 }
 
-void getMovePath(Board* board, int cell, short player, vector<CBmove*> *move) {
-	vector<short> points, captures;
-}
-
-void getMovePath(Board* board, int cell, short player, vector<CBmove*> *move, vector<short> *points, vector<short> *captures) {
-	if (board->getPiece(cell) & player) {
-
+void Checkers::generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured) {
+	vector<movp> moves;
+	moves = getCaptures(cell, &board);
+	if (moves.size() > 0) *captured = true;
+	if (!captured) {
+		moves = getMoves(cell, &board);
 	}
-}
 
-Board applySingleMove(Board* board, short from, short to, short capture) {
-	return *board;
-}
+	for (size_t i = 0; i < moves.size(); i++) {
+		path->push_back(moves[i]);
+		generateMoves(original, applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured);
+		path->pop_back();
+	}
 
-struct CBMove* generateMove(vector<short> *points, vector<short> *captures) {
-	return NULL;
-}
+	//we can move no more
+	if (moves.size() == 0) {
+		//return if we didn't move at all
+		if (path->size() == 0) return;
+		//otherwise we make a move thingamadoodad
+		struct CBmove2 new_move;
+		//and copy the board's original state
+		Board play = *original;
+		new_move.oldpiece = play.getPiece(moves[0].from);
+		new_move.from = toCoord(moves[0].from);
+		bool caused_a_death = false;
+		//path size shouldn't ever exceed 12
+		for (size_t i = 0; i < path->size(); i++) {
+			//now we play and write down all the deaths we caused
 
-bool Checkers::jumpable(short me, short direction, short cell_id, Board* board) {
-	short piece = board->getPiece(cell_id);
-	if (piece == -1) return false; //illegal position
-	if ((piece & WHITE) != (me & WHITE)) { //pieces aren't same type
-		//so we can check if there is space behind them to jump to
-		if (direction == UP) {
-			if (is_free(NW(cell_id), board) || is_free(NE(cell_id), board)) return true;
+			//log intermediate moves
+			if (i < path->size() - 1) new_move.path[i] = toCoord(moves[i].to);
+			//if there was a capture (if there's more than one move, there should always be one, otherwise this is wrong)
+			if (moves[i].capture) {
+				caused_a_death = true;
+				new_move.delpiece[i] = play.getPiece(moves[i].capture);
+				new_move.del[i] = toCoord(moves[i].capture);
+			}
+			//update the board
+			play = applySingleMove(play, moves[i]);
+		}
+		new_move.to = toCoord(moves[path->size()-1].to);
+		new_move.newpiece = play.getPiece(moves[path->size()-1].to);
+		if (caused_a_death) {
+			capture->push_back(new_move);
 		}
 		else {
-			if (is_free(SW(cell_id), board) || is_free(SE(cell_id), board)) return true;
+			normal->push_back(new_move);
 		}
 	}
+}
+
+Board Checkers::applySingleMove(Board board, movp move) {
+	short piece = board.getPiece(move.from);
+
+	board.setPiece(move.from, FREE);
+
+	if (move.capture) board.setPiece(move.capture, FREE);
+	if (promotionCheck(move.to, piece)) piece |= KING;
+
+	board.setPiece(move.to, piece);
 	
-	return false;
+	return board;
 }
 
-bool Checkers::is_free(short cell_id, Board* board) {
-	short piece = board->getPiece(cell_id);
-	if (piece == -1) return false; //illegal position
-	return !!(piece ^ FREE);
+vector<short> Checkers::getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south) {
+	vector<short> directions;
+	if (north) {
+		if ((board->getPiece(NW(cell_id)) & type) == type) {
+			directions.push_back(NORTHWEST);
+		}
+		if ((board->getPiece(NE(cell_id)) & type) == type) {
+			directions.push_back(NORTHEAST);
+		}
+	}
+	if (south) {
+		if ((board->getPiece(SW(cell_id)) & type) == type) {
+			directions.push_back(SOUTHWEST);
+		}
+		if ((board->getPiece(SE(cell_id)) & type) == type) {
+			directions.push_back(SOUTHWEST);
+		}
+	}
+	return directions;
 }
 
+vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
+	short piece;
+	vector<short> directions;
+	vector<movp> moves;
+	bool north;
+	bool south;
+	short type;
 
-void Checkers::getUp(short cell_id, Board* board, vector<short>& vec) {
-	short piece = board->getPiece(cell_id);
-	if (is_free(NW(cell_id), board) || jumpable(piece, UP, NW(cell_id), board)) {
-		vec.push_back(NW(cell_id));
+	piece = board->getPiece(cell_id);
+	north = south = false;
+
+	if (piece == FREE) return moves; //what are you doin mate
+
+	if (piece & KING) {
+		north = true;
+		south = true;
 	}
-
-	if (is_free(NE(cell_id), board) || jumpable(piece, UP, NE(cell_id), board)) {
-		vec.push_back(NE(cell_id));
-	}
-}
-
-void Checkers::getDown(short cell_id, Board* board, vector<short>& vec) {
-	short piece = board->getPiece(cell_id);
-	if (is_free(SW(cell_id), board) || jumpable(piece, DOWN, SW(cell_id), board)) {
-		vec.push_back(SW(cell_id));
-	}
-
-	if (is_free(SE(cell_id), board) || jumpable(piece, DOWN, SE(cell_id), board)) {
-		vec.push_back(SE(cell_id));
-	}
-}
-
-void Checkers::getDiagonals(short cell_id, Board* board, vector<short>& vec) {
-	short piece = board->getPiece(cell_id);
-	if (is_free(cell_id, board)) return; //wasn't occupied. the fuck are you doing.	
-	if (piece & WHITE) {
-		if (piece & KING) getUp(cell_id, board, vec);
-		getDown(cell_id, board, vec);
+	else if (piece & WHITE) {
+		south = true;
+		type = BLACK;
 	}
 	else {
-		if (piece & KING) getDown(cell_id, board, vec);
-		getUp(cell_id, board, vec);
+		north = true;
+		type = WHITE;
 	}
+
+	directions = getDirectionsWhereType(cell_id, board, type, north, south);
+
+	for (size_t i = 0; i < directions.size(); i++) {
+		switch (directions[i]) {
+		case NORTHWEST:
+			if (board->getPiece(NW(NW(cell_id))) == FREE) {
+				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id)));
+			}
+			break;
+		case NORTHEAST:
+			if (board->getPiece(NE(NE(cell_id))) == FREE) {
+				moves.push_back(movp(NE(NE(cell_id)), NE(cell_id)));
+			}
+			break;
+		case SOUTHWEST:
+			if (board->getPiece(SW(SW(cell_id))) == FREE) {
+				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
+			}
+			break;
+		case SOUTHEAST:
+			if (board->getPiece(SE(SE(cell_id))) == FREE) {
+				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
+			}
+			break;
+		}
+	}
+
+	return moves;
+}
+
+vector<movp> Checkers::getMoves(short cell_id, Board* board) {
+	short piece;
+	vector<short> directions;
+	vector<movp> moves;
+	bool north;
+	bool south;
+
+	piece = board->getPiece(cell_id);
+	north = south = false;
+
+	if (piece == FREE) return moves; //what are you doin mate
+
+	if (piece & KING) {
+		north = true;
+		south = true;
+	}
+	else if (piece & WHITE) {
+		south = true;
+	}
+	else {
+		north = true;
+	}
+
+	directions = getDirectionsWhereType(cell_id, board, FREE, north, south);
+
+	for (size_t i = 0; i < directions.size(); i++) {
+		switch (directions[i]) {
+		case NORTHWEST:
+			moves.push_back(movp(cell_id, NW(cell_id)));
+			break;
+		case NORTHEAST:
+			moves.push_back(movp(cell_id, NE(cell_id)));
+			break;
+		case SOUTHWEST:
+			moves.push_back(movp(cell_id, SW(cell_id)));
+			break;
+		case SOUTHEAST:
+			moves.push_back(movp(cell_id, SE(cell_id)));
+			break;
+		}
+	}
+
+	return moves;
+}
+
+
+bool promotionCheck(short cell_id, short piece) {
+	return ((piece & MAN) && (((piece & WHITE) && cell_id < 5) || ((piece & BLACK) && cell_id > 28)));
 }
