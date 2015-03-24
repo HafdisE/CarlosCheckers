@@ -76,20 +76,29 @@ State Checkers::applyMove(State state, struct CBmove *move) {
 
 vector<CBmove*> Checkers::getLegalMoves(State* state, short player) {
 	vector<CBmove*> v;
-	Board* board = &(state->getBoard());
-	vector<short> moves;
+	Board board = state->getBoard();
 	for (int i = 1; i < 32; i++) {
-		if ((board->getPiece(i) & player) == player) {
-			short cell_id = i;
-			getDiagonals(cell_id, board, moves);
-			while (moves.size() > 0) {
-
-				moves.clear();
-			}
-		}
-		
+		getMovePath(&board, i, player, &v);		
 	}
 	return v;
+}
+
+void getMovePath(Board* board, int cell, short player, vector<CBmove*> *move) {
+	vector<short> points, captures;
+}
+
+void getMovePath(Board* board, int cell, short player, vector<CBmove*> *move, vector<short> *points, vector<short> *captures) {
+	if (board->getPiece(cell) & player) {
+
+	}
+}
+
+Board applySingleMove(Board* board, short from, short to, short capture) {
+	return *board;
+}
+
+struct CBMove* generateMove(vector<short> *points, vector<short> *captures) {
+	return NULL;
 }
 
 bool Checkers::jumpable(short me, short direction, short cell_id, Board* board) {

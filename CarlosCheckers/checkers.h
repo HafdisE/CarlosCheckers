@@ -58,6 +58,10 @@ private:
 	State current_state;
 	/* TODO: move this to monte carlo things */
 	unordered_map<State, short> repeat_check;
+	static void getMovePath(Board* board, int cell, short player, vector<CBmove*> *move);
+	static void getMovePath(Board* board, int cell, short player, vector<CBmove*> *move, vector<short> *points, vector<short> *captures);
+	static Board applySingleMove(Board* board, short from, short to, short capture);
+	static struct CBMove* generateMove(vector<short> *points, vector<short> *captures);
 	/* only return diagonals that are free/occupied by enemy pieces and are legal for the piece */
 	static void getDiagonals(short cell_id, Board* board, vector<short>& vec);
 	static void getUp(short cell_id, Board* board, vector<short>& vec);
