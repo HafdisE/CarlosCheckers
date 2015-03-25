@@ -271,13 +271,19 @@ vector<movp> Checkers::getMoves(short cell_id, Board* board) {
 	return moves;
 }
 
+/* TODO: compare with simple checkers code to see where the fuck 0,0 is */
 coord Checkers::toCoord(short cell_id) {
-	coord ret;
+	if (cell_id < 1 || cell_id > 32) return coord(-1, -1);
 
-	ret.x = 0;
-	ret.y = 0;
-
-	return ret;
+	static coord vals[] = { coord(6, 7), coord(4, 7), coord(2, 7), coord(0, 7),
+		             coord(7, 6), coord(5, 6), coord(3, 6), coord(1, 6),
+					 coord(6, 5), coord(4, 5), coord(2, 5), coord(0, 5),
+					 coord(7, 4), coord(5, 4), coord(3, 4), coord(1, 4),
+					 coord(6, 3), coord(4, 3), coord(2, 3), coord(0, 3),
+					 coord(7, 2), coord(5, 2), coord(3, 2), coord(1, 2),
+					 coord(6, 1), coord(4, 1), coord(2, 1), coord(0, 1),
+					 coord(7, 0), coord(5, 0), coord(3, 0), coord(1, 0) };
+	return vals[cell_id-1];
 }
 
 

@@ -33,7 +33,7 @@ struct movp {
 
 /* this was bitching like CBmove so here it is...*/
 struct coord {
-	coord(){ x = 0; y = 0; }
+	coord() : x(0), y(0) {}
 	coord(int x, int y) : x(x), y(y) {}
 	int x;
 	int y;
@@ -92,6 +92,7 @@ private:
 	/* TODO: move this to monte carlo things */
 	unordered_map<State, short> repeat_check;
 
+	/* too tired to comment */
 	static void generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp> *path, bool *captures);
 	static Board applySingleMove(Board board, movp move);
 	static vector<short> getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south);
