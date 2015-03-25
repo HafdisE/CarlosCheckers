@@ -29,7 +29,7 @@
     <ClCompile Include="TestBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestMove.cpp">
+    <ClCompile Include="TestCheckers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
