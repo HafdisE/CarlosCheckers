@@ -287,6 +287,6 @@ coord Checkers::toCoord(short cell_id) {
 }
 
 
-bool promotionCheck(short cell_id, short piece) {
+bool Checkers::promotionCheck(short cell_id, short piece) {
 	return ((piece & MAN) && (((piece & WHITE) && cell_id < 5) || ((piece & BLACK) && cell_id > 28)));
 }
