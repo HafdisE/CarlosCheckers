@@ -19,9 +19,11 @@
 #define LOSS 2
 #define UNKNOWN 3
 
-
-
 using namespace std;
+
+namespace CarlosCheckersTests {
+	struct CheckersTester;
+}
 
 struct movp {
 	movp(short from, short to) : from(from), to(to) {}
@@ -115,6 +117,8 @@ private:
 	void tieCheck(short count, short new_count);
 	/* helper function for goaltest, counts the pieces of both colours on the board */
 	static counter countPieces(Board* board);
+
+	friend struct ::CarlosCheckersTests::CheckersTester;
 };
 
 
