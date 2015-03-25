@@ -5,7 +5,7 @@
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
-namespace CarlosCheackersTests
+namespace CarlosCheckersTests
 {		
 	TEST_CLASS(Board)
 	{
