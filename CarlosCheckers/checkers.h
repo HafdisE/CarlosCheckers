@@ -1,3 +1,6 @@
+#ifndef CHECKERS_H
+#define CHECKERS_H
+
 #include <vector>
 #include <unordered_map>
 #include "state.h"
@@ -120,5 +123,7 @@ private:
 
 	friend struct ::CarlosCheckersTests::CheckersTester;
 };
+
+#endif
 
 

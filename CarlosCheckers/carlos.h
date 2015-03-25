@@ -1,3 +1,6 @@
+#ifndef CARLOS_H
+#define CARLOS_H
+
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -45,3 +48,5 @@ extern "C" {
 	int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *playnow, int info, int unused, struct CBmove *move);
 	int  WINAPI enginecommand(char str[256], char reply[256]);
 }
+
+#endif

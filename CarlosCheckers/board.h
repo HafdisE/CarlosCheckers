@@ -1,3 +1,6 @@
+#ifndef BOARD_H
+#define BOARD_H
+
 #include <string>
 
 #define OCCUPIED 0
@@ -33,3 +36,5 @@ private:
 	int whitebit;
 	int blackbit;
 };
+
+#endif

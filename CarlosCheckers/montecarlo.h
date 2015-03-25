@@ -1,3 +1,6 @@
+#ifndef MONTECARLO_H
+#define MONTECARLO_H
+
 #include "checkers.h"
 #include <cmath>
 #include "node.h"
@@ -19,3 +22,5 @@ private:
 	
 	int tsim_count;
 };
+
+#endif

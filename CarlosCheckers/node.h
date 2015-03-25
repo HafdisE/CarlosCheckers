@@ -1,3 +1,6 @@
+#ifndef NODE_H
+#define NODE_H
+
 #include <vector>
 using namespace std;
 
@@ -9,3 +12,5 @@ struct Node
 };
 
 typedef Node* NodePtr;
+
+#endif

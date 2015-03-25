@@ -1,3 +1,6 @@
+#ifndef STATE_H
+#define STATE_H
+
 #include "board.h"
 #include <string>
 
@@ -41,3 +44,5 @@ namespace std {
 	};
 
 }
+
+#endif
