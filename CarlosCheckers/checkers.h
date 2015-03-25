@@ -42,8 +42,8 @@ struct coord {
 //the proper variety has no constructor and we shouldn't modify it so here this is
 struct CBmove2            	/* all the information you need about a move */
 {
-	CBmove2() {}
-	int ismove = 1;          /* kind of superfluous: is 0 if the move is not a valid move */
+	CBmove2();
+	int ismove;          /* kind of superfluous: is 0 if the move is not a valid move */
 	int newpiece;        /* what type of piece appears on to */
 	int oldpiece;        /* what disappears on from */
 	struct coord from, to; /* coordinates of the piece - in 8x8 notation!*/
@@ -98,6 +98,7 @@ private:
 	static vector<short> getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south);
 	static bool promotionCheck(short cell_id, short piece);
 	static coord toCoord(short cell_id);
+	static short toCellID(coord co);
 	static vector<movp> getCaptures(short cell_id, Board* board);
 	static vector<movp> getMoves(short cell_id, Board* board);
 	void tieCheck(short count, short new_count);

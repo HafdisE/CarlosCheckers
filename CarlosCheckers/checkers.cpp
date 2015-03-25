@@ -70,9 +70,36 @@ counter Checkers::countPieces(Board* board) {
 	return count;
 }
 
+short Checkers::toCellID(coord co) {
+	if (co.x == -1) return 0;
+	//TODO: implement
+	return 0;
+}
+
+//TODO: incomplete
 State Checkers::applyMove(State state, CBmove2 move) {
+	int moves = state.getMovesSinceLastCapture();
+	Board board = state.getBoard();
+	if (move.delpiece[0] != FREE) {
+		moves = 0;
+		for (int i = 0; i < 12; i++) {
+			if (move.del[i].x == -1) break;
+			board.setPiece(toCellID(move.del[i]), FREE);
+		}
+	}
+	else {
+		moves++;
+	}
+	board.setPiece(toCellID(move.from), FREE);
+	board.setPiece(toCellID(move.to), move.newpiece);
+	
+	State ret(board);
+	ret.setMovesSinceLastCapture(moves);
+
 	return state;
 }
+
+
 
 vector<CBmove2> Checkers::getLegalMoves(State* state, short player) {
 	vector<CBmove2> normal, captures;
@@ -289,4 +316,16 @@ coord Checkers::toCoord(short cell_id) {
 
 bool Checkers::promotionCheck(short cell_id, short piece) {
 	return ((piece & MAN) && (((piece & WHITE) && cell_id < 5) || ((piece & BLACK) && cell_id > 28)));
+}
+
+CBmove2::CBmove2() {
+	ismove = 1;
+	newpiece = oldpiece = FREE;
+	from = coord(-1,-1);
+	to = coord(-1,-1);
+	for (int i = 0; i < 12; i++) {
+		path[i] = coord(-1, -1);
+		del[i] = coord(-1, -1);
+		delpiece[i] = FREE;
+	}
 }

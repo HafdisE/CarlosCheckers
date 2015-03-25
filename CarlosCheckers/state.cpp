@@ -15,3 +15,7 @@ bool State::getTie() {
 short State::getMovesSinceLastCapture() const {
 	return moves_since_last_capture;
 }
+
+void State::setMovesSinceLastCapture(int moves) {
+	moves_since_last_capture = moves;
+}
