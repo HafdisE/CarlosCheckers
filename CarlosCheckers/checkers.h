@@ -6,10 +6,10 @@
 #include "state.h"
 #include <utility>
 
-#define NW(x) (x + 5)
-#define NE(x) (x + 4)
-#define SW(x) (x - 4)
-#define SE(x) (x - 5)
+#define NW(x) (!(((x-1)/2)%2) ? x + 5 : x + 4)
+#define NE(x) (!(((x-1)/2)%2) ? x + 4 : x + 3)
+#define SW(x) (!(((x-1)/2)%2) ? x - 3 : x - 4)
+#define SE(x) (!(((x-1)/2)%2) ? x - 4 : x - 5)
 
 #define NORTHWEST 0
 #define NORTHEAST 1
@@ -100,7 +100,7 @@ private:
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
 	   an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
 	   in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
-	static void generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp> *path, bool *captures);
+	static void generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp> *path, bool *captures, int depth = 0);
 	/* applies a 'single move', of the simplified move notation to the board and returns a new board */
 	static Board applySingleMove(Board board, movp move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass

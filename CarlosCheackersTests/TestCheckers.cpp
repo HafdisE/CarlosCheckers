@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 #include "..\CarlosCheckers\checkers.h"
+#include "TestBoard.cpp"
 
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -27,6 +28,10 @@ namespace CarlosCheckersTests
 
 		static vector<movp> getMoves(Checkers& checkers, short cell_id, Board* board) {
 			return checkers.getMoves(cell_id, board);
+		}
+
+		static Board applySingleMove(Checkers& checkers, Board board, movp move) {
+			return checkers.applySingleMove(board, move);
 		}
 	};
 
@@ -126,7 +131,29 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)2, CheckersTester::getMoves(white, 11, &def).size());
 			Assert::AreEqual((size_t)2, CheckersTester::getMoves(white, 10, &def).size());
 			Assert::AreEqual((size_t)2, CheckersTester::getMoves(white, 9, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getMoves(white, 8, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getMoves(white, 7, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getMoves(white, 6, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getMoves(white, 5, &def).size());
 		}
+
+		TEST_METHOD(TestApplySingleMoveDefaultBoard)
+		{
+			Checkers white(WHITE);
+			Board start(1024, 0, 0);
+			Board result(16384, 0, 0);
+			movp mov(11, 15);
+			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(CheckersTester::applySingleMove(white, start, mov)));
+		}
+
+		TEST_METHOD(TestCheckIfAnyLegalMovesDefaultBoard)
+		{
+			Checkers white(WHITE);
+			State state;
+			Assert::AreEqual((size_t)7, white.getLegalMoves(&state, BLACK).size());
+		}
+
+
 
 		
 	};

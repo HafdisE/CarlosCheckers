@@ -107,22 +107,25 @@ vector<CBmove2> Checkers::getLegalMoves(State* state, short player) {
 	Board board = state->getBoard(); 
 	bool captured = false;
 	for (int i = 1; i < 32; i++) {
+		if(!(board.getPiece(i) & player)) continue;
 		generateMoves(&board, board, i, player, &normal, &captures, &path, &captured);
 	}
 	return (captured ? captures : normal);
 }
 
-void Checkers::generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured) {
+void Checkers::generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured, int depth) {
 	vector<movp> moves;
-	moves = getCaptures(cell, &board);
-	if (moves.size() > 0) *captured = true;
-	if (!captured) {
+	if (depth == 0 || *(captured))  {
+		moves = getCaptures(cell, &board);
+		if (moves.size() > 0) *captured = true;
+	}
+	if (depth == 0 && !(*captured)) {
 		moves = getMoves(cell, &board);
 	}
 
 	for (size_t i = 0; i < moves.size(); i++) {
 		path->push_back(moves[i]);
-		generateMoves(original, applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured);
+		generateMoves(original, applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, depth + 1);
 		path->pop_back();
 	}
 
@@ -134,26 +137,26 @@ void Checkers::generateMoves(Board* original, Board board, short cell, short pla
 		struct CBmove2 new_move;
 		//and copy the board's original state
 		Board play = *original;
-		new_move.oldpiece = play.getPiece(moves[0].from);
-		new_move.from = toCoord(moves[0].from);
+		new_move.oldpiece = play.getPiece((*path)[0].from);
+		new_move.from = toCoord((*path)[0].from);
 		bool caused_a_death = false;
 		//path size shouldn't ever exceed 12
 		for (size_t i = 0; i < path->size(); i++) {
 			//now we play and write down all the deaths we caused
 
 			//log intermediate moves
-			if (i < path->size() - 1) new_move.path[i] = toCoord(moves[i].to);
+			if (i < path->size() - 1) new_move.path[i] = toCoord((*path)[i].to);
 			//if there was a capture (if there's more than one move, there should always be one, otherwise this is wrong)
-			if (moves[i].capture) {
+			if ((*path)[i].capture) {
 				caused_a_death = true;
-				new_move.delpiece[i] = play.getPiece(moves[i].capture);
-				new_move.del[i] = toCoord(moves[i].capture);
+				new_move.delpiece[i] = play.getPiece((*path)[i].capture);
+				new_move.del[i] = toCoord((*path)[i].capture);
 			}
 			//update the board
-			play = applySingleMove(play, moves[i]);
+			play = applySingleMove(play, (*path)[i]);
 		}
-		new_move.to = toCoord(moves[path->size()-1].to);
-		new_move.newpiece = play.getPiece(moves[path->size()-1].to);
+		new_move.to = toCoord((*path)[path->size() - 1].to);
+		new_move.newpiece = play.getPiece((*path)[path->size() - 1].to);
 		if (caused_a_death) {
 			capture->push_back(new_move);
 		}
