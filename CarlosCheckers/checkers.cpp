@@ -179,24 +179,33 @@ Board Checkers::applySingleMove(Board board, movp move) {
 vector<short> Checkers::getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south) {
 	vector<short> directions;
 	if (north) {
-		if ((board->getPiece(NW(cell_id)) & type) == type) {
+		if (!isLeftPiece(cell_id) && (board->getPiece(NW(cell_id)) & type) == type) {
 			directions.push_back(NORTHWEST);
 		}
-		if ((board->getPiece(NE(cell_id)) & type) == type) {
+		if (!isRightPiece(cell_id) && (board->getPiece(NE(cell_id)) & type) == type) {
 			directions.push_back(NORTHEAST);
 		}
 	}
 	if (south) {
-		if ((board->getPiece(SW(cell_id)) & type) == type) {
+		if (!isLeftPiece(cell_id) && (board->getPiece(SW(cell_id)) & type) == type) {
 			directions.push_back(SOUTHWEST);
 		}
-		if ((board->getPiece(SE(cell_id)) & type) == type) {
+		if (!isRightPiece(cell_id) && (board->getPiece(SE(cell_id)) & type) == type) {
 			directions.push_back(SOUTHWEST);
 		}
 	}
 	return directions;
 }
 
+bool Checkers::isLeftPiece(short cell_id) {
+	return cell_id == 4 || cell_id == 12 ||
+		cell_id == 20 || cell_id == 28;
+}
+
+bool Checkers::isRightPiece(short cell_id) {
+	return 	cell_id == 5  || cell_id == 13 ||
+		    cell_id == 21 || cell_id == 29;
+}
 vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	short piece;
 	vector<short> directions;
@@ -228,22 +237,22 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	for (size_t i = 0; i < directions.size(); i++) {
 		switch (directions[i]) {
 		case NORTHWEST:
-			if (board->getPiece(NW(NW(cell_id))) == FREE) {
+			if (!isLeftPiece(NW(cell_id)) && board->getPiece(NW(NW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id)));
 			}
 			break;
 		case NORTHEAST:
-			if (board->getPiece(NE(NE(cell_id))) == FREE) {
+			if (!isRightPiece(NW(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
 				moves.push_back(movp(NE(NE(cell_id)), NE(cell_id)));
 			}
 			break;
 		case SOUTHWEST:
-			if (board->getPiece(SW(SW(cell_id))) == FREE) {
+			if (!isLeftPiece(NW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
 			}
 			break;
 		case SOUTHEAST:
-			if (board->getPiece(SE(SE(cell_id))) == FREE) {
+			if (!isRightPiece(NW(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
 			}
 			break;

@@ -121,6 +121,9 @@ private:
 	/* helper function for goaltest, counts the pieces of both colours on the board */
 	static counter countPieces(Board* board);
 
+	static bool isLeftPiece(short cell_id);
+	static bool isRightPiece(short cell_id);
+
 	friend struct ::CarlosCheckersTests::CheckersTester;
 };
 

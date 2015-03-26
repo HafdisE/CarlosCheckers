@@ -20,6 +20,14 @@ namespace CarlosCheckersTests
 		static bool promotionCheck(Checkers& checkers, short cell_id, short piece) {
 			return checkers.promotionCheck(cell_id, piece);
 		}
+
+		static vector<movp> getCaptures(Checkers& checkers, short cell_id, Board* board) {
+			return checkers.getCaptures(cell_id, board);
+		}
+
+		static vector<movp> getMoves(Checkers& checkers, short cell_id, Board* board) {
+			return checkers.getMoves(cell_id, board);
+		}
 	};
 
 	TEST_CLASS(TestCheckers)
@@ -100,6 +108,27 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((short)DRAW, white.goalTest(&def, WHITE));
 		}
 
+		TEST_METHOD(TestGetCapturesDefaultBoard)
+		{
+			Checkers white(WHITE);
+			Board def;
+			Assert::AreEqual((size_t)0, CheckersTester::getCaptures(white, 12, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getCaptures(white, 11, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getCaptures(white, 10, &def).size());
+			Assert::AreEqual((size_t)0, CheckersTester::getCaptures(white, 9, &def).size());
+		}
+
+		TEST_METHOD(TestGetMovesDefaultBoard)
+		{
+			Checkers white(WHITE);
+			Board def;
+			Assert::AreEqual((size_t)1, CheckersTester::getMoves(white, 12, &def).size());
+			Assert::AreEqual((size_t)2, CheckersTester::getMoves(white, 11, &def).size());
+			Assert::AreEqual((size_t)2, CheckersTester::getMoves(white, 10, &def).size());
+			Assert::AreEqual((size_t)2, CheckersTester::getMoves(white, 9, &def).size());
+		}
+
+		
 	};
 	
 }
