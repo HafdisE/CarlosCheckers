@@ -1,31 +1,23 @@
 #include "checkers.h"
+short Checkers::player = WHITE;
+Board Checkers::current_board = Board();
 
-/* board hashing */
-
-Board Checkers::getBoard() const {
-	return current_state.getBoard();
+Board Checkers::getBoard() {
+	return current_board;
 }
 
-State Checkers::getState() const {
-	return current_state;
+void Checkers::setBoard(Board board) {
+	current_board = board;
 }
 
-int Checkers::getPlayer() const {
+int Checkers::getPlayer() {
 	return player;
 }
 
-void Checkers::updateState(State state) {
-	short moves = current_state.getMovesSinceLastCapture();
-	current_state = state;
-	tieCheck(moves, current_state.getMovesSinceLastCapture());
+void Checkers::setPlayer(short newplayer) {
+	player = newplayer;
 }
-
-void Checkers::updateState(CBmove2 move) {
-	short moves = current_state.getMovesSinceLastCapture();
-	current_state = applyMove(current_state, move);
-	tieCheck(moves, current_state.getMovesSinceLastCapture());
-}
-
+/*
 void Checkers::tieCheck(short count, short new_count) {
 	if (count != new_count) {
 		repeat_check.clear();
@@ -36,11 +28,10 @@ void Checkers::tieCheck(short count, short new_count) {
 			current_state.setTie();
 		}
 	}
-}
+}*/
 
-short Checkers::goalTest(State* state, short player) {
-	Board b = state->getBoard();
-	counter c = countPieces(&b);
+short Checkers::goalTest(Board &board, short player) {
+	counter c = countPieces(&board);
 	if ((c.black == 0 && player == BLACK) || (c.white == 0 && player == WHITE)) {
 		return LOSS;
 	}
@@ -49,11 +40,7 @@ short Checkers::goalTest(State* state, short player) {
 		return WIN;
 	}
 
-	if (state->getMovesSinceLastCapture() >= 50) {
-		return DRAW;
-	}
-
-	//TODO: THE OTHER DRAW CONDITION
+//MISSING DRAW THINGS
 
 	return UNKNOWN;
 }
@@ -75,44 +62,42 @@ short Checkers::toCellID(coord co) {
 	return co.x / 2 + (co.y * 4) + 1;
 }
 
-//TODO: incomplete
-State Checkers::applyMove(State state, CBmove2 move) {
-	int moves = state.getMovesSinceLastCapture();
-	Board board = state.getBoard();
+void Checkers::applyMove(CBmove2 move) {
 	if (move.delpiece[0] != FREE) {
-		moves = 0;
 		for (int i = 0; i < 12; i++) {
 			if (move.del[i].x == -1) break;
-			board.setPiece(toCellID(move.del[i]), FREE);
+			current_board.setPiece(toCellID(move.del[i]), FREE);
 		}
 	}
-	else {
-		moves++;
-	}
-	board.setPiece(toCellID(move.from), FREE);
-	board.setPiece(toCellID(move.to), move.newpiece);
-	
-	State ret(board);
-	ret.setMovesSinceLastCapture(moves);
+	current_board.setPiece(toCellID(move.from), FREE);
+	current_board.setPiece(toCellID(move.to), move.newpiece);
+}
 
-	return state;
+void Checkers::undoMove(CBmove2 move) {
+	if (move.delpiece[0] != FREE) {
+		for (int i = 0; i < 12; i++) {
+			if (move.del[i].x == -1) break;
+			current_board.setPiece(toCellID(move.del[i]), move.delpiece[i]);
+		}
+	}
+	current_board.setPiece(toCellID(move.to), FREE);
+	current_board.setPiece(toCellID(move.from), move.newpiece);
 }
 
 
 
-vector<CBmove2> Checkers::getLegalMoves(State* state, short player) {
+vector<CBmove2> Checkers::getLegalMoves(short player) {
 	vector<CBmove2> normal, captures;
 	vector<movp> path;
-	Board board = state->getBoard(); 
 	bool captured = false;
 	for (int i = 1; i < 32; i++) {
-		if(!(board.getPiece(i) & player)) continue;
-		generateMoves(&board, board, i, player, &normal, &captures, &path, &captured);
+		if (!(current_board.getPiece(i) & player)) continue;
+		generateMoves(current_board, i, player, &normal, &captures, &path, &captured);
 	}
 	return (captured ? captures : normal);
 }
 
-void Checkers::generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured, int depth) {
+void Checkers::generateMoves(Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured, int depth) {
 	vector<movp> moves;
 	if (depth == 0 || *(captured))  {
 		moves = getCaptures(cell, &board);
@@ -124,7 +109,7 @@ void Checkers::generateMoves(Board* original, Board board, short cell, short pla
 
 	for (size_t i = 0; i < moves.size(); i++) {
 		path->push_back(moves[i]);
-		generateMoves(original, applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, depth + 1);
+		generateMoves(applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, depth + 1);
 		path->pop_back();
 	}
 
@@ -135,7 +120,7 @@ void Checkers::generateMoves(Board* original, Board board, short cell, short pla
 		//otherwise we make a move thingamadoodad
 		struct CBmove2 new_move;
 		//and copy the board's original state
-		Board play = *original;
+		Board play = current_board;
 		new_move.oldpiece = play.getPiece((*path)[0].from);
 		new_move.from = toCoord((*path)[0].from);
 		bool caused_a_death = false;

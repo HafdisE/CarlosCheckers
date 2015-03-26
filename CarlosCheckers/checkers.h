@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <unordered_map>
-#include "state.h"
+//#include "state.h"
+#include "board.h"
 #include <utility>
 
 #define NW(x) (!(((x-1)/4)%2) ? x + 5 : x + 4)
@@ -80,39 +81,39 @@ struct counter {
 //this is our player the montecarlo search refers to for info on the current state and which player we are
 //it should be updated based on messages from the engine
 class Checkers {
-public:
-	/*Constructor. Initialise game state tracker for player player.*/
-	Checkers(short player) : player(player) {}
+public:	
 	/* Update the current state using a move */
-	void updateState(CBmove2 move);
+	static void applyMove(CBmove2 move);
+	static void undoMove(CBmove2 move);
 	/* Update the current state using a state */
-	void updateState(State state);
-	/* Get the current board */
-	Board getBoard() const;
-	/* Get the current state */
-	State getState() const;
+	//static void updateState(State state);
+	/* Get pointer to the current board */
+	static Board getBoard();
+	static void setBoard(Board board);
+	/* Get pointer to the current state */
+	//static State getState();
 	/* Get the player */
-	int getPlayer() const;
+	static int getPlayer();
+	static void setPlayer(short player);
 
 	/* Static public functions for use in conjunction with MCTS */
 
 	/* Returns a vector of all the legal moves in the given state for the given player */
-	static vector<CBmove2> getLegalMoves(State* state, short player);
-	/* Returns a state which has the supplied move applied onto the supplied state */
-	static State applyMove(State state, struct CBmove2 move);
-	/* Returns WIN, LOSE, DRAW or UNKNOWN for a given state from the given player's POV */
-	static short goalTest(State* state, short player);	
+	static vector<CBmove2> getLegalMoves(short player);
+	/* Returns WIN, LOSE, DRAW or UNKNOWN for the current state from the given player's POV */
+	static short goalTest(Board& board, short player);
 
 private:
-	short player; //WHITE or BLACK
-	State current_state;
+	static short player; //WHITE or BLACK
+	static Board current_board;
+	//State current_state;
 	/* TODO: move this to monte carlo things */
-	unordered_map<State, short> repeat_check;
+	//static unordered_map<Board, short> repeat_check;
 
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
 	   an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
 	   in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
-	static void generateMoves(Board* original, Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp> *path, bool *captures, int depth = 0);
+	static void generateMoves(Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp> *path, bool *captures, int depth = 0);
 	/* applies a 'single move', of the simplified move notation to the board and returns a new board */
 	static Board applySingleMove(Board board, movp move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass
@@ -129,14 +130,14 @@ private:
 	/* gets all simplified notation moves for a single piece that are simple moves */
 	static vector<movp> getMoves(short cell_id, Board* board);
 	/* checks if a state has occurred three times, should be moved to montecarlo */
-	void tieCheck(short count, short new_count);
+	static void tieCheck(short count, short new_count);
 	/* helper function for goaltest, counts the pieces of both colours on the board */
 	static counter countPieces(Board* board);
 
 	static bool isLeftPiece(short cell_id);
 	static bool isRightPiece(short cell_id);
 
-	friend struct ::CarlosCheckersTests::CheckersTester;
+	static friend struct ::CarlosCheckersTests::CheckersTester;
 };
 
 #endif
