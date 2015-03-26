@@ -147,6 +147,25 @@ namespace CarlosCheckersTests
 			State state;
 			Assert::AreEqual((size_t)7, Checkers::getLegalMoves(&state, BLACK).size());
 		}
+		TEST_METHOD(TestWhenWhiteHasToKillBlackThreePieces)
+		{
+			Board b(0, 0, 0);
+			b.setPiece(14, WHITE | MAN);
+			b.setPiece(15, WHITE | MAN);
+			b.setPiece(19, BLACK | MAN);
+			State state(b);
+			Assert::AreEqual((size_t)24576, BoardTester::getWhitebit(b));
+			Assert::AreEqual((size_t)262144, BoardTester::getBlackbit(b));
+			Assert::AreEqual((size_t) 0, BoardTester::getKingbit(b));
+			Assert::AreEqual((size_t)1, Checkers::getLegalMoves(&state, WHITE).size());
+		}
+		
+		TEST_METHOD(TestWhenWhiteHasToKillBlackFullBoard)
+		{
+			Board b(4287184896, 16125, 0);
+			State state(b);
+			Assert::AreEqual((size_t)1, Checkers::getLegalMoves(&state, WHITE).size());
+		}
 
 
 
