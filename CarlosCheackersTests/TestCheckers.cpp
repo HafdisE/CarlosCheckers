@@ -80,37 +80,33 @@ namespace CarlosCheckersTests
 
 		TEST_METHOD(TestGoalTestDefaultState)
 		{
-			Checkers white(WHITE);
 			State def;
-			Assert::AreEqual((short)UNKNOWN, white.goalTest(&def, WHITE));
-			Assert::AreEqual((short)UNKNOWN, white.goalTest(&def, BLACK));
+			Assert::AreEqual((short)UNKNOWN, Checkers::goalTest(&def, WHITE));
+			Assert::AreEqual((short)UNKNOWN, Checkers::goalTest(&def, BLACK));
 		}
 
 		TEST_METHOD(TestGoalTestBlackWin)
 		{
-			Checkers white(WHITE);
 			Board board(4095, 0, 0);
 			State def(board);
-			Assert::AreEqual((short)LOSS, white.goalTest(&def, WHITE));
-			Assert::AreEqual((short)WIN, white.goalTest(&def, BLACK));
+			Assert::AreEqual((short)LOSS, Checkers::goalTest(&def, WHITE));
+			Assert::AreEqual((short)WIN, Checkers::goalTest(&def, BLACK));
 		}
 
 		TEST_METHOD(TestGoalTestWhiteWin)
 		{
-			Checkers white(WHITE);
 			Board board(0, 4293918720, 0);
 			State def(board);
-			Assert::AreEqual((short)LOSS, white.goalTest(&def, BLACK));
-			Assert::AreEqual((short)WIN, white.goalTest(&def, WHITE));
+			Assert::AreEqual((short)LOSS, Checkers::goalTest(&def, BLACK));
+			Assert::AreEqual((short)WIN, Checkers::goalTest(&def, WHITE));
 		}
 
 		TEST_METHOD(TestGoalTestTieFiftyMovesNothingHappen)
 		{
-			Checkers white(WHITE);
 			State def;
 			def.setMovesSinceLastCapture(50);
-			Assert::AreEqual((short)DRAW, white.goalTest(&def, BLACK));
-			Assert::AreEqual((short)DRAW, white.goalTest(&def, WHITE));
+			Assert::AreEqual((short)DRAW, Checkers::goalTest(&def, BLACK));
+			Assert::AreEqual((short)DRAW, Checkers::goalTest(&def, WHITE));
 		}
 
 		TEST_METHOD(TestGetCapturesDefaultBoard)
@@ -148,9 +144,8 @@ namespace CarlosCheckersTests
 
 		TEST_METHOD(TestCheckIfAnyLegalMovesDefaultBoard)
 		{
-			Checkers white(WHITE);
 			State state;
-			Assert::AreEqual((size_t)7, white.getLegalMoves(&state, BLACK).size());
+			Assert::AreEqual((size_t)7, Checkers::getLegalMoves(&state, BLACK).size());
 		}
 
 
