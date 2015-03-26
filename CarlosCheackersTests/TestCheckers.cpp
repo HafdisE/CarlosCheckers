@@ -189,6 +189,9 @@ namespace CarlosCheckersTests
 		{
 			Board b(20478, 4290908160, 0);
 			State state(b);
+			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
+			Assert::AreEqual((size_t)4290908160, BoardTester::getWhitebit(b));
+			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
 			Assert::AreEqual((size_t)1, Checkers::getLegalMoves(&state, BLACK).size());
 		}
 
