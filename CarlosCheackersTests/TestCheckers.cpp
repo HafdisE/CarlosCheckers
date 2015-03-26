@@ -49,8 +49,8 @@ namespace CarlosCheckersTests
 			
 			short cell = 10;
 			coord res = CheckersTester::toCoord(white, cell);
-			Assert::AreEqual(4, res.x);
-			Assert::AreEqual(5, res.y);
+			Assert::AreEqual(3, res.x);
+			Assert::AreEqual(2, res.y);
 		}
 
 		TEST_METHOD(TestToCellid)
@@ -185,7 +185,7 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)3, Checkers::getLegalMoves(&state, WHITE).size());
 		}
 		
-		TEST_METHOD(TestWhenWhiteHasToKillBlackFullBoard)
+		TEST_METHOD(TestWhenBlackHasToKillWhiteFullBoard)
 		{
 			Board b(20478, 4290908160, 0);
 			State state(b);
@@ -193,6 +193,53 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)4290908160, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
 			Assert::AreEqual((size_t)1, Checkers::getLegalMoves(&state, BLACK).size());
+		}
+
+		TEST_METHOD(TestWhenBlackHasToKillTwoWhiteInARowFullBoard)
+		{
+			Board b(20478, 4023521280, 0);
+			State state(b);
+			vector<CBmove2> moves = Checkers::getLegalMoves(&state, BLACK);
+			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
+			Assert::AreEqual((size_t)4023521280, BoardTester::getWhitebit(b));
+			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
+			Assert::IsTrue ((coord(0, 7) == moves[0].to));
+			Assert::IsTrue((coord(4, 3) == moves[0].from));
+			Assert::IsTrue((coord(3, 4) == moves[0].del[0]));
+			Assert::IsTrue((coord(1, 6) == moves[0].del[1]));
+			Assert::AreEqual((size_t)1, Checkers::getLegalMoves(&state, BLACK).size());
+		}
+		TEST_METHOD(TestWhenBlackHasToKillOneOfTwoPossibleWhite)
+		{
+			Board b(20478, 4282781696, 0);
+			State state(b);
+			vector<CBmove2> moves = Checkers::getLegalMoves(&state, BLACK);
+			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
+			Assert::AreEqual((size_t)4282781696, BoardTester::getWhitebit(b));
+			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
+			Assert::IsTrue((coord(6, 5) == moves[0].to));
+			Assert::IsTrue((coord(2, 5) == moves[1].to));
+			Assert::IsTrue((coord(4, 3) == moves[0].from));
+			Assert::IsTrue((coord(5, 4) == moves[0].del[0]));
+			Assert::IsTrue((coord(3, 4) == moves[1].del[0]));
+			Assert::AreEqual((size_t)2, Checkers::getLegalMoves(&state, BLACK).size());
+		}
+
+		TEST_METHOD(TestWhenBlackHasToKillOneOfTwoPossibleWhiteAfterAlreadyKilling)
+		{
+			Board b(20478, 2948730880, 0);
+			State state(b);
+			vector<CBmove2> moves = Checkers::getLegalMoves(&state, BLACK);
+			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
+			Assert::AreEqual((size_t)2948730880, BoardTester::getWhitebit(b));
+			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
+			Assert::IsTrue((coord(4, 7) == moves[0].to));
+			Assert::IsTrue((coord(0, 7) == moves[1].to));
+			Assert::IsTrue((coord(4, 3) == moves[0].from));
+			Assert::IsTrue((coord(3, 4) == moves[0].del[0]));
+			Assert::IsTrue((coord(3, 6) == moves[0].del[1]));
+			Assert::IsTrue((coord(1, 6) == moves[1].del[1]));
+			Assert::AreEqual((size_t)2, Checkers::getLegalMoves(&state, BLACK).size());
 		}
 
 
