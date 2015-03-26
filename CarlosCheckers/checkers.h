@@ -6,10 +6,10 @@
 #include "state.h"
 #include <utility>
 
-#define NW(x) (!(((x-1)/2)%2) ? x + 5 : x + 4)
-#define NE(x) (!(((x-1)/2)%2) ? x + 4 : x + 3)
-#define SW(x) (!(((x-1)/2)%2) ? x - 3 : x - 4)
-#define SE(x) (!(((x-1)/2)%2) ? x - 4 : x - 5)
+#define NW(x) (!(((x-1)/4)%2) ? x + 5 : x + 4)
+#define NE(x) (!(((x-1)/4)%2) ? x + 4 : x + 3)
+#define SW(x) (!(((x-1)/4)%2) ? x - 3 : x - 4)
+#define SE(x) (!(((x-1)/4)%2) ? x - 4 : x - 5)
 
 #define NORTHWEST 0
 #define NORTHEAST 1

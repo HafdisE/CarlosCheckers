@@ -72,7 +72,6 @@ counter Checkers::countPieces(Board* board) {
 
 short Checkers::toCellID(coord co) {
 	if (co.x == -1) return 0;
-	//TODO: implement
 	return 0;
 }
 
