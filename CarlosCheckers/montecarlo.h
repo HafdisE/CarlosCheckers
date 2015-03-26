@@ -13,8 +13,10 @@ public:
 private:
 	NodePtr root;
 	double evaluationUCB1(NodePtr node);
-	void expand(NodePtr node);
+	void search(NodePtr node);
+	NodePtr expand(NodePtr node);
 	void simulation(NodePtr node);
+	void selectNode(int node);
 	void clearTree(NodePtr node);
 	
 	int tsim_count;
