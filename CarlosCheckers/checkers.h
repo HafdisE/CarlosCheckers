@@ -34,6 +34,12 @@ struct movp {
 	short to; //move to cell_id
 	short from; //move from cell_id
 	short capture = 0; //cell_id of captured piece if any (0 if not)
+
+	/* equals operator overload */
+	bool operator==(const movp &other) const
+	{
+		return (to == other.to && from == other.from && capture == other.capture);
+	}
 };
 
 /* this was bitching like CBmove so here it is...*/
@@ -42,13 +48,19 @@ struct coord {
 	coord(int x, int y) : x(x), y(y) {}
 	int x;
 	int y;
+
+	/* equals operator overload */
+	bool operator==(const coord &other) const
+	{
+		return (x == other.x && y == other.y);
+	}
+
 };
 
 //the proper variety has no constructor and we shouldn't modify it so here this is
 struct CBmove2            	/* all the information you need about a move */
 {
 	CBmove2();
-	int ismove;          /* kind of superfluous: is 0 if the move is not a valid move */
 	int newpiece;        /* what type of piece appears on to */
 	int oldpiece;        /* what disappears on from */
 	struct coord from, to; /* coordinates of the piece - in 8x8 notation!*/

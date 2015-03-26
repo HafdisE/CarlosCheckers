@@ -331,7 +331,6 @@ bool Checkers::promotionCheck(short cell_id, short piece) {
 }
 
 CBmove2::CBmove2() {
-	ismove = 1;
 	newpiece = oldpiece = FREE;
 	from = coord(-1,-1);
 	to = coord(-1,-1);
