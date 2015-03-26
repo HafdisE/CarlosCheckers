@@ -314,6 +314,8 @@ vector<movp> Checkers::getMoves(short cell_id, Board* board) {
 coord Checkers::toCoord(short cell_id) {
 	if (cell_id < 1 || cell_id > 32) return coord(-1, -1);
 
+	cell_id = cell_id - 32;
+	if (cell_id < 0) cell_id = -cell_id;
 	static coord vals[] = { coord(6, 7), coord(4, 7), coord(2, 7), coord(0, 7),
 		             coord(7, 6), coord(5, 6), coord(3, 6), coord(1, 6),
 					 coord(6, 5), coord(4, 5), coord(2, 5), coord(0, 5),
@@ -322,7 +324,7 @@ coord Checkers::toCoord(short cell_id) {
 					 coord(7, 2), coord(5, 2), coord(3, 2), coord(1, 2),
 					 coord(6, 1), coord(4, 1), coord(2, 1), coord(0, 1),
 					 coord(7, 0), coord(5, 0), coord(3, 0), coord(1, 0) };
-	return vals[cell_id-1];
+	return vals[cell_id];
 }
 
 
