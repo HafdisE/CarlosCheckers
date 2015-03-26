@@ -14,6 +14,10 @@ namespace CarlosCheckersTests
 			return checkers.toCoord(cell_id);
 		}
 
+		static short toCellID(Checkers& checkers, coord coord) {
+			return checkers.toCellID(coord);
+		}
+
 		static counter countPieces(Checkers& checkers, Board *board) {
 			return checkers.countPieces(board);
 		}
@@ -47,6 +51,18 @@ namespace CarlosCheckersTests
 			coord res = CheckersTester::toCoord(white, cell);
 			Assert::AreEqual(4, res.x);
 			Assert::AreEqual(5, res.y);
+		}
+
+		TEST_METHOD(TestToCellid)
+		{
+			Checkers white(WHITE);
+
+			coord cell(4,1);
+			short res = CheckersTester::toCellID(white, cell);
+			Assert::AreEqual((short)7, res);
+			coord cell2(2, 5);
+			res = CheckersTester::toCellID(white, cell2);
+			Assert::AreEqual((short)22, res);
 		}
 
 		TEST_METHOD(TestCountPiecesDefaultBoard)
