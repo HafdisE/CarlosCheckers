@@ -193,7 +193,7 @@ vector<short> Checkers::getDirectionsWhereType(short cell_id, Board *board, shor
 			directions.push_back(SOUTHWEST);
 		}
 		if (!isRightPiece(cell_id) && (board->getPiece(SE(cell_id)) & type) == type) {
-			directions.push_back(SOUTHWEST);
+			directions.push_back(SOUTHEAST);
 		}
 	}
 	return directions;
