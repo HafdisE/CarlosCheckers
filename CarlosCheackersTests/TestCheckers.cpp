@@ -187,13 +187,12 @@ namespace CarlosCheckersTests
 		
 		TEST_METHOD(TestWhenWhiteHasToKillBlackFullBoard)
 		{
+			Checkers c(WHITE);
 			Board b(20478, 4290908160, 0);
 			State state(b);
+			Assert::AreEqual((size_t)1, CheckersTester::getCaptures(c, 15, &b).size());
 			Assert::AreEqual((size_t)1, Checkers::getLegalMoves(&state, BLACK).size());
 		}
-
-
-
 		
 	};
 	

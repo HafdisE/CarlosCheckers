@@ -146,7 +146,7 @@ void Checkers::generateMoves(Board* original, Board board, short cell, short pla
 			//log intermediate moves
 			if (i < path->size() - 1) new_move.path[i] = toCoord((*path)[i].to);
 			//if there was a capture (if there's more than one move, there should always be one, otherwise this is wrong)
-			if ((*path)[i].capture) {
+			if ((*path)[i].capture > 0) {
 				caused_a_death = true;
 				new_move.delpiece[i] = play.getPiece((*path)[i].capture);
 				new_move.del[i] = toCoord((*path)[i].capture);
@@ -225,7 +225,8 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 		north = true;
 		south = true;
 	}
-	else if (piece & WHITE) {
+	
+	if (piece & WHITE) {
 		south = true;
 		type = BLACK;
 	}
@@ -244,17 +245,17 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 			}
 			break;
 		case NORTHEAST:
-			if (!isRightPiece(NW(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
-				moves.push_back(movp(NE(NE(cell_id)), NE(cell_id)));
+			if (!isRightPiece(NE(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
+				moves.push_back(movp(cell_id, NE(NE(cell_id)), NE(cell_id)));
 			}
 			break;
 		case SOUTHWEST:
-			if (!isLeftPiece(NW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
+			if (!isLeftPiece(SW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
 			}
 			break;
 		case SOUTHEAST:
-			if (!isRightPiece(NW(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
+			if (!isRightPiece(SE(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
 			}
 			break;
