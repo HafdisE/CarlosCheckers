@@ -1,3 +1,6 @@
+#ifndef LOGGER_H
+#define LOGGER_H
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -16,3 +19,5 @@ private:
 	ofstream file;
 	char buf[255];
 };
+
+#endif

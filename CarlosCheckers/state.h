@@ -1,3 +1,6 @@
+#ifndef STATE_H
+#define STATE_H
+
 #include "board.h"
 #include <string>
 
@@ -10,6 +13,7 @@ public:
 	Board getBoard() const;
 	/* Get moves since last capture. Is changed via states generated from move applications. */
 	short getMovesSinceLastCapture() const;
+	void setMovesSinceLastCapture(int moves);
 
 	/* will be removed soon */
 	void setTie();
@@ -40,3 +44,5 @@ namespace std {
 	};
 
 }
+
+#endif
