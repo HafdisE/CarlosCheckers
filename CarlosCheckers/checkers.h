@@ -68,6 +68,10 @@ struct CBmove2            	/* all the information you need about a move */
 	struct coord path[12]; /* intermediate path coordinates of the moving piece */
 	struct coord del[12]; /* squares whose pieces are deleted after the move */
 	int delpiece[12];    /* what is on these squares */
+
+	/* equals operator overload */
+	bool operator==(const CBmove2 &other) const;
+
 };
 
 /* A pair of sorts to return the count results */

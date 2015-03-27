@@ -1,4 +1,14 @@
 #include "checkers.h"
+
+bool CBmove2::operator==(const CBmove2 &other) const {
+	bool res = (from == other.from) && (to == other.to) && (newpiece == other.newpiece) && (oldpiece == other.oldpiece);
+	for (int i = 0; i < 12; i++) {
+		if (!res) break;
+		res &= (path[i] == other.path[i]) && (del[i] == other.del[i]) && (delpiece[i] == other.delpiece[i]);
+	}
+	return res;
+}
+
 short Checkers::player = WHITE;
 Board Checkers::current_board = Board();
 

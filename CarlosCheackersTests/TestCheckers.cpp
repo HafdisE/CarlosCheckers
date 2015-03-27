@@ -140,6 +140,52 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)0, CheckersTester::getMoves(5, &def).size());
 		}
 
+		TEST_METHOD(TestApplyCBMoveBlackKillTwoWhite)
+		{
+			Board start(0, 0, 0);
+			start.setPiece(11, BLACK | MAN);
+			start.setPiece(15, WHITE | MAN);
+			start.setPiece(23, WHITE | MAN);
+			Board result(0, 0, 0);
+			result.setPiece(27, BLACK | MAN);
+			CBmove2 move;
+			move.from = coord(5, 2);
+			move.to = coord(5, 6);
+			move.path[0] = coord(3, 4);
+			move.oldpiece = BLACK | MAN;
+			move.newpiece = BLACK | MAN;
+			move.del[0] = coord(4, 3);
+			move.del[1] = coord(4, 5);
+			move.delpiece[0] = WHITE | MAN;
+			move.delpiece[1] = WHITE | MAN;
+			Checkers::setBoard(start);
+			Checkers::applyMove(move);
+			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(Checkers::getBoard()));
+			Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(Checkers::getBoard()));
+			Checkers::undoMove(move);
+			Assert::AreEqual(BoardTester::getBlackbit(start), BoardTester::getBlackbit(Checkers::getBoard()));
+			Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
+		}
+
+		TEST_METHOD(TestApplyCBMoveUndoCBmoveGetLegalBlackKillTwoWhite)
+		{
+			Board start(0, 0, 0);
+			start.setPiece(11, BLACK | MAN);
+			start.setPiece(15, WHITE | MAN);
+			start.setPiece(23, WHITE | MAN);
+			Board result(0, 0, 0);
+			result.setPiece(27, BLACK | MAN);
+			Checkers::setBoard(start);
+			vector<CBmove2> moves = Checkers::getLegalMoves(BLACK);
+			Assert::AreEqual((size_t) 1, moves.size());
+			Checkers::applyMove(moves[0]);
+			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(Checkers::getBoard()));
+			Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(Checkers::getBoard()));
+			Checkers::undoMove(moves[0]);
+			Assert::AreEqual(BoardTester::getBlackbit(start), BoardTester::getBlackbit(Checkers::getBoard()));
+			Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
+		}
+
 		TEST_METHOD(TestApplySingleMoveDefaultBoard)
 		{
 			Board start(1024, 0, 0);
