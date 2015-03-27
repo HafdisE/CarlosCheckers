@@ -69,6 +69,8 @@ struct counter {
 //it should be updated based on messages from the engine
 class Checkers {
 public:
+	/* Default constructor */
+	Checkers() : player(1) {}
 	/*Constructor. Initialise game state tracker for player player.*/
 	Checkers(short player) : player(player) {}
 	/* Update the current state using a move */

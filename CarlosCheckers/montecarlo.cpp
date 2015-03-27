@@ -1,5 +1,7 @@
 #include "montecarlo.h"
-
+MonteCarlo::MonteCarlo(){
+	root = new Node(0, 0, NULL);
+}
 MonteCarlo::~MonteCarlo(){
 	clearTree();
 }
@@ -30,4 +32,12 @@ double MonteCarlo::evaluationUCB1(NodePtr node){
 
 NodePtr MonteCarlo::expand(NodePtr node){
 	return NULL;
+}
+
+NodePtr MonteCarlo::search(){
+	return search(root, );
+}
+
+NodePtr MonteCarlo::search(NodePtr node, short player){
+	vector<CBmove2> moves = Checkers::getLegalMoves(checkers.getState, )
 }

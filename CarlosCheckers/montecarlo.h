@@ -8,15 +8,20 @@ static double C  = sqrt(2);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo{
 public:
-	MonteCarlo(){ tsim_count = 0; root = NULL; }
+	/* Default constructor */
+	MonteCarlo() : tsim_count(0),  checkers(Checkers(1)){};
+	/* Destructor */
 	~MonteCarlo();
-	void search();
+	/* Start search */
+	NodePtr search();
+	/* Clear the entire tree */
 	void clearTree();
 	
 private:
 	NodePtr root;
+	Checkers checkers;
 	double evaluationUCB1(NodePtr node);
-	void search(NodePtr node);
+	NodePtr search(NodePtr node, short player);
 	NodePtr expand(NodePtr node);
 	void simulation(NodePtr node);
 	void selectNode(int node);
