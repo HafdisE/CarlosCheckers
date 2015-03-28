@@ -30,9 +30,12 @@ double MonteCarlo::evaluationUCB1(NodePtr node){
 }
 
 
-CBmove2 MonteCarlo::search(){
+void MonteCarlo::search(){
 	/* do something */
-	return CBmove2();
+	while (true){
+
+
+	}
 }
 
 int MonteCarlo::search(NodePtr node, short player){
@@ -73,7 +76,7 @@ int MonteCarlo::simulation(short player){
 	srand((unsigned)time(0));
 	CBmove2 currMove;
 	stack<CBmove2> pastMoves;
-	int isGoal;
+	int isGoal = 0;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		isGoal = Checkers::goalTest(Checkers::getBoard(), player);
 		if (isGoal == WIN || isGoal == DRAW) break;

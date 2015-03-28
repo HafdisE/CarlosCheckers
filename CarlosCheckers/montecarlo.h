@@ -15,7 +15,7 @@ class MonteCarlo{
 public:
 	MonteCarlo() : tsim_count(0) { root = new Node(0, 0, CBmove2());};
 	~MonteCarlo();
-	CBmove2 search();
+	void search();
 	void clearTree();
 private:
 	NodePtr root;
