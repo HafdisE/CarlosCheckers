@@ -1,5 +1,5 @@
 #include "checkers.h"
-
+/*
 bool CBmove2::operator==(const CBmove2 &other) const {
 	bool res = (from == other.from) && (to == other.to) && (newpiece == other.newpiece) && (oldpiece == other.oldpiece);
 	for (int i = 0; i < 12; i++) {
@@ -8,7 +8,7 @@ bool CBmove2::operator==(const CBmove2 &other) const {
 	}
 	return res;
 }
-
+*/
 short Checkers::player = WHITE;
 Board Checkers::current_board = Board();
 
@@ -37,21 +37,9 @@ int Checkers::getPlayer() {
 void Checkers::setPlayer(short newplayer) {
 	player = newplayer;
 }
-/*
-void Checkers::tieCheck(short count, short new_count) {
-if (count != new_count) {
-repeat_check.clear();
-}
-else {
-repeat_check[current_state]++;
-if (repeat_check[current_state] == 3) {
-current_state.setTie();
-}
-}
-}*/
 
 short Checkers::goalTest(Board &board, short player) {
-	counter c = countPieces(&board);
+	counter c = countPieces(board);
 	if ((c.black == 0 && player == BLACK) || (c.white == 0 && player == WHITE)) {
 		return LOSS;
 	}
@@ -65,11 +53,11 @@ short Checkers::goalTest(Board &board, short player) {
 	return UNKNOWN;
 }
 
-counter Checkers::countPieces(Board* board) {
+counter Checkers::countPieces(Board &board) {
 	counter count;
 	short piece;
 	for (int i = 1; i <= 32; i++) {
-		piece = board->getPiece(i);
+		piece = board.getPiece(i);
 		if (piece & WHITE) count.white++;
 		if (piece & BLACK) count.black++;
 	}
@@ -82,7 +70,7 @@ short Checkers::toCellID(coord co) {
 	return (3 - co.x / 2) + (co.y * 4) + 1;
 }
 
-void Checkers::applyMove(CBmove2 move) {
+/*void Checkers::applyMove(CBmove2 move) {
 	if (move.delpiece[0] != FREE) {
 		for (int i = 0; i < 12; i++) {
 			if (move.del[i].x == -1) break;
@@ -103,72 +91,43 @@ void Checkers::undoMove(CBmove2 move) {
 	current_board.setPiece(toCellID(move.to), FREE);
 	current_board.setPiece(toCellID(move.from), move.newpiece);
 }
+*/
 
 
-
-vector<CBmove2> Checkers::getLegalMoves(short player) {
-	vector<CBmove2> normal, captures;
+vector<Board> Checkers::getLegalBoards(Board &board, short player) {
+	vector<Board> normal, captures;
 	vector<movp> path;
 	bool captured = false;
 	for (int i = 1; i <= 32; i++) {
 		if (!(current_board.getPiece(i) & player)) continue;
-		generateMoves(current_board, i, player, &normal, &captures, &path, &captured);
+		generateMoves(board, i, player, normal, captures, path, captured);
 	}
 	return (captured ? captures : normal);
 }
 
-void Checkers::generateMoves(Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured, int depth) {
+void Checkers::generateMoves(Board board, short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, int depth) {
 	vector<movp> moves;
-	if (depth == 0 || *(captured))  {
-		moves = getCaptures(cell, &board);
-		if (moves.size() > 0) *captured = true;
+	if (depth == 0 || captured)  {
+		moves = getCaptures(cell, board);
+		if (moves.size() > 0) captured = true;
 	}
-	if (depth == 0 && !(*captured)) {
-		moves = getMoves(cell, &board);
+	if (depth == 0 && !captured) {
+		moves = getMoves(cell, board);
 	}
 
 	for (size_t i = 0; i < moves.size(); i++) {
-		path->push_back(moves[i]);
+		path.push_back(moves[i]);
 		generateMoves(applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, depth + 1);
-		path->pop_back();
+		path.pop_back();
 	}
 
 	//we can move no more
-	if (moves.size() == 0) {
-		//return if we didn't move at all
-		if (path->size() == 0) return;
-		//otherwise we make a move thingamadoodad
-		struct CBmove2 new_move;
-		//and copy the board's original state
-		Board play = current_board;
-		new_move.oldpiece = play.getPiece((*path)[0].from);
-		new_move.from = toCoord((*path)[0].from);
-		bool caused_a_death = false;
-		//path size shouldn't ever exceed 12
-		size_t i;
-		for (i = 0; i < path->size(); i++) {
-			//now we play and write down all the deaths we caused
-
-			//log intermediate moves
-			if (i < path->size() - 1) new_move.path[i] = toCoord((*path)[i].to);
-			//if there was a capture (if there's more than one move, there should always be one, otherwise this is wrong)
-			if ((*path)[i].capture > 0) {
-				caused_a_death = true;
-				new_move.delpiece[i] = play.getPiece((*path)[i].capture);
-				new_move.del[i] = toCoord((*path)[i].capture);
-			}
-			//update the board
-			play = applySingleMove(play, (*path)[i]);
-			if (promotionCheck((*path)[i].to, new_move.oldpiece)) break;
-		}
-		if (i == path->size()) i--;
-		new_move.to = toCoord((*path)[i].to);
-		new_move.newpiece = play.getPiece((*path)[i].to);
-		if (caused_a_death) {
-			capture->push_back(new_move);
+	if (moves.size() == 0 && path.size() > 0) {
+		if (path[0].capture) {
+			capture.push_back(board);
 		}
 		else {
-			normal->push_back(new_move);
+			normal.push_back(board);
 		}
 	}
 }
@@ -189,21 +148,21 @@ Board Checkers::applySingleMove(Board board, movp move) {
 	return board;
 }
 
-vector<short> Checkers::getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south) {
+vector<short> Checkers::getDirectionsWhereType(short cell_id, Board &board, short type, bool north, bool south) {
 	vector<short> directions;
 	if (north) {
-		if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (board->getPiece(NW(cell_id)) & type) == type) {
+		if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (board.getPiece(NW(cell_id)) & type) == type) {
 			directions.push_back(NORTHWEST);
 		}
-		if (boundaryCheck(NE(cell_id)) && !isRightPiece(cell_id) && (board->getPiece(NE(cell_id)) & type) == type) {
+		if (boundaryCheck(NE(cell_id)) && !isRightPiece(cell_id) && (board.getPiece(NE(cell_id)) & type) == type) {
 			directions.push_back(NORTHEAST);
 		}
 	}
 	if (south) {
-		if (boundaryCheck(SW(cell_id)) && !isLeftPiece(cell_id) && (board->getPiece(SW(cell_id)) & type) == type) {
+		if (boundaryCheck(SW(cell_id)) && !isLeftPiece(cell_id) && (board.getPiece(SW(cell_id)) & type) == type) {
 			directions.push_back(SOUTHWEST);
 		}
-		if (boundaryCheck(SE(cell_id)) && !isRightPiece(cell_id) && (board->getPiece(SE(cell_id)) & type) == type) {
+		if (boundaryCheck(SE(cell_id)) && !isRightPiece(cell_id) && (board.getPiece(SE(cell_id)) & type) == type) {
 			directions.push_back(SOUTHEAST);
 		}
 	}
@@ -223,7 +182,7 @@ bool Checkers::isRightPiece(short cell_id) {
 	return 	cell_id == 5 || cell_id == 13 ||
 		cell_id == 21 || cell_id == 29;
 }
-vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
+vector<movp> Checkers::getCaptures(short cell_id, Board& board) {
 	short piece;
 	vector<short> directions;
 	vector<movp> moves;
@@ -231,7 +190,7 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	bool south;
 	short type;
 
-	piece = board->getPiece(cell_id);
+	piece = board.getPiece(cell_id);
 	north = south = false;
 
 	if (piece == FREE) return moves; //what are you doin mate
@@ -255,22 +214,22 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	for (size_t i = 0; i < directions.size(); i++) {
 		switch (directions[i]) {
 		case NORTHWEST:
-			if (boundaryCheck(NW(NW(cell_id))) && !isLeftPiece(NW(cell_id)) && board->getPiece(NW(NW(cell_id))) == FREE) {
+			if (boundaryCheck(NW(NW(cell_id))) && !isLeftPiece(NW(cell_id)) && board.getPiece(NW(NW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id)));
 			}
 			break;
 		case NORTHEAST:
-			if (boundaryCheck(NE(NE(cell_id))) && !isRightPiece(NE(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
+			if (boundaryCheck(NE(NE(cell_id))) && !isRightPiece(NE(cell_id)) && board.getPiece(NE(NE(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, NE(NE(cell_id)), NE(cell_id)));
 			}
 			break;
 		case SOUTHWEST:
-			if (boundaryCheck(SW(SW(cell_id))) && !isLeftPiece(SW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
+			if (boundaryCheck(SW(SW(cell_id))) && !isLeftPiece(SW(cell_id)) && board.getPiece(SW(SW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
 			}
 			break;
 		case SOUTHEAST:
-			if (boundaryCheck(SE(SE(cell_id))) && !isRightPiece(SE(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
+			if (boundaryCheck(SE(SE(cell_id))) && !isRightPiece(SE(cell_id)) && board.getPiece(SE(SE(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
 			}
 			break;
@@ -280,14 +239,14 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	return moves;
 }
 
-vector<movp> Checkers::getMoves(short cell_id, Board* board) {
+vector<movp> Checkers::getMoves(short cell_id, Board &board) {
 	short piece;
 	vector<short> directions;
 	vector<movp> moves;
 	bool north;
 	bool south;
 
-	piece = board->getPiece(cell_id);
+	piece = board.getPiece(cell_id);
 	north = south = false;
 
 	if (piece == FREE) return moves; //what are you doin mate
@@ -344,6 +303,7 @@ bool Checkers::promotionCheck(short cell_id, short piece) {
 	return ((piece & MAN) && (((piece & WHITE) && (cell_id < 5)) || ((piece & BLACK) && (cell_id > 28))));
 }
 
+/*
 CBmove2::CBmove2() {
 	newpiece = oldpiece = FREE;
 	from = coord(-1, -1);
@@ -353,4 +313,4 @@ CBmove2::CBmove2() {
 		del[i] = coord(-1, -1);
 		delpiece[i] = FREE;
 	}
-}
+}*/

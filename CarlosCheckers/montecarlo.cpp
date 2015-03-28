@@ -31,20 +31,20 @@ double MonteCarlo::evaluationUCB1(NodePtr node){
 	return (node->win_count / (double)node->sim_count) + C * (sqrt(log(tsim_count) / (double)node->sim_count));
 }
 
-
+/*
 CBmove2 MonteCarlo::search(){
 	/* do something */
-	return CBmove2();
-}
+	/*return CBmove2();
+}*/
 
 int MonteCarlo::search(NodePtr node, short player){
-	vector<CBmove2> moves = Checkers::getLegalMoves(player);
+	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
 	int result;
 	if (node->children.empty()){
-		Checkers::applyMove(moves.front());
+		//Checkers::applyMove(moves.front());
 		result = simulation();
 		node->children.push_back(new Node(1, result, moves.front()));
-		Checkers::undoMove(moves.front());
+		//Checkers::undoMove(moves.front());
 	} else {
 		double maxValue = INFMIN;
 		int maxNode = 0;
@@ -57,16 +57,16 @@ int MonteCarlo::search(NodePtr node, short player){
 		}
 		if ((moves.size() > node->children.size()) && (evaluationUCB1(NULL) > maxValue)){
 			maxNode++;
-			Checkers::applyMove(node->children[maxNode]->move);
+			//Checkers::applyMove(node->children[maxNode]->move);
 			result = simulation();
 			node->children.push_back(new Node(1, result, moves[maxNode]));
 		} else {
-			Checkers::applyMove((node->children[maxNode]->move));
+			//Checkers::applyMove((node->children[maxNode]->move));
 			result = search(node->children[maxNode], (player == 1) ? 2 : 1);
 			node->sim_count++;
 			node->win_count =+ result;
 		}
-		Checkers::undoMove(node->children[maxNode]->move);
+		//Checkers::undoMove(node->children[maxNode]->move);
 	}
 		return result;
 }
