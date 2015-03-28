@@ -4,8 +4,6 @@ MonteCarlo::~MonteCarlo(){
 	clearTree();
 }
 
-
-
 void MonteCarlo::clearTree(){
 	clearTree(root);
 }
@@ -42,7 +40,7 @@ int MonteCarlo::search(NodePtr node, short player){
 	int result;
 	if (node->children.empty()){
 		//Checkers::applyMove(moves.front());
-		result = simulation();
+		result = simulation((player == 1) ? 2 : 1);
 		node->children.push_back(new Node(1, result, moves.front()));
 		//Checkers::undoMove(moves.front());
 	} else {
@@ -58,7 +56,7 @@ int MonteCarlo::search(NodePtr node, short player){
 		if ((moves.size() > node->children.size()) && (evaluationUCB1(NULL) > maxValue)){
 			maxNode++;
 			//Checkers::applyMove(node->children[maxNode]->move);
-			result = simulation();
+			result = simulation((player == 1) ? 2 : 1);
 			node->children.push_back(new Node(1, result, moves[maxNode]));
 		} else {
 			//Checkers::applyMove((node->children[maxNode]->move));
@@ -71,6 +69,23 @@ int MonteCarlo::search(NodePtr node, short player){
 		return result;
 }
 
-int MonteCarlo::simulation(){
-	return 0;
+int MonteCarlo::simulation(short player){
+	srand((unsigned)time(0));
+	Board currMove;
+	stack<Board> pastMoves;
+	int isGoal;
+	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
+		isGoal = Checkers::goalTest(Checkers::getBoard(), player);
+		if (isGoal == WIN || isGoal == DRAW) break;
+		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
+		currMove = moves[rand() % moves.size()];
+		pastMoves.push(currMove);
+		//Checkers::applyMove(currMove);
+	}
+	while (!pastMoves.empty()){
+		//Checkers::undoMove(pastMoves.top());
+		pastMoves.pop();
+	}
+
+	return isGoal;
 }
