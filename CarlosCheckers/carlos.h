@@ -42,6 +42,8 @@ struct CBmove            	/* all the information you need about a move */
 } GCBmove;
 
 
+MonteCarlo mc;
+
 BOOL WINAPI DllEntryPoint(HANDLE hDLL, DWORD dwReason, LPVOID lpReserved);
 
 /* required functions */

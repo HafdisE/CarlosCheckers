@@ -105,20 +105,22 @@ vector<Board> Checkers::getLegalBoards(Board &board, short player) {
 	return (captured ? captures : normal);
 }
 
-void Checkers::generateMoves(Board board, short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, int depth) {
+void Checkers::generateMoves(Board board, short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, bool promoted, int depth) {
 	vector<movp> moves;
-	if (depth == 0 || captured)  {
-		moves = getCaptures(cell, board);
-		if (moves.size() > 0) captured = true;
-	}
-	if (depth == 0 && !captured) {
-		moves = getMoves(cell, board);
-	}
+	if (!promoted) {
+		if (depth == 0 || captured)  {
+			moves = getCaptures(cell, board);
+			if (moves.size() > 0) captured = true;
+		}
+		if (depth == 0 && !captured) {
+			moves = getMoves(cell, board);
+		}
 
-	for (size_t i = 0; i < moves.size(); i++) {
-		path.push_back(moves[i]);
-		generateMoves(applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, depth + 1);
-		path.pop_back();
+		for (size_t i = 0; i < moves.size(); i++) {
+			path.push_back(moves[i]);
+			generateMoves(applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, moves[i].promotion, depth + 1);
+			path.pop_back();
+		}
 	}
 
 	//we can move no more

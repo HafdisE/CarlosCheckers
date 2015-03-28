@@ -20,7 +20,7 @@
 /* return values */
 #define DRAW 0
 #define WIN 1
-#define LOSS 2
+#define LOSS 0
 #define UNKNOWN 3
 
 using namespace std;
@@ -104,7 +104,7 @@ private:
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
 	an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
 	in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
-	static void generateMoves(Board board, short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captures, int depth = 0);
+	static void generateMoves(Board board, short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captures, bool promoted = false, int depth = 0);
 	/* applies a 'single move', of the simplified move notation to the board and returns a new board */
 	static Board applySingleMove(Board board, movp move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass

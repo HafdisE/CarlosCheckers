@@ -15,7 +15,7 @@ class MonteCarlo{
 public:
 	MonteCarlo() : tsim_count(0) { root = new Node(0, 0, Board());};
 	~MonteCarlo();
-	Board search();
+	Board search(double maxtime, int* playnow, char str[255]);
 	void clearTree();
 private:
 	NodePtr root;

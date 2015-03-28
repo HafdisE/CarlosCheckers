@@ -1,3 +1,7 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include "montecarlo.h"
 
 MonteCarlo::~MonteCarlo(){
@@ -25,18 +29,39 @@ void MonteCarlo::selectNode(int node){
 }
 
 double MonteCarlo::evaluationUCB1(NodePtr node){
-	if (!node)(C * (sqrt(log(tsim_count))));
+	if (!node) return (C * (sqrt(log(tsim_count))));
 	return (node->win_count / (double)node->sim_count) + C * (sqrt(log(tsim_count) / (double)node->sim_count));
 }
 
-/*
-CBmove2 MonteCarlo::search(){
-	/* do something */
-	/*return CBmove2();
-}*/
+
+Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
+	double start = clock();
+	while (true) {
+		sprintf(str, "Searching. Time is: %lf", (clock() - start));
+		if (((clock() - start) >= maxtime)) break;
+		search(root, Checkers::getPlayer());
+	}
+
+	sprintf(str, "Search complete");
+	int index = 0;
+	double max = INFMIN;
+	double eval;
+	for (size_t i = 0; i < root->children.size(); i++) {
+		eval = evaluationUCB1(root->children[i]);
+		if (eval > max) {
+			max = eval;
+			index = i;
+		}
+	}
+
+	selectNode(index);
+
+	return root->board;
+}
 
 int MonteCarlo::search(NodePtr node, short player){
 	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
+	if (moves.size() == 0) return LOSS;
 	int result;
 	if (node->children.empty()){
 		result = simulation(moves.front(), (player == 1) ? 2 : 1);
@@ -65,17 +90,25 @@ int MonteCarlo::search(NodePtr node, short player){
 }
 
 int MonteCarlo::simulation(Board board, short player){
+	short me = player;
 	random_device  rand_dev;
 	mt19937 generator(rand_dev());
 	Board currMove = board;
 	int isGoal = 0;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
-		isGoal = Checkers::goalTest(Checkers::getBoard(), player);
-		if (isGoal == WIN || isGoal == DRAW) break;
+		isGoal = Checkers::goalTest(currMove, player);
+		if (isGoal == WIN || isGoal == LOSS) break;
 		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
+		if (moves.size() == 0) {
+			isGoal = LOSS;
+			break;
+		}
 		uniform_int_distribution<int> distr(0, moves.size() - 1);
 		currMove = moves[distr(generator)];
+		player = (player == 1) ? 2 : 1;
 	}
 
-	return isGoal;
+	//To be more sophisticated later.
+	if (me == player) return isGoal;
+	else return !isGoal;
 }

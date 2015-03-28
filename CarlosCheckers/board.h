@@ -35,10 +35,12 @@ public:
 		return (kingbit == other.kingbit && whitebit == other.whitebit && blackbit == other.blackbit);
 	}
 
-private:
 	unsigned int kingbit;
 	unsigned int whitebit;
 	unsigned int blackbit;
+
+private:
+	
 
 	friend struct ::CarlosCheckersTests::BoardTester;
 };
