@@ -66,8 +66,8 @@ int MonteCarlo::search(NodePtr node, short player){
 
 int MonteCarlo::simulation(short player){
 	srand((unsigned)time(0));
-	CBmove2 currMove;
-	stack<CBmove2> pastMoves;
+	Board currMove;
+	stack<Board> pastMoves;
 	int isGoal = 0;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		isGoal = Checkers::goalTest(Checkers::getBoard(), player);
