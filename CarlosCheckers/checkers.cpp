@@ -145,7 +145,8 @@ void Checkers::generateMoves(Board board, short cell, short player, vector<CBmov
 		new_move.from = toCoord((*path)[0].from);
 		bool caused_a_death = false;
 		//path size shouldn't ever exceed 12
-		for (size_t i = 0; i < path->size(); i++) {
+		size_t i;
+		for (i = 0; i < path->size(); i++) {
 			//now we play and write down all the deaths we caused
 
 			//log intermediate moves
@@ -158,9 +159,10 @@ void Checkers::generateMoves(Board board, short cell, short player, vector<CBmov
 			}
 			//update the board
 			play = applySingleMove(play, (*path)[i]);
+			if (promotionCheck((*path)[i].to, new_move.oldpiece)) break;
 		}
-		new_move.to = toCoord((*path)[path->size() - 1].to);
-		new_move.newpiece = play.getPiece((*path)[path->size() - 1].to);
+		new_move.to = toCoord((*path)[i].to);
+		new_move.newpiece = play.getPiece((*path)[i].to);
 		if (caused_a_death) {
 			capture->push_back(new_move);
 		}
@@ -338,7 +340,7 @@ coord Checkers::toCoord(short cell_id) {
 
 
 bool Checkers::promotionCheck(short cell_id, short piece) {
-	return (((piece & WHITE) && (cell_id < 5)) || ((piece & BLACK) && (cell_id > 28)));
+	return ((piece & MAN) && (((piece & WHITE) && (cell_id < 5)) || ((piece & BLACK) && (cell_id > 28))));
 }
 
 CBmove2::CBmove2() {
