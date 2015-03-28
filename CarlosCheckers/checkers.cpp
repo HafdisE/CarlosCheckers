@@ -1,328 +1,204 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+
+
+/*______________________________________________________________________________
+
+----------> name: simple checkers with enhancements
+----------> author: martin fierz
+----------> purpose: platform independent checkers engine
+----------> version: 1.15
+----------> date: 4th february 2011
+----------> description: simplech.c contains a simple but fast checkers engine
+and some routines to interface to checkerboard. simplech.c contains three
+main parts: interface, search and move generation. these parts are
+separated in the code.
+
+board representation: the standard checkers notation is
+
+(white)
+32  31  30  29
+28  27  26  25
+24  23  22  21
+20  19  18  17
+16  15  14  13
+12  11  10   9
+8   7   6   5
+4   3   2   1
+(black)
+
+the internal representation of the board is different, it is a
+array of int with length 46, the checkers board is numbered
+like this:
+
+(white)
+37  38  39  40
+32  33  34  35
+28  29  30  31
+23  24  25  26
+19  20  21  22
+14  15  16  17
+10  11  12  13
+5   6   7   8
+(black)
+
+let's say, you would like to teach the program that it is
+important to keep a back rank guard. you can for instance
+add the following (not very sophisticated) code for this:
+
+if(b[6] & (BLACK|MAN)) eval++;
+if(b[8] & (BLACK|MAN)) eval++;
+if(b[37] & (WHITE|MAN)) eval--;
+if(b[39] & (WHITE|MAN)) eval--;
+
+the evaluation function is seen from the point of view of the
+black player, so you increase the value v if you think the
+position is good for black.
+
+simple checkers is free for anyone to use, in any way, explicitly also
+in commercial products without the need for asking me. Naturally, I would
+appreciate if you tell me that you are using it, and if you acknowledge
+my contribution to your project.
+
+questions, comments, suggestions to:
+
+Martin Fierz
+checkers@fierz.ch
+
+
+/*----------> includes */
+#include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <windows.h>
+#include <random>     /* srand, rand */
+#include "carlos.h"
 #include "checkers.h"
 
-bool CBmove2::operator==(const CBmove2 &other) const {
-	bool res = (from == other.from) && (to == other.to) && (newpiece == other.newpiece) && (oldpiece == other.oldpiece);
-	for (int i = 0; i < 12; i++) {
-		if (!res) break;
-		res &= (path[i] == other.path[i]) && (del[i] == other.del[i]) && (delpiece[i] == other.delpiece[i]);
+
+
+
+/*-------------- PART 1: dll stuff -------------------------------------------*/
+
+BOOL WINAPI DllEntryPoint(HANDLE hDLL, DWORD dwReason, LPVOID lpReserved)
+{
+	/* in a dll you used to have LibMain instead of WinMain in windows programs, or main
+	in normal C programs
+	win32 replaces LibMain with DllEntryPoint.*/
+
+	switch (dwReason)
+	{
+	case DLL_PROCESS_ATTACH:
+		/* dll loaded. put initializations here! */
+		break;
+	case DLL_PROCESS_DETACH:
+		/* program is unloading dll. put clean up here! */
+		break;
+	case DLL_THREAD_ATTACH:
+		break;
+	case DLL_THREAD_DETACH:
+		break;
+	default:
+		break;
 	}
-	return res;
+	return TRUE;
 }
 
-short Checkers::player = WHITE;
-Board Checkers::current_board = Board();
+int  WINAPI enginecommand(char str[256], char reply[256])
+{
+	// answer to commands sent by CheckerBoard.
+	// Simple Checkers does not answer to some of the commands,
+	// eg it has no engine options.
 
-Board Checkers::getBoard() {
-	return current_board;
-}
+	char command[256], param1[256], param2[256];
 
-void Checkers::setBoard(Board board) {
-	current_board = board;
-}
+	sscanf(str, "%s %s %s", command, param1, param2);
 
-int Checkers::getPlayer() {
-	return player;
-}
+	// check for command keywords 
 
-void Checkers::setPlayer(short newplayer) {
-	player = newplayer;
-}
-/*
-void Checkers::tieCheck(short count, short new_count) {
-	if (count != new_count) {
-		repeat_check.clear();
+	if (strcmp(command, "name") == 0)
+	{
+		sprintf(reply, "Carlos Montorazzo");
+		return 1;
 	}
-	else {
-		repeat_check[current_state]++;
-		if (repeat_check[current_state] == 3) {
-			current_state.setTie();
+
+	if (strcmp(command, "about") == 0)
+	{
+		sprintf(reply, "Carlos Montorazzo 0.0.0");
+		return 1;
+	}
+
+	if (strcmp(command, "help") == 0)
+	{
+		sprintf(reply, "simplechhelp.htm");
+		return 1;
+	}
+
+	if (strcmp(command, "set") == 0)
+	{
+		if (strcmp(param1, "hashsize") == 0)
+		{
+			sprintf(reply, "?");
+			return 0;
+		}
+		if (strcmp(param1, "book") == 0)
+		{
+			sprintf(reply, "?");
+			return 0;
 		}
 	}
-}*/
 
-short Checkers::goalTest(Board &board, short player) {
-	counter c = countPieces(&board);
-	if ((c.black == 0 && player == BLACK) || (c.white == 0 && player == WHITE)) {
-		return LOSS;
+	if (strcmp(command, "get") == 0)
+	{
+		if (strcmp(param1, "hashsize") == 0)
+		{
+			sprintf(reply, "?");
+			return 0;
+		}
+		if (strcmp(param1, "book") == 0)
+		{
+			sprintf(reply, "?");
+			return 0;
+		}
+		if (strcmp(param1, "protocolversion") == 0)
+		{
+			sprintf(reply, "2");
+			return 1;
+		}
+		if (strcmp(param1, "gametype") == 0)
+		{
+			sprintf(reply, "21");
+			return 1;
+		}
 	}
-
-	if ((c.black == 0 && player == WHITE) || (c.white == 0 && player == BLACK)) {
-		return WIN;
-	}
-
-//MISSING DRAW THINGS
-
-	return UNKNOWN;
+	sprintf(reply, "?");
+	return 0;
 }
 
-counter Checkers::countPieces(Board* board) {
-	counter count;
+int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *playnow, int info, int unused, struct CBmove *move)
+{
+	Checkers::setBoard(b);
+	vector<CBmove2> moves = Checkers::getLegalMoves(color);
+	if (moves.size() == 0) return DRAW;
+	random_device  rand_dev;
+	mt19937 generator(rand_dev());
+	std::uniform_int_distribution<int> distr(0, moves.size() - 1);
+	int index = distr(generator);
+	CBmove2 m = moves[index];
+	Checkers::applyMove(m);
+	coord c;
 	short piece;
 	for (int i = 1; i <= 32; i++) {
-		piece = board->getPiece(i);
-		if (piece & WHITE) count.white++;
-		if (piece & BLACK) count.black++;		
+		c = Checkers::toCoord(i);
+		piece = Checkers::getBoard().getPiece(i);
+		//if(piece & KING) sprintf(str, "piece is a king");
+		if (piece == FREE) piece = 0;
+		b[c.x][c.y] = piece;
 	}
 
-	return count;
-}
+	sprintf(str, "I am %s. Move %d of %s %d,%d to %s %d,%d out of %d possible", (color == WHITE ? "white" : "black"), index + 1, (m.oldpiece & MAN ? "man" : "king"), m.from.x, m.from.y, (m.newpiece & MAN ? "man" : "king"), m.to.x, m.to.y, moves.size());
 
-short Checkers::toCellID(coord co) {
-	if (co.x == -1) return 0;
-	return co.x / 2 + (co.y * 4) + 1;
-}
-
-void Checkers::applyMove(CBmove2 move) {
-	if (move.delpiece[0] != FREE) {
-		for (int i = 0; i < 12; i++) {
-			if (move.del[i].x == -1) break;
-			current_board.setPiece(toCellID(move.del[i]), FREE);
-		}
-	}
-	current_board.setPiece(toCellID(move.from), FREE);
-	current_board.setPiece(toCellID(move.to), move.newpiece);
-}
-
-void Checkers::undoMove(CBmove2 move) {
-	if (move.delpiece[0] != FREE) {
-		for (int i = 0; i < 12; i++) {
-			if (move.del[i].x == -1) break;
-			current_board.setPiece(toCellID(move.del[i]), move.delpiece[i]);
-		}
-	}
-	current_board.setPiece(toCellID(move.to), FREE);
-	current_board.setPiece(toCellID(move.from), move.newpiece);
-}
-
-
-
-vector<CBmove2> Checkers::getLegalMoves(short player) {
-	vector<CBmove2> normal, captures;
-	vector<movp> path;
-	bool captured = false;
-	for (int i = 1; i < 32; i++) {
-		if (!(current_board.getPiece(i) & player)) continue;
-		generateMoves(current_board, i, player, &normal, &captures, &path, &captured);
-	}
-	return (captured ? captures : normal);
-}
-
-void Checkers::generateMoves(Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp>* path, bool *captured, int depth) {
-	vector<movp> moves;
-	if (depth == 0 || *(captured))  {
-		moves = getCaptures(cell, &board);
-		if (moves.size() > 0) *captured = true;
-	}
-	if (depth == 0 && !(*captured)) {
-		moves = getMoves(cell, &board);
-	}
-
-	for (size_t i = 0; i < moves.size(); i++) {
-		path->push_back(moves[i]);
-		generateMoves(applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, depth + 1);
-		path->pop_back();
-	}
-
-	//we can move no more
-	if (moves.size() == 0) {
-		//return if we didn't move at all
-		if (path->size() == 0) return;
-		//otherwise we make a move thingamadoodad
-		struct CBmove2 new_move;
-		//and copy the board's original state
-		Board play = current_board;
-		new_move.oldpiece = play.getPiece((*path)[0].from);
-		new_move.from = toCoord((*path)[0].from);
-		bool caused_a_death = false;
-		//path size shouldn't ever exceed 12
-		for (size_t i = 0; i < path->size(); i++) {
-			//now we play and write down all the deaths we caused
-
-			//log intermediate moves
-			if (i < path->size() - 1) new_move.path[i] = toCoord((*path)[i].to);
-			//if there was a capture (if there's more than one move, there should always be one, otherwise this is wrong)
-			if ((*path)[i].capture > 0) {
-				caused_a_death = true;
-				new_move.delpiece[i] = play.getPiece((*path)[i].capture);
-				new_move.del[i] = toCoord((*path)[i].capture);
-			}
-			//update the board
-			play = applySingleMove(play, (*path)[i]);
-		}
-		new_move.to = toCoord((*path)[path->size() - 1].to);
-		new_move.newpiece = play.getPiece((*path)[path->size() - 1].to);
-		if (caused_a_death) {
-			capture->push_back(new_move);
-		}
-		else {
-			normal->push_back(new_move);
-		}
-	}
-}
-
-Board Checkers::applySingleMove(Board board, movp move) {
-	short piece = board.getPiece(move.from);
-
-	board.setPiece(move.from, FREE);
-
-	if (move.capture) board.setPiece(move.capture, FREE);
-	if (promotionCheck(move.to, piece)) piece |= KING;
-
-	board.setPiece(move.to, piece);
-	
-	return board;
-}
-
-vector<short> Checkers::getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south) {
-	vector<short> directions;
-	if (north) {
-		if (!isLeftPiece(cell_id) && (board->getPiece(NW(cell_id)) & type) == type) {
-			directions.push_back(NORTHWEST);
-		}
-		if (!isRightPiece(cell_id) && (board->getPiece(NE(cell_id)) & type) == type) {
-			directions.push_back(NORTHEAST);
-		}
-	}
-	if (south) {
-		if (!isLeftPiece(cell_id) && (board->getPiece(SW(cell_id)) & type) == type) {
-			directions.push_back(SOUTHWEST);
-		}
-		if (!isRightPiece(cell_id) && (board->getPiece(SE(cell_id)) & type) == type) {
-			directions.push_back(SOUTHEAST);
-		}
-	}
-	return directions;
-}
-
-bool Checkers::isLeftPiece(short cell_id) {
-	return cell_id == 4 || cell_id == 12 ||
-		cell_id == 20 || cell_id == 28;
-}
-
-bool Checkers::isRightPiece(short cell_id) {
-	return 	cell_id == 5  || cell_id == 13 ||
-		    cell_id == 21 || cell_id == 29;
-}
-vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
-	short piece;
-	vector<short> directions;
-	vector<movp> moves;
-	bool north;
-	bool south;
-	short type;
-
-	piece = board->getPiece(cell_id);
-	north = south = false;
-
-	if (piece == FREE) return moves; //what are you doin mate
-
-	if (piece & KING) {
-		north = true;
-		south = true;
-	}
-	
-	if (piece & WHITE) {
-		south = true;
-		type = BLACK;
-	}
-	else {
-		north = true;
-		type = WHITE;
-	}
-
-	directions = getDirectionsWhereType(cell_id, board, type, north, south);
-
-	for (size_t i = 0; i < directions.size(); i++) {
-		switch (directions[i]) {
-		case NORTHWEST:
-			if (!isLeftPiece(NW(cell_id)) && board->getPiece(NW(NW(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id)));
-			}
-			break;
-		case NORTHEAST:
-			if (!isRightPiece(NE(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, NE(NE(cell_id)), NE(cell_id)));
-			}
-			break;
-		case SOUTHWEST:
-			if (!isLeftPiece(SW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
-			}
-			break;
-		case SOUTHEAST:
-			if (!isRightPiece(SE(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
-			}
-			break;
-		}
-	}
-
-	return moves;
-}
-
-vector<movp> Checkers::getMoves(short cell_id, Board* board) {
-	short piece;
-	vector<short> directions;
-	vector<movp> moves;
-	bool north;
-	bool south;
-
-	piece = board->getPiece(cell_id);
-	north = south = false;
-
-	if (piece == FREE) return moves; //what are you doin mate
-
-	if (piece & KING) {
-		north = true;
-		south = true;
-	}
-	else if (piece & WHITE) {
-		south = true;
-	}
-	else {
-		north = true;
-	}
-
-	directions = getDirectionsWhereType(cell_id, board, FREE, north, south);
-
-	for (size_t i = 0; i < directions.size(); i++) {
-		switch (directions[i]) {
-		case NORTHWEST:
-			moves.push_back(movp(cell_id, NW(cell_id)));
-			break;
-		case NORTHEAST:
-			moves.push_back(movp(cell_id, NE(cell_id)));
-			break;
-		case SOUTHWEST:
-			moves.push_back(movp(cell_id, SW(cell_id)));
-			break;
-		case SOUTHEAST:
-			moves.push_back(movp(cell_id, SE(cell_id)));
-			break;
-		}
-	}
-
-	return moves;
-}
-
-/* TODO: compare with simple checkers code to see where the fuck 0,0 is */
-coord Checkers::toCoord(short cell_id) {
-	if (cell_id < 1 || cell_id > 32) return coord(-1, -1);
-	return coord(cell_id % 4 + 1, cell_id / 4);
-}
-
-
-bool Checkers::promotionCheck(short cell_id, short piece) {
-	return ((piece & MAN) && (((piece & WHITE) && cell_id < 5) || ((piece & BLACK) && cell_id > 28)));
-}
-
-CBmove2::CBmove2() {
-	newpiece = oldpiece = FREE;
-	from = coord(-1,-1);
-	to = coord(-1,-1);
-	for (int i = 0; i < 12; i++) {
-		path[i] = coord(-1, -1);
-		del[i] = coord(-1, -1);
-		delpiece[i] = FREE;
-	}
+	return Checkers::goalTest(Checkers::getBoard(), color);
 }
