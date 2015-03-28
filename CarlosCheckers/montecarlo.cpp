@@ -72,5 +72,7 @@ int MonteCarlo::search(NodePtr node, short player){
 }
 
 int MonteCarlo::simulation(){
+	srand((unsigned)time(0));
+
 	return 0;
 }

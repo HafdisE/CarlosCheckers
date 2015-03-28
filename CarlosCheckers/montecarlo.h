@@ -1,8 +1,10 @@
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
 
-#include "checkers.h"
 #include <cmath>
+#include <cstdlib>
+#include <time.h>
+#include "checkers.h"
 #include "node.h"
 #define INFMIN  -300000000;
 static double C  = sqrt(2);
@@ -17,7 +19,6 @@ private:
 	NodePtr root;
 	double evaluationUCB1(NodePtr node);
 	int search(NodePtr node, short player);
-	NodePtr expand(NodePtr node);
 	int simulation();
 	void selectNode(int node);
 	void clearTree(NodePtr node);
