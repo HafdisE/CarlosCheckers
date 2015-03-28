@@ -71,6 +71,7 @@ checkers@fierz.ch
 #include <string.h>
 #include <time.h>
 #include <windows.h>
+#include <random>
 #include "carlos.h"
 
 
@@ -174,6 +175,25 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 
 int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *playnow, int info, int unused, struct CBmove *move)
 {
+	Checkers::setBoard(b);
+	vector<Board> moves = Checkers::getLegalBoards(Checkers::getBoard(), color);
+	if (moves.size() == 0) return LOSS;
+	random_device  rand_dev;
+	mt19937 generator(rand_dev());
+	uniform_int_distribution<int> distr(0, moves.size() - 1);
+	int index = distr(generator);
+	Board m = moves[index];
+	coord c;
+	short piece;
+	for (int i = 1; i <= 32; i++) {
+		c = Checkers::toCoord(i);
+		piece = Checkers::getBoard().getPiece(i);
+		//if(piece & KING) sprintf(str, "piece is a king");
+		if (piece == FREE) piece = 0;
+		b[c.x][c.y] = piece;
+	}
 
-	return 0;
+	sprintf(str, "BEEP BOOP I'M A DOUCHE");
+
+	return Checkers::goalTest(Checkers::getBoard(), color);
 }

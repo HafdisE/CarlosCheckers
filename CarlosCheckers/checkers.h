@@ -93,11 +93,13 @@ public:
 	/* Returns WIN, LOSE, DRAW or UNKNOWN for the current state from the given player's POV */
 	static short goalTest(Board& board, short player);
 
+	static coord toCoord(short cell_id);
+
 private:
 	static short player; //WHITE or BLACK
 	static Board current_board;
 
-	static coord toCoord(short cell_id);
+	
 
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
 	an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
