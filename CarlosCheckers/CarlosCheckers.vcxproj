@@ -74,7 +74,6 @@
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="montecarlo.cpp" />
     <ClCompile Include="node.cpp" />
-    <ClCompile Include="state.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
@@ -85,7 +84,6 @@
     <ClInclude Include="node.h">
       <DeploymentContent>false</DeploymentContent>
     </ClInclude>
-    <ClInclude Include="state.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="carlos.def" />
