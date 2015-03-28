@@ -36,18 +36,11 @@ CBmove2 MonteCarlo::search(){
 }*/
 
 int MonteCarlo::search(NodePtr node, short player){
-	if (node->is_goal) return 0;
 	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
 	int result;
 	if (node->children.empty()){
-		if (Checkers::goalTest(moves.front(), player)){
-			
-		}
 		result = simulation(moves.front(), (player == 1) ? 2 : 1);
 		node->children.push_back(new Node(1, result, moves.back()));
-		if (Checkers::goalTest(moves.front(), player) == WIN){
-			node->children.front()->is_goal = true;
-		}
 	} else {
 		double maxValue = INFMIN;
 		int maxNode = 0;
@@ -62,9 +55,6 @@ int MonteCarlo::search(NodePtr node, short player){
 			maxNode++;
 			result = simulation(moves[maxNode], (player == 1) ? 2 : 1);
 			node->children.push_back(new Node(1, result, moves[maxNode]));
-			if (Checkers::goalTest(moves[maxNode], player) == WIN){
-				node->children.front()->is_goal = true;
-			}
 		} else {
 			result = search(node->children[maxNode], (player == 1) ? 2 : 1);
 			node->sim_count++;
