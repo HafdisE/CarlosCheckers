@@ -247,9 +247,10 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)2, moves.size());
 		}
 
-		TEST_METHOD(TestTheWhiteKing)
+		TEST_METHOD(TestTheBlackKing)
 		{
 			Board b(0, 0, 0);
+			b.setPiece(18, BLACK | KING);
 			b.setPiece(15, WHITE | MAN);
 			b.setPiece(23, WHITE | MAN);
 			Assert::AreEqual((size_t)131072, BoardTester::getBlackbit(b));
