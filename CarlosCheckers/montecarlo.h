@@ -13,9 +13,9 @@ static double C  = sqrt(2);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo{
 public:
-	MonteCarlo() : tsim_count(0) { root = new Node(0, 0, CBmove2());};
+	MonteCarlo() : tsim_count(0) { root = new Node(0, 0, Board());};
 	~MonteCarlo();
-	void search();
+	Board search();
 	void clearTree();
 private:
 	NodePtr root;

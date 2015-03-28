@@ -29,23 +29,18 @@ double MonteCarlo::evaluationUCB1(NodePtr node){
 	return (node->win_count / (double)node->sim_count) + C * (sqrt(log(tsim_count) / (double)node->sim_count));
 }
 
-
-void MonteCarlo::search(){
+/*
+CBmove2 MonteCarlo::search(){
 	/* do something */
-	while (true){
-
-
-	}
-}
+	/*return CBmove2();
+}*/
 
 int MonteCarlo::search(NodePtr node, short player){
-	vector<CBmove2> moves = Checkers::getLegalMoves(player);
+	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
 	int result;
 	if (node->children.empty()){
-		Checkers::applyMove(moves.front());
 		result = simulation((player == 1) ? 2 : 1);
 		node->children.push_back(new Node(1, result, moves.front()));
-		Checkers::undoMove(moves.front());
 	} else {
 		double maxValue = INFMIN;
 		int maxNode = 0;
@@ -58,16 +53,13 @@ int MonteCarlo::search(NodePtr node, short player){
 		}
 		if ((moves.size() > node->children.size()) && (evaluationUCB1(NULL) > maxValue)){
 			maxNode++;
-			Checkers::applyMove(node->children[maxNode]->move);
 			result = simulation((player == 1) ? 2 : 1);
 			node->children.push_back(new Node(1, result, moves[maxNode]));
 		} else {
-			Checkers::applyMove((node->children[maxNode]->move));
 			result = search(node->children[maxNode], (player == 1) ? 2 : 1);
 			node->sim_count++;
 			node->win_count =+ result;
 		}
-		Checkers::undoMove(node->children[maxNode]->move);
 	}
 		return result;
 }
@@ -80,13 +72,13 @@ int MonteCarlo::simulation(short player){
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		isGoal = Checkers::goalTest(Checkers::getBoard(), player);
 		if (isGoal == WIN || isGoal == DRAW) break;
-		vector<CBmove2> moves = Checkers::getLegalMoves(player);
+		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
 		currMove = moves[rand() % moves.size()];
 		pastMoves.push(currMove);
-		Checkers::applyMove(currMove);
+		//Checkers::applyMove(currMove);
 	}
 	while (!pastMoves.empty()){
-		Checkers::undoMove(pastMoves.top());
+		//Checkers::undoMove(pastMoves.top());
 		pastMoves.pop();
 	}
 
