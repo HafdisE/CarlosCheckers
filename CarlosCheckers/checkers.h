@@ -85,7 +85,7 @@ struct counter {
 //this is our player the montecarlo search refers to for info on the current state and which player we are
 //it should be updated based on messages from the engine
 class Checkers {
-public:	
+public:
 	/* Update the current state using a move */
 	static void applyMove(CBmove2 move);
 	static void undoMove(CBmove2 move);
@@ -93,12 +93,15 @@ public:
 	//static void updateState(State state);
 	/* Get pointer to the current board */
 	static Board getBoard();
+	static void setBoard(int board[8][8]);
 	static void setBoard(Board board);
 	/* Get pointer to the current state */
 	//static State getState();
 	/* Get the player */
 	static int getPlayer();
 	static void setPlayer(short player);
+
+	static coord toCoord(short cell_id);
 
 	/* Static public functions for use in conjunction with MCTS */
 
@@ -115,18 +118,19 @@ private:
 	//static unordered_map<Board, short> repeat_check;
 
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
-	   an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
-	   in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
+	an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
+	in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
 	static void generateMoves(Board board, short cell, short player, vector<CBmove2> *normal, vector<CBmove2> *capture, vector<movp> *path, bool *captures, int depth = 0);
 	/* applies a 'single move', of the simplified move notation to the board and returns a new board */
 	static Board applySingleMove(Board board, movp move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass
-	   north and south boolean values to tell it whether it should check north and/or south */
+	north and south boolean values to tell it whether it should check north and/or south */
 	static vector<short> getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south);
 	/* checks if a piece has reached a promotion row and returns true if that is the case */
 	static bool promotionCheck(short cell_id, short piece);
+	static bool boundaryCheck(short cell_id);
 	/* converts cell_id to coord */
-	static coord toCoord(short cell_id);
+
 	/* converts coord to cell_id (doesn't actually do this yet)*/
 	static short toCellID(coord co);
 	/* gets all simplified notation moves for a single piece that is a capture move */

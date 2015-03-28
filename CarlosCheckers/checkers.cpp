@@ -16,6 +16,16 @@ Board Checkers::getBoard() {
 	return current_board;
 }
 
+void Checkers::setBoard(int board[8][8]) {
+	Board b(0, 0, 0);
+	for (int x = 0; x < 8; x++) {
+		for (int y = 0; y < 8; y++) {
+			b.setPiece(toCellID(coord(x, y)), board[x][y]);
+		}
+	}
+	current_board = b;
+}
+
 void Checkers::setBoard(Board board) {
 	current_board = board;
 }
@@ -29,15 +39,15 @@ void Checkers::setPlayer(short newplayer) {
 }
 /*
 void Checkers::tieCheck(short count, short new_count) {
-	if (count != new_count) {
-		repeat_check.clear();
-	}
-	else {
-		repeat_check[current_state]++;
-		if (repeat_check[current_state] == 3) {
-			current_state.setTie();
-		}
-	}
+if (count != new_count) {
+repeat_check.clear();
+}
+else {
+repeat_check[current_state]++;
+if (repeat_check[current_state] == 3) {
+current_state.setTie();
+}
+}
 }*/
 
 short Checkers::goalTest(Board &board, short player) {
@@ -50,7 +60,7 @@ short Checkers::goalTest(Board &board, short player) {
 		return WIN;
 	}
 
-//MISSING DRAW THINGS
+	//MISSING DRAW THINGS
 
 	return UNKNOWN;
 }
@@ -61,7 +71,7 @@ counter Checkers::countPieces(Board* board) {
 	for (int i = 1; i <= 32; i++) {
 		piece = board->getPiece(i);
 		if (piece & WHITE) count.white++;
-		if (piece & BLACK) count.black++;		
+		if (piece & BLACK) count.black++;
 	}
 
 	return count;
@@ -69,7 +79,7 @@ counter Checkers::countPieces(Board* board) {
 
 short Checkers::toCellID(coord co) {
 	if (co.x == -1) return 0;
-	return co.x / 2 + (co.y * 4) + 1;
+	return (3 - co.x / 2) + (co.y * 4) + 1;
 }
 
 void Checkers::applyMove(CBmove2 move) {
@@ -100,7 +110,7 @@ vector<CBmove2> Checkers::getLegalMoves(short player) {
 	vector<CBmove2> normal, captures;
 	vector<movp> path;
 	bool captured = false;
-	for (int i = 1; i < 32; i++) {
+	for (int i = 1; i <= 32; i++) {
 		if (!(current_board.getPiece(i) & player)) continue;
 		generateMoves(current_board, i, player, &normal, &captures, &path, &captured);
 	}
@@ -135,7 +145,8 @@ void Checkers::generateMoves(Board board, short cell, short player, vector<CBmov
 		new_move.from = toCoord((*path)[0].from);
 		bool caused_a_death = false;
 		//path size shouldn't ever exceed 12
-		for (size_t i = 0; i < path->size(); i++) {
+		size_t i;
+		for (i = 0; i < path->size(); i++) {
 			//now we play and write down all the deaths we caused
 
 			//log intermediate moves
@@ -148,9 +159,10 @@ void Checkers::generateMoves(Board board, short cell, short player, vector<CBmov
 			}
 			//update the board
 			play = applySingleMove(play, (*path)[i]);
+			if (promotionCheck((*path)[i].to, new_move.oldpiece)) break;
 		}
-		new_move.to = toCoord((*path)[path->size() - 1].to);
-		new_move.newpiece = play.getPiece((*path)[path->size() - 1].to);
+		new_move.to = toCoord((*path)[i].to);
+		new_move.newpiece = play.getPiece((*path)[i].to);
 		if (caused_a_death) {
 			capture->push_back(new_move);
 		}
@@ -166,32 +178,39 @@ Board Checkers::applySingleMove(Board board, movp move) {
 	board.setPiece(move.from, FREE);
 
 	if (move.capture) board.setPiece(move.capture, FREE);
-	if (promotionCheck(move.to, piece)) piece |= KING;
+	if (promotionCheck(move.to, piece)) {
+		piece &= ~MAN;
+		piece |= KING;
+	}
 
 	board.setPiece(move.to, piece);
-	
+
 	return board;
 }
 
 vector<short> Checkers::getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south) {
 	vector<short> directions;
 	if (north) {
-		if (!isLeftPiece(cell_id) && (board->getPiece(NW(cell_id)) & type) == type) {
+		if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (board->getPiece(NW(cell_id)) & type) == type) {
 			directions.push_back(NORTHWEST);
 		}
-		if (!isRightPiece(cell_id) && (board->getPiece(NE(cell_id)) & type) == type) {
+		if (boundaryCheck(NE(cell_id)) && !isRightPiece(cell_id) && (board->getPiece(NE(cell_id)) & type) == type) {
 			directions.push_back(NORTHEAST);
 		}
 	}
 	if (south) {
-		if (!isLeftPiece(cell_id) && (board->getPiece(SW(cell_id)) & type) == type) {
+		if (boundaryCheck(SW(cell_id)) && !isLeftPiece(cell_id) && (board->getPiece(SW(cell_id)) & type) == type) {
 			directions.push_back(SOUTHWEST);
 		}
-		if (!isRightPiece(cell_id) && (board->getPiece(SE(cell_id)) & type) == type) {
+		if (boundaryCheck(SE(cell_id)) && !isRightPiece(cell_id) && (board->getPiece(SE(cell_id)) & type) == type) {
 			directions.push_back(SOUTHEAST);
 		}
 	}
 	return directions;
+}
+
+bool Checkers::boundaryCheck(short cell_id) {
+	return (cell_id > 0 && cell_id < 33);
 }
 
 bool Checkers::isLeftPiece(short cell_id) {
@@ -200,8 +219,8 @@ bool Checkers::isLeftPiece(short cell_id) {
 }
 
 bool Checkers::isRightPiece(short cell_id) {
-	return 	cell_id == 5  || cell_id == 13 ||
-		    cell_id == 21 || cell_id == 29;
+	return 	cell_id == 5 || cell_id == 13 ||
+		cell_id == 21 || cell_id == 29;
 }
 vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	short piece;
@@ -220,7 +239,7 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 		north = true;
 		south = true;
 	}
-	
+
 	if (piece & WHITE) {
 		south = true;
 		type = BLACK;
@@ -235,22 +254,22 @@ vector<movp> Checkers::getCaptures(short cell_id, Board* board) {
 	for (size_t i = 0; i < directions.size(); i++) {
 		switch (directions[i]) {
 		case NORTHWEST:
-			if (!isLeftPiece(NW(cell_id)) && board->getPiece(NW(NW(cell_id))) == FREE) {
+			if (boundaryCheck(NW(NW(cell_id))) && !isLeftPiece(NW(cell_id)) && board->getPiece(NW(NW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id)));
 			}
 			break;
 		case NORTHEAST:
-			if (!isRightPiece(NE(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
+			if (boundaryCheck(NE(NE(cell_id))) && !isRightPiece(NE(cell_id)) && board->getPiece(NE(NE(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, NE(NE(cell_id)), NE(cell_id)));
 			}
 			break;
 		case SOUTHWEST:
-			if (!isLeftPiece(SW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
+			if (boundaryCheck(SW(SW(cell_id))) && !isLeftPiece(SW(cell_id)) && board->getPiece(SW(SW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
 			}
 			break;
 		case SOUTHEAST:
-			if (!isRightPiece(SE(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
+			if (boundaryCheck(SE(SE(cell_id))) && !isRightPiece(SE(cell_id)) && board->getPiece(SE(SE(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
 			}
 			break;
@@ -308,29 +327,26 @@ vector<movp> Checkers::getMoves(short cell_id, Board* board) {
 /* TODO: compare with simple checkers code to see where the fuck 0,0 is */
 coord Checkers::toCoord(short cell_id) {
 	if (cell_id < 1 || cell_id > 32) return coord(-1, -1);
-
-	cell_id = cell_id - 32;
-	if (cell_id < 0) cell_id = -cell_id;
-	static coord vals[] = { coord(6, 7), coord(4, 7), coord(2, 7), coord(0, 7),
-		             coord(7, 6), coord(5, 6), coord(3, 6), coord(1, 6),
-					 coord(6, 5), coord(4, 5), coord(2, 5), coord(0, 5),
-					 coord(7, 4), coord(5, 4), coord(3, 4), coord(1, 4),
-					 coord(6, 3), coord(4, 3), coord(2, 3), coord(0, 3),
-					 coord(7, 2), coord(5, 2), coord(3, 2), coord(1, 2),
-					 coord(6, 1), coord(4, 1), coord(2, 1), coord(0, 1),
-					 coord(7, 0), coord(5, 0), coord(3, 0), coord(1, 0) };
-	return vals[cell_id];
+	static coord select[] = { coord(6, 0), coord(4, 0), coord(2, 0), coord(0, 0),
+		coord(7, 1), coord(5, 1), coord(3, 1), coord(1, 1),
+		coord(6, 2), coord(4, 2), coord(2, 2), coord(0, 2),
+		coord(7, 3), coord(5, 3), coord(3, 3), coord(1, 3),
+		coord(6, 4), coord(4, 4), coord(2, 4), coord(0, 4),
+		coord(7, 5), coord(5, 5), coord(3, 5), coord(1, 5),
+		coord(6, 6), coord(4, 6), coord(2, 6), coord(0, 6),
+		coord(7, 7), coord(5, 7), coord(3, 7), coord(1, 7), };
+	return select[cell_id - 1];
 }
 
 
 bool Checkers::promotionCheck(short cell_id, short piece) {
-	return ((piece & MAN) && (((piece & WHITE) && cell_id < 5) || ((piece & BLACK) && cell_id > 28)));
+	return ((piece & MAN) && (((piece & WHITE) && (cell_id < 5)) || ((piece & BLACK) && (cell_id > 28))));
 }
 
 CBmove2::CBmove2() {
 	newpiece = oldpiece = FREE;
-	from = coord(-1,-1);
-	to = coord(-1,-1);
+	from = coord(-1, -1);
+	to = coord(-1, -1);
 	for (int i = 0; i < 12; i++) {
 		path[i] = coord(-1, -1);
 		del[i] = coord(-1, -1);
