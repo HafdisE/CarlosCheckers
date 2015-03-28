@@ -5,6 +5,7 @@
 #include <string.h>
 #include <time.h>
 #include <windows.h>
+#include <random>
 #include "montecarlo.h"
 
 

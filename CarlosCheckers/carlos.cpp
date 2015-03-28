@@ -1,82 +1,7 @@
 #ifdef _MSC_VER
 #define _CRT_SECURE_NO_WARNINGS
 #endif
-
-/*______________________________________________________________________________
-
-----------> name: simple checkers with enhancements
-----------> author: martin fierz
-----------> purpose: platform independent checkers engine
-----------> version: 1.15
-----------> date: 4th february 2011
-----------> description: simplech.c contains a simple but fast checkers engine
-and some routines to interface to checkerboard. simplech.c contains three
-main parts: interface, search and move generation. these parts are
-separated in the code.
-
-board representation: the standard checkers notation is
-
-(white)
-32  31  30  29
-28  27  26  25
-24  23  22  21
-20  19  18  17
-16  15  14  13
-12  11  10   9
-8   7   6   5
-4   3   2   1
-(black)
-
-the internal representation of the board is different, it is a
-array of int with length 46, the checkers board is numbered
-like this:
-
-(white)
-37  38  39  40
-32  33  34  35
-28  29  30  31
-23  24  25  26
-19  20  21  22
-14  15  16  17
-10  11  12  13
-5   6   7   8
-(black)
-
-let's say, you would like to teach the program that it is
-important to keep a back rank guard. you can for instance
-add the following (not very sophisticated) code for this:
-
-if(b[6] & (BLACK|MAN)) eval++;
-if(b[8] & (BLACK|MAN)) eval++;
-if(b[37] & (WHITE|MAN)) eval--;
-if(b[39] & (WHITE|MAN)) eval--;
-
-the evaluation function is seen from the point of view of the
-black player, so you increase the value v if you think the
-position is good for black.
-
-simple checkers is free for anyone to use, in any way, explicitly also
-in commercial products without the need for asking me. Naturally, I would
-appreciate if you tell me that you are using it, and if you acknowledge
-my contribution to your project.
-
-questions, comments, suggestions to:
-
-Martin Fierz
-checkers@fierz.ch
-
-
-/*----------> includes */
-#include <stdio.h>
-#include <string.h>
-#include <time.h>
-#include <windows.h>
-#include <random>
 #include "carlos.h"
-
-
-
-/*-------------- PART 1: dll stuff -------------------------------------------*/
 
 BOOL WINAPI DllEntryPoint(HANDLE hDLL, DWORD dwReason, LPVOID lpReserved)
 {
@@ -181,14 +106,13 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	random_device  rand_dev;
 	mt19937 generator(rand_dev());
 	uniform_int_distribution<int> distr(0, moves.size() - 1);
-	int index = distr(generator);
-	Board m = moves[index];
+	Board m = moves[distr(generator)];
+	Checkers::setBoard(m);
 	coord c;
 	short piece;
 	for (int i = 1; i <= 32; i++) {
 		c = Checkers::toCoord(i);
-		piece = Checkers::getBoard().getPiece(i);
-		//if(piece & KING) sprintf(str, "piece is a king");
+		piece = m.getPiece(i);
 		if (piece == FREE) piece = 0;
 		b[c.x][c.y] = piece;
 	}

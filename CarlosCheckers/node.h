@@ -7,7 +7,7 @@ using namespace std;
 
 struct Node
 {
-	Node(int sim_count, int win_count, Board board) : sim_count(sim_count), win_count(win_count), board(board), is_goal(false) { };
+	Node(int sim_count, int win_count, Board board) : sim_count(sim_count), win_count(win_count), board(board) { };
 	int sim_count, win_count;
 	vector<Node*> children;
 	Board board;
