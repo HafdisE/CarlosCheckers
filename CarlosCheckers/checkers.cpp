@@ -18,11 +18,12 @@ Board Checkers::getBoard() {
 
 void Checkers::setBoard(int board[8][8]) {
 	Board b(0, 0, 0);
-	for (int x = 0; x < 8; x++) {
-		for (int y = 0; y < 8; y++) {
-			b.setPiece(toCellID(coord(x, y)), board[x][y]);
-		}
+	coord c;
+	for (int i = 1; i <= 32; i++) {
+		c = toCoord(i);
+		b.setPiece(i, board[c.x][c.y]);
 	}
+			
 	current_board = b;
 }
 

@@ -13,7 +13,7 @@ static double C  = sqrt(2);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo{
 public:
-	MonteCarlo() : tsim_count(0) { root = new Node(0, 0, Board());};
+	MonteCarlo() : tsim_count(0) { root = NULL;};
 	~MonteCarlo();
 	Board search(double maxtime, int* playnow, char str[255]);
 	void clearTree();

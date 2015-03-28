@@ -108,6 +108,7 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	mt19937 generator(rand_dev());
 	uniform_int_distribution<int> distr(0, moves.size() - 1);*/
 
+	//sprintf(str, "board 15: %d", Checkers::getBoard().getPiece(15));
 
 	Board m = mc.search(maxtime, playnow, str);
 	Checkers::setBoard(m);
@@ -123,5 +124,7 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 
 	sprintf(str, "%u %u %u", m.blackbit, m.whitebit, m.kingbit);
 
-	return Checkers::goalTest(Checkers::getBoard(), Checkers::getPlayer());
+	int goal = Checkers::goalTest(Checkers::getBoard(), Checkers::getPlayer());
+
+	return goal;
 }

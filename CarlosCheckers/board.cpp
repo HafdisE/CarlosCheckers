@@ -34,12 +34,6 @@ void Board::setPiece(short cell_id, short type) {
 	int mask = 1 << shift;
 	switch (type)
 	{
-	case FREE:
-		mask = ~mask;
-		whitebit &= mask;
-		blackbit &= mask;
-		kingbit  &= mask;
-		break;
 	case WHITE|MAN:
 		blackbit &= ~mask;
 		whitebit |= mask;
@@ -59,8 +53,13 @@ void Board::setPiece(short cell_id, short type) {
 		whitebit &= ~mask;
 		blackbit |= mask;
 		kingbit |= mask;
-		break;
+		break;	
+	case FREE:
 	default:
+		mask = ~mask;
+		whitebit &= mask;
+		blackbit &= mask;
+		kingbit &= mask;
 		break;
 	}
 	return;

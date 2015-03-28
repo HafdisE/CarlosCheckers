@@ -10,6 +10,7 @@ MonteCarlo::~MonteCarlo(){
 
 void MonteCarlo::clearTree(){
 	clearTree(root);
+	root = NULL;
 }
 
 void MonteCarlo::clearTree(NodePtr node){
@@ -36,13 +37,18 @@ double MonteCarlo::evaluationUCB1(NodePtr node){
 
 Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	double start = clock();
+	//clearTree();
+	root = new Node(0, 0, Checkers::getBoard());
+	//temporary hack
+	int calls = 0;
 	while (true) {
-		sprintf(str, "Searching. Time is: %lf", (clock() - start));
-		if (((clock() - start) >= maxtime)) break;
+		//sprintf(str, "Searching. Time is: %lf", (clock() - start));
+		if (((clock() - start) >= maxtime*1000)) break;
 		search(root, Checkers::getPlayer());
+		calls++;
 	}
 
-	sprintf(str, "Search complete");
+	//sprintf(str, "Search complete with %d calls to search", calls);
 	int index = 0;
 	double max = INFMIN;
 	double eval;
@@ -55,7 +61,7 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	}
 
 	selectNode(index);
-
+	
 	return root->board;
 }
 
