@@ -1,29 +1,27 @@
 #ifndef MONTECARLO_H
 #define MONTECARLO_H
 
-#include "checkers.h"
 #include <cmath>
+#include <cstdlib>
+#include <time.h>
+#include <stack>
+#include "checkers.h"
 #include "node.h"
+#define INFMIN  -300000000
+#define SIMULATION_LENGTH 50
 static double C  = sqrt(2);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo{
 public:
-	/* Default constructor */
-	MonteCarlo() : tsim_count(0),  checkers(Checkers(1)){};
-	/* Destructor */
+	MonteCarlo() : tsim_count(0) { root = new Node(0, 0, CBmove2());};
 	~MonteCarlo();
-	/* Start search */
-	NodePtr search();
-	/* Clear the entire tree */
+	CBmove2 search();
 	void clearTree();
-	
 private:
 	NodePtr root;
-	Checkers checkers;
 	double evaluationUCB1(NodePtr node);
-	NodePtr search(NodePtr node, short player);
-	NodePtr expand(NodePtr node);
-	void simulation(NodePtr node);
+	int search(NodePtr node, short player);
+	int simulation(short player);
 	void selectNode(int node);
 	void clearTree(NodePtr node);
 	
