@@ -161,6 +161,7 @@ void Checkers::generateMoves(Board board, short cell, short player, vector<CBmov
 			play = applySingleMove(play, (*path)[i]);
 			if (promotionCheck((*path)[i].to, new_move.oldpiece)) break;
 		}
+		if (i == path->size()) i--;
 		new_move.to = toCoord((*path)[i].to);
 		new_move.newpiece = play.getPiece((*path)[i].to);
 		if (caused_a_death) {

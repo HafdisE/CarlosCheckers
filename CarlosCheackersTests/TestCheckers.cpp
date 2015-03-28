@@ -49,7 +49,7 @@ namespace CarlosCheckersTests
 		{			
 			short cell = 10;
 			coord res = CheckersTester::toCoord(cell);
-			Assert::AreEqual(3, res.x);
+			Assert::AreEqual(4, res.x);
 			Assert::AreEqual(2, res.y);
 		}
 
@@ -57,10 +57,10 @@ namespace CarlosCheckersTests
 		{
 			coord cell(4,1);
 			short res = CheckersTester::toCellID(cell);
-			Assert::AreEqual((short)7, res);
-			coord cell2(2, 5);
+			Assert::AreEqual((short)6, res);
+			coord cell2(1, 5);
 			res = CheckersTester::toCellID(cell2);
-			Assert::AreEqual((short)22, res);
+			Assert::AreEqual((short)24, res);
 		}
 
 		TEST_METHOD(TestCountPiecesDefaultBoard)
@@ -149,13 +149,13 @@ namespace CarlosCheckersTests
 			Board result(0, 0, 0);
 			result.setPiece(27, BLACK | MAN);
 			CBmove2 move;
-			move.from = coord(5, 2);
-			move.to = coord(5, 6);
-			move.path[0] = coord(3, 4);
+			move.from = coord(2, 2);
+			move.to = coord(2, 6);
+			move.path[0] = coord(4, 4);
 			move.oldpiece = BLACK | MAN;
 			move.newpiece = BLACK | MAN;
-			move.del[0] = coord(4, 3);
-			move.del[1] = coord(4, 5);
+			move.del[0] = coord(3, 3);
+			move.del[1] = coord(3, 5);
 			move.delpiece[0] = WHITE | MAN;
 			move.delpiece[1] = WHITE | MAN;
 			Checkers::setBoard(start);
@@ -234,6 +234,7 @@ namespace CarlosCheckersTests
 		TEST_METHOD(TestWhenBlackHasToKillOneWhiteWithAKing)
 		{
 			Board b(20478, 2948730880, 0);
+			Checkers::setBoard(b);
 			vector<CBmove2> moves = Checkers::getLegalMoves(BLACK);
 			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)2948730880, BoardTester::getWhitebit(b));
@@ -253,6 +254,7 @@ namespace CarlosCheckersTests
 			b.setPiece(15, WHITE | MAN);
 			b.setPiece(23, WHITE | MAN);
 			b.setPiece(18, BLACK | KING);
+			Checkers::setBoard(b);
 			Assert::AreEqual((size_t)131072, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)4210688, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)131072, BoardTester::getKingbit(b));
@@ -262,6 +264,7 @@ namespace CarlosCheckersTests
 		TEST_METHOD(TestTheWhiteKingKillingTwoInRow)
 		{
 			Board b(16384, 151389696, 16384);
+			Checkers::setBoard(b);
 			Assert::AreEqual((size_t)16384, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)151389696, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)16384, BoardTester::getKingbit(b));
