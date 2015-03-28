@@ -65,14 +65,16 @@ int MonteCarlo::search(NodePtr node, short player){
 }
 
 int MonteCarlo::simulation(Board board, short player){
-	srand((unsigned)time(0));
+	random_device  rand_dev;
+	mt19937 generator(rand_dev());
 	Board currMove = board;
 	int isGoal = 0;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		isGoal = Checkers::goalTest(Checkers::getBoard(), player);
 		if (isGoal == WIN || isGoal == DRAW) break;
 		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
-		currMove = moves[rand() % moves.size()];
+		uniform_int_distribution<int> distr(0, moves.size() - 1);
+		currMove = moves[distr(generator)];
 	}
 
 	return isGoal;

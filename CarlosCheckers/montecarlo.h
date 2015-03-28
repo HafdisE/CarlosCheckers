@@ -4,7 +4,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <time.h>
-#include <stack>
+#include <random>
 #include "checkers.h"
 #include "node.h"
 #define INFMIN  -300000000
