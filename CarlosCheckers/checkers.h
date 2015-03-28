@@ -93,12 +93,15 @@ public:
 	//static void updateState(State state);
 	/* Get pointer to the current board */
 	static Board getBoard();
+	static void setBoard(int board[8][8]);
 	static void setBoard(Board board);
 	/* Get pointer to the current state */
 	//static State getState();
 	/* Get the player */
 	static int getPlayer();
 	static void setPlayer(short player);
+
+	static coord toCoord(short cell_id);
 
 	/* Static public functions for use in conjunction with MCTS */
 
@@ -125,8 +128,9 @@ private:
 	static vector<short> getDirectionsWhereType(short cell_id, Board *board, short type, bool north, bool south);
 	/* checks if a piece has reached a promotion row and returns true if that is the case */
 	static bool promotionCheck(short cell_id, short piece);
+	static bool boundaryCheck(short cell_id);
 	/* converts cell_id to coord */
-	static coord toCoord(short cell_id);
+	
 	/* converts coord to cell_id (doesn't actually do this yet)*/
 	static short toCellID(coord co);
 	/* gets all simplified notation moves for a single piece that is a capture move */

@@ -49,18 +49,18 @@ namespace CarlosCheckersTests
 		{			
 			short cell = 10;
 			coord res = CheckersTester::toCoord(cell);
-			Assert::AreEqual(3, res.x);
+			Assert::AreEqual(4, res.x);
 			Assert::AreEqual(2, res.y);
 		}
 
 		TEST_METHOD(TestToCellid)
 		{
-			coord cell(4,1);
+			coord cell(3,1);
 			short res = CheckersTester::toCellID(cell);
 			Assert::AreEqual((short)7, res);
-			coord cell2(2, 5);
+			coord cell2(1, 5);
 			res = CheckersTester::toCellID(cell2);
-			Assert::AreEqual((short)22, res);
+			Assert::AreEqual((short)24, res);
 		}
 
 		TEST_METHOD(TestCountPiecesDefaultBoard)
@@ -149,13 +149,13 @@ namespace CarlosCheckersTests
 			Board result(0, 0, 0);
 			result.setPiece(27, BLACK | MAN);
 			CBmove2 move;
-			move.from = coord(5, 2);
-			move.to = coord(5, 6);
-			move.path[0] = coord(3, 4);
+			move.from = coord(2, 2);
+			move.to = coord(2, 6);
+			move.path[0] = coord(4, 4);
 			move.oldpiece = BLACK | MAN;
 			move.newpiece = BLACK | MAN;
-			move.del[0] = coord(4, 3);
-			move.del[1] = coord(4, 5);
+			move.del[0] = coord(3, 3);
+			move.del[1] = coord(3, 5);
 			move.delpiece[0] = WHITE | MAN;
 			move.delpiece[1] = WHITE | MAN;
 			Checkers::setBoard(start);

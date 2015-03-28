@@ -2,6 +2,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+
+
 /*______________________________________________________________________________
 
 ----------> name: simple checkers with enhancements
@@ -71,7 +73,10 @@ checkers@fierz.ch
 #include <string.h>
 #include <time.h>
 #include <windows.h>
+#include <random>     /* srand, rand */
 #include "carlos.h"
+#include "checkers.h"
+
 
 
 
@@ -174,6 +179,26 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 
 int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *playnow, int info, int unused, struct CBmove *move)
 {
+	Checkers::setBoard(b);
+	vector<CBmove2> moves = Checkers::getLegalMoves(color);
+	if (moves.size() == 0) return DRAW;	
+	random_device  rand_dev;
+	mt19937 generator(rand_dev());
+	std::uniform_int_distribution<int> distr(0, moves.size() - 1);
+	int index = distr(generator);
+	CBmove2 m = moves[index];
+	Checkers::applyMove(m);
+	coord c;
+	short piece;
+	for (int i = 1; i <= 32; i++) {
+		c = Checkers::toCoord(i);
+		piece = Checkers::getBoard().getPiece(i);
+		//if(piece & KING) sprintf(str, "piece is a king");
+		if (piece == FREE) piece = 0;
+		b[c.x][c.y] = piece;
+	}
 
-	return 0;
+	sprintf(str, "I am %s. Move %d of %s %d,%d to %s %d,%d out of %d possible", (color == WHITE ? "white" : "black"), index + 1, (m.oldpiece & MAN ? "man" : "king"), m.from.x, m.from.y, (m.newpiece & MAN ? "man" : "king"), m.to.x, m.to.y, moves.size());
+
+	return Checkers::goalTest(Checkers::getBoard(), color);
 }
