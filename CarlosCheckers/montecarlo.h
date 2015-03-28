@@ -21,7 +21,7 @@ private:
 	NodePtr root;
 	double evaluationUCB1(NodePtr node);
 	int search(NodePtr node, short player);
-	int simulation(short player);
+	int simulation(Board board, short player);
 	void selectNode(int node);
 	void clearTree(NodePtr node);
 	
