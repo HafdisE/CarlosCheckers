@@ -28,17 +28,18 @@ void MonteCarlo::clearTree(){
 
 void MonteCarlo::clearTree(NodePtr node){
 	if (node){
-		for (unsigned int i = 0; i < node->children.size(); i++){
-			clearTree(node->children[i]);
+		while (!node->children.empty()){
+			clearTree(node->children.top());
+			node->children.pop();
 		}
 		delete node;
 		s--;
 	}
 }
 
-void MonteCarlo::selectNode(int node){
-	NodePtr temp = root->children[node];
-	root->children[node] = NULL;
+void MonteCarlo::selectNode(){
+	NodePtr temp = root->children.top();
+	root->children.pop();
 	clearTree();
 	root = temp;
 }
@@ -52,15 +53,19 @@ void MonteCarlo::updateTree() {
 	if (root) {
 		Board curr = Checkers::getBoard();
 		//find the node containing the current board
-		for (size_t i = 0; i < root->children.size(); i++) {
-			if (root->children[i]->board == curr) {
+		while (!root->children.empty()) {
+			
+			if (root->children.top()->board == curr) {
 				//select it and return
 #if LOGGING
 				mclog.log("Update tree", "Found node with corresponding board in children. Node selected.");
 #endif
-				selectNode(i);
+				selectNode();
 				return;
 			}
+			NodePtr temp = root->children.top();
+			root->children.pop();
+			clearTree(temp);
 		}
 	}
 	
@@ -70,7 +75,7 @@ void MonteCarlo::updateTree() {
 	clearTree();
 	tsim_count = 0;
 	//if root is null or current board wasn't one of the children
-	root = new Node(0, 0, Checkers::getBoard(), 0);
+	root = new Node(0, 0, Checkers::getBoard(), 0, NULL);
 }
 
 
@@ -103,20 +108,7 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 #endif
 
 
-
-
-	int index = 0;
-	double max = INFMIN;
-	double eval;
-	for (size_t i = 0; i < root->children.size(); i++) {
-		eval = evaluationUCB1(root->children[i]);
-		if (eval > max) {
-			max = eval;
-			index = i;
-		}
-	}
-
-	selectNode(index);
+	selectNode();
 	
 #if LOGGING
 	sprintf(logstr, "Returning board with blackbit: %d whitebit: %d kingbit: %d", root->board.blackbit, root->board.whitebit, root->board.kingbit);
@@ -126,32 +118,32 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 }
 
 int MonteCarlo::search(NodePtr node, short player){
-	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
-	if (moves.size() == 0) return LOSS;
 	int result;
+	NodePtr temp;
 	if (node->children.empty()){
-		result = simulation(moves.front(), (player == 1) ? 2 : 1);
-		node->children.push_back(new Node(1, result, moves.back(), 0));
-		node->children.back()->worth = evaluationUCB1(node->children.back());
+		vector<Board> moves = Checkers::getLegalBoards(node->board, player);
+		if (moves.size() == 0) return LOSS;
+		result = simulation(moves.back(), (player == 1) ? 2 : 1);
+		moves.pop_back();
+		temp = new Node(1, result, moves.back(), 0, node);
+		temp->moves_left = moves;
+		temp->worth = evaluationUCB1(temp);
+		node->children.push(temp);
 		s++;
 	} else {
-		double maxValue = INFMIN;
-		int maxNode = 0;
-		for (size_t i = 0; i < node->children.size(); i++) {
-			double currValue = node->children[i]->worth;
-			if (currValue > maxValue){
-				maxValue = currValue;
-				maxNode = i;
-			}
-		}
-		if ((moves.size() > node->children.size()) && (evaluationUCB1(NULL) > maxValue)){
-			maxNode++;
-			result = simulation(moves[maxNode], (player == 1) ? 2 : 1);
-			node->children.push_back(new Node(1, result, moves[maxNode], 0));
-			node->children.back()->worth = evaluationUCB1(node->children.back());
+
+		if ((!node->moves_left.empty()) && (evaluationUCB1(NULL) > node->children.top()->worth)){
+			result = simulation(node->moves_left.back(), (player == 1) ? 2 : 1);
+			temp = new Node(1, result, node->moves_left.back(), 0, node);
+			temp->worth = evaluationUCB1(temp);
+			node->children.push(temp);
+			node->moves_left.pop_back();
 			s++;
 		} else {
-			result = search(node->children[maxNode], (player == 1) ? 2 : 1);
+			temp = node->children.top();
+			result = search(temp, (player == 1) ? 2 : 1);
+			node->children.pop();
+			node->children.push(temp);
 			node->sim_count++;
 			node->win_count =+ result;
 			node->worth = evaluationUCB1(node);
