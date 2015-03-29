@@ -32,6 +32,9 @@
     <ClCompile Include="TestCheckers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestLogger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="TestMonteCarlo.cpp">

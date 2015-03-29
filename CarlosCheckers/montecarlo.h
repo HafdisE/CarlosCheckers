@@ -7,13 +7,15 @@
 #include <random>
 #include "checkers.h"
 #include "node.h"
+#include "logger.h"
+#define LOGGING 1
 #define INFMIN  -300000000
 #define SIMULATION_LENGTH 50
 static double C  = sqrt(2);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo{
 public:
-	MonteCarlo() : tsim_count(0) { root = NULL;};
+	MonteCarlo();
 	~MonteCarlo();
 	Board search(double maxtime, int* playnow, char str[255]);
 	void clearTree();
@@ -27,6 +29,15 @@ private:
 	void updateTree();
 	
 	int tsim_count;
+
+	random_device rand_dev;
+	mt19937 generator;
+	uniform_int_distribution<int> distr;
+
+#if LOGGING
+	Logger mclog;
+#endif
+
 };
 
 #endif

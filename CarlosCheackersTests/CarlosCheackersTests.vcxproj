@@ -96,6 +96,7 @@
     </ClCompile>
     <ClCompile Include="TestBoard.cpp" />
     <ClCompile Include="TestCheckers.cpp" />
+    <ClCompile Include="TestLogger.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TestMonteCarlo.cpp" />

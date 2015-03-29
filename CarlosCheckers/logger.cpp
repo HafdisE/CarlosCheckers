@@ -1,17 +1,33 @@
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "logger.h"
 #include <cstdio>
+#include <assert.h>
 
 using namespace std;
 
 Logger::Logger(string filename) {
-	fname = filename;
-	file.open(fname);
+	stringstream ss;
+	ss << "C:/Logs/" << filename << "_" << VERSION << ".log";
+	ss >> fname;
+	file = new ofstream(fname);
+	file->open(fname, std::ios::out | std::ios::trunc);
+	assert(file->is_open() == true);
 }
 
-void Logger::log(string loc, string msg) {	
-	int n = sprintf_s(buf, "[%s] %s\n", loc, msg);
-	file.write(buf, n);
+void Logger::log(string loc, string msg) {
+	if (file) {
+		*(file) << "[" << loc << "] " << msg << "\n";
+		//assert(file->good() == true);		
+	}
 }
 Logger::~Logger() {
-	file.close();
+	if (file) {
+		file->flush();
+		file->close();
+		delete file;
+	}
 }
+
+#endif

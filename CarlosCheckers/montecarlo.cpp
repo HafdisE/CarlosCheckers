@@ -4,8 +4,20 @@
 
 #include "montecarlo.h"
 
+MonteCarlo::MonteCarlo() : tsim_count(0) { 
+	root = NULL; 
+	generator = mt19937(rand_dev()); 
+#if LOGGING
+	mclog = Logger("montecarlo");
+#endif
+}
+
+
 MonteCarlo::~MonteCarlo(){
 	clearTree();
+#if LOGGING
+	mclog.log("Monte Carlo destructor", "Tree destroyed");
+#endif
 }
 
 void MonteCarlo::clearTree(){
@@ -38,15 +50,22 @@ void MonteCarlo::updateTree() {
 	if (root) {
 		Board curr = Checkers::getBoard();
 		//find the node containing the current board
-		for (int i = 0; i < root->children.size(); i++) {
+		for (size_t i = 0; i < root->children.size(); i++) {
 			if (root->children[i]->board == curr) {
 				//select it and return
+#if LOGGING
+				mclog.log("Update tree", "Found node with corresponding board in children. Node selected.");
+#endif
 				selectNode(i);
 				return;
 			}
 		}
 	}
 	
+#if LOGGING
+	mclog.log("Update tree", "Failed to find board in children, clearing tree and changing root.");
+#endif
+	clearTree();
 	//if root is null or current board wasn't one of the children
 	root = new Node(0, 0, Checkers::getBoard());
 }
@@ -55,15 +74,22 @@ void MonteCarlo::updateTree() {
 Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	double start = clock();
 	updateTree();
+#if LOGGING
 	int calls = 0;
+#endif
 	while (true) {
-		//sprintf(str, "Searching. Time is: %lf", (clock() - start));
 		if (((clock() - start) >= maxtime*1000)) break;
 		search(root, Checkers::getPlayer());
+#if LOGGING
 		calls++;
+#endif
 	}
 
-	//sprintf(str, "Search complete with %d calls to search", calls);
+#if LOGGING
+	char log[128];
+	sprintf(log, "Search complete with %d calls to search over %lf", calls, (clock()-start));
+	mclog.log("Search", log);
+#endif
 	int index = 0;
 	double max = INFMIN;
 	double eval;
@@ -77,6 +103,11 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 
 	selectNode(index);
 	
+#if LOGGING
+	char logstr[128];
+	sprintf(logstr, "Returning board with blackbit: %d whitebit: %d kingbit: %d", root->board.blackbit, root->board.whitebit, root->board.kingbit);
+	mclog.log("Search", logstr);
+#endif
 	return root->board;
 }
 
@@ -112,8 +143,6 @@ int MonteCarlo::search(NodePtr node, short player){
 
 int MonteCarlo::simulation(Board board, short player){
 	short me = player;
-	random_device  rand_dev;
-	mt19937 generator(rand_dev());
 	Board currMove = board;
 	int isGoal = 0;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
@@ -124,7 +153,7 @@ int MonteCarlo::simulation(Board board, short player){
 			isGoal = LOSS;
 			break;
 		}
-		uniform_int_distribution<int> distr(0, moves.size() - 1);
+		distr = uniform_int_distribution<int>(0, moves.size() - 1);
 		currMove = moves[distr(generator)];
 		player = (player == 1) ? 2 : 1;
 	}
