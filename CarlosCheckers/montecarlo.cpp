@@ -83,12 +83,11 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	double start = clock();
 	updateTree();
 #if LOGGING
-	char logstr[128];
-	Board curr = Checkers::getBoard();
-	sprintf(logstr, "Actual board state: %d whitebit: %d kingbit: %d", curr.blackbit, curr.whitebit, curr.kingbit);
-	mclog.log("Search", logstr);
-	sprintf(logstr, "Starting search with blackbit: %d whitebit: %d kingbit: %d", root->board.blackbit, root->board.whitebit, root->board.kingbit);
-	mclog.log("Search", logstr);
+	stringstream ss;
+	stringstream().swap(ss);
+	ss << "Starting search as " << (Checkers::getPlayer() == WHITE ? "white" : "black") << endl << boardToString(root->board) << endl << root->board.blackbit << " " << root->board.whitebit << " " << root->board.kingbit;
+	mclog.log("Search", ss.str());
+	stringstream().swap(ss);
 
 #endif
 #if LOGGING
@@ -103,16 +102,18 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	}
 
 #if LOGGING
-	sprintf(logstr, "Search complete with %d calls to search over %lf", calls, (clock()-start));
-	mclog.log("Search", logstr);
+	ss << "Search complete with " << calls << " calls to search over " << (clock() - start) / 1000 << "seconds";
+	mclog.log("Search", ss.str());
+	stringstream().swap(ss);
 #endif
 
 
 	selectNode();
 	
 #if LOGGING
-	sprintf(logstr, "Returning board with blackbit: %d whitebit: %d kingbit: %d", root->board.blackbit, root->board.whitebit, root->board.kingbit);
-	mclog.log("Search", logstr);
+	ss << "Returning board" << endl << boardToString(root->board) << endl << root->board.blackbit << " " << root->board.whitebit << " " << root->board.kingbit;
+	mclog.log("Search", ss.str());
+	stringstream().swap(ss);
 #endif
 	return root->board;
 }

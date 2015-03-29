@@ -64,3 +64,32 @@ void Board::setPiece(short cell_id, short type) {
 	}
 	return;
 }
+
+std::string boardToString(Board& b) {
+	std::stringstream ss(std::ios_base::app | std::ios_base::out);
+
+	for (int i = 7; i >= 0; i--) {
+		if (i % 2 == 1) {
+			ss << "  ";
+		}
+		ss << pieceToString(b.getPiece(i * 4 + 4)) << "  ";
+		ss << pieceToString(b.getPiece(i * 4 + 3)) << "  ";
+		ss << pieceToString(b.getPiece(i * 4 + 2)) << "  ";
+		ss << pieceToString(b.getPiece(i * 4 + 1));
+		if (i % 2 == 0) {
+			ss << "  ";
+		}
+		ss << "\n";
+	}
+	
+	return ss.str();
+}
+
+std::string pieceToString(short piece) {
+	std::stringstream ss;
+	std::string ret;
+	if (piece == FREE) ss << "  ";
+	else ss << (piece & WHITE ? "W" : "B") << (piece & MAN ? "M" : "K");
+
+	return ss.str();
+}

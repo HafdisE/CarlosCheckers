@@ -2,6 +2,8 @@
 #define BOARD_H
 
 #include <string>
+#include <iostream>
+#include <sstream>
 
 #define OCCUPIED 0
 #define WHITE 1
@@ -29,6 +31,7 @@ public:
 	   Might make this static or switch to the proper hash function overloading.. */
 	std::size_t hash() const;
 	
+	
 	/* equals operator overload */
 	bool operator==(const Board &other) const
 	{
@@ -41,8 +44,9 @@ public:
 
 private:
 	
-
 	friend struct ::CarlosCheckersTests::BoardTester;
 };
 
+std::string boardToString(Board& b);
+std::string pieceToString(short piece);
 #endif

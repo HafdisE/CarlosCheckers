@@ -40,12 +40,12 @@ void Checkers::setPlayer(short newplayer) {
 }
 
 short Checkers::goalTest(Board &board, short player) {
-	counter c = countPieces(board);
-	if ((c.black == 0 && player == BLACK) || (c.white == 0 && player == WHITE)) {
+	//counter c = countPieces(board);
+	if ((board.blackbit == 0 && player == BLACK) || (board.whitebit == 0 && player == WHITE)) {
 		return LOSS;
 	}
 
-	if ((c.black == 0 && player == WHITE) || (c.white == 0 && player == BLACK)) {
+	if ((board.blackbit == 0 && player == WHITE) || (board.whitebit == 0 && player == BLACK)) {
 		return WIN;
 	}
 
