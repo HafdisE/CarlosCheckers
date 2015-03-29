@@ -9,11 +9,12 @@ using namespace std;
 
 Logger::Logger(string filename) {
 	stringstream ss;
+
 	ss << "C:/Logs/" << filename << "_" << VERSION << ".log";
 	ss >> fname;
 	file = new ofstream(fname);
 	file->open(fname, std::ios::out | std::ios::trunc);
-	assert(file->is_open() == true);
+	//assert(file->is_open() == true);
 }
 
 void Logger::log(string loc, string msg) {

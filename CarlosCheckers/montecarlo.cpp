@@ -66,6 +66,7 @@ void MonteCarlo::updateTree() {
 	mclog.log("Update tree", "Failed to find board in children, clearing tree and changing root.");
 #endif
 	clearTree();
+	tsim_count = 0;
 	//if root is null or current board wasn't one of the children
 	root = new Node(0, 0, Checkers::getBoard());
 }
@@ -74,6 +75,15 @@ void MonteCarlo::updateTree() {
 Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	double start = clock();
 	updateTree();
+#if LOGGING
+	char logstr[128];
+	Board curr = Checkers::getBoard();
+	sprintf(logstr, "Actual board state: %d whitebit: %d kingbit: %d", curr.blackbit, curr.whitebit, curr.kingbit);
+	mclog.log("Search", logstr);
+	sprintf(logstr, "Starting search with blackbit: %d whitebit: %d kingbit: %d", root->board.blackbit, root->board.whitebit, root->board.kingbit);
+	mclog.log("Search", logstr);
+
+#endif
 #if LOGGING
 	int calls = 0;
 #endif
@@ -86,9 +96,8 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	}
 
 #if LOGGING
-	char log[128];
-	sprintf(log, "Search complete with %d calls to search over %lf", calls, (clock()-start));
-	mclog.log("Search", log);
+	sprintf(logstr, "Search complete with %d calls to search over %lf", calls, (clock()-start));
+	mclog.log("Search", logstr);
 #endif
 	int index = 0;
 	double max = INFMIN;
@@ -104,7 +113,6 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	selectNode(index);
 	
 #if LOGGING
-	char logstr[128];
 	sprintf(logstr, "Returning board with blackbit: %d whitebit: %d kingbit: %d", root->board.blackbit, root->board.whitebit, root->board.kingbit);
 	mclog.log("Search", logstr);
 #endif
