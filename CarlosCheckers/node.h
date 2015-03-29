@@ -7,8 +7,9 @@ using namespace std;
 
 struct Node
 {
-	Node(int sim_count, int win_count, Board board) : sim_count(sim_count), win_count(win_count), board(board) { };
+	Node(int sim_count, int win_count, Board board, double worth) : sim_count(sim_count), win_count(win_count), board(board), worth(worth) { };
 	int sim_count, win_count;
+	double worth;
 	vector<Node*> children;
 	Board board;
 };
