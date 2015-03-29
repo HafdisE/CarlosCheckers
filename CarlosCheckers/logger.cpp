@@ -7,28 +7,27 @@
 
 using namespace std;
 
-Logger::Logger(string filename) {
+void Logger::setFile(string filename) {
 	stringstream ss;
 
 	ss << "C:/Logs/" << filename << "_" << VERSION << ".log";
 	ss >> fname;
-	file = new ofstream(fname);
-	file->open(fname, std::ios::out | std::ios::trunc);
+	file.open(fname, std::ios::out | std::ios::trunc);
+	
 	//assert(file->is_open() == true);
 }
 
 void Logger::log(string loc, string msg) {
-	if (file) {
-		*(file) << "[" << loc << "] " << msg << "\n";
-		//assert(file->good() == true);		
+	if (file.is_open()) {
+		file.clear();
+		file << "[" << loc << "] " << msg << "\n";
+		//assert(file->good() == true);
+		
 	}
 }
 Logger::~Logger() {
-	if (file) {
-		file->flush();
-		file->close();
-		delete file;
-	}
+	file.flush();
+	file.close();
 }
 
 #endif

@@ -8,7 +8,7 @@ MonteCarlo::MonteCarlo() : tsim_count(0) {
 	root = NULL; 
 	generator = mt19937(rand_dev()); 
 #if LOGGING
-	mclog = Logger("montecarlo");
+	mclog.setFile("montecarlo");
 #endif
 }
 

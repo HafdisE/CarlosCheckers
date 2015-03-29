@@ -11,15 +11,14 @@ using namespace std;
 
 class Logger {
 public:
-	Logger() : file(NULL) {};
-	/* create instnace of logger and initialise with file filename */
-	Logger(string filename);
+	Logger() {};
 	~Logger();
 	/* log a message from an identifying location */
 	void log(string location, string message);
+	void setFile(string file);
 private:
 	char fname[128];
-	ofstream* file;
+	ofstream file;
 	char buf[255];
 };
 
