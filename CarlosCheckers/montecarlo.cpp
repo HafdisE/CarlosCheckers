@@ -70,7 +70,7 @@ void MonteCarlo::updateTree() {
 	clearTree();
 	tsim_count = 0;
 	//if root is null or current board wasn't one of the children
-	root = new Node(0, 0, Checkers::getBoard());
+	root = new Node(0, 0, Checkers::getBoard(), 0);
 }
 
 
@@ -131,13 +131,14 @@ int MonteCarlo::search(NodePtr node, short player){
 	int result;
 	if (node->children.empty()){
 		result = simulation(moves.front(), (player == 1) ? 2 : 1);
-		node->children.push_back(new Node(1, result, moves.back()));
+		node->children.push_back(new Node(1, result, moves.back(), 0));
+		node->children.back()->worth = evaluationUCB1(node->children.back());
 		s++;
 	} else {
 		double maxValue = INFMIN;
 		int maxNode = 0;
 		for (size_t i = 0; i < node->children.size(); i++) {
-			double currValue = evaluationUCB1(node->children[i]);
+			double currValue = node->children[i]->worth;
 			if (currValue > maxValue){
 				maxValue = currValue;
 				maxNode = i;
@@ -146,12 +147,14 @@ int MonteCarlo::search(NodePtr node, short player){
 		if ((moves.size() > node->children.size()) && (evaluationUCB1(NULL) > maxValue)){
 			maxNode++;
 			result = simulation(moves[maxNode], (player == 1) ? 2 : 1);
-			node->children.push_back(new Node(1, result, moves[maxNode]));
+			node->children.push_back(new Node(1, result, moves[maxNode], 0));
+			node->children.back()->worth = evaluationUCB1(node->children.back());
 			s++;
 		} else {
 			result = search(node->children[maxNode], (player == 1) ? 2 : 1);
 			node->sim_count++;
 			node->win_count =+ result;
+			node->worth = evaluationUCB1(node);
 		}
 	}
 		return result;
