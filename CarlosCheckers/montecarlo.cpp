@@ -32,6 +32,7 @@ void MonteCarlo::clearTree(NodePtr node){
 			clearTree(node->children[i]);
 		}
 		delete node;
+		s--;
 	}
 }
 
