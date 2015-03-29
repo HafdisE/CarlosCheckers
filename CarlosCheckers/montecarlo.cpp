@@ -26,7 +26,7 @@ void MonteCarlo::clearTree(){
 }
 
 void MonteCarlo::clearTree(NodePtr node){
-	if (!node){
+	if (node){
 		for (unsigned int i = 0; i < node->children.size(); i++){
 			clearTree(node->children[i]);
 		}

@@ -8,7 +8,7 @@
 #include "checkers.h"
 #include "node.h"
 #include "logger.h"
-#define LOGGING 1
+#define LOGGING 0
 #define INFMIN  -300000000
 #define SIMULATION_LENGTH 50
 static double C  = sqrt(2);
