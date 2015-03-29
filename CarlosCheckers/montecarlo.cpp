@@ -7,6 +7,7 @@
 MonteCarlo::MonteCarlo() : tsim_count(0) { 
 	root = NULL; 
 	generator = mt19937(rand_dev()); 
+	s = 0;
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -99,6 +100,10 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	sprintf(logstr, "Search complete with %d calls to search over %lf", calls, (clock()-start));
 	mclog.log("Search", logstr);
 #endif
+
+
+
+
 	int index = 0;
 	double max = INFMIN;
 	double eval;
@@ -126,6 +131,7 @@ int MonteCarlo::search(NodePtr node, short player){
 	if (node->children.empty()){
 		result = simulation(moves.front(), (player == 1) ? 2 : 1);
 		node->children.push_back(new Node(1, result, moves.back()));
+		s++;
 	} else {
 		double maxValue = INFMIN;
 		int maxNode = 0;
@@ -140,6 +146,7 @@ int MonteCarlo::search(NodePtr node, short player){
 			maxNode++;
 			result = simulation(moves[maxNode], (player == 1) ? 2 : 1);
 			node->children.push_back(new Node(1, result, moves[maxNode]));
+			s++;
 		} else {
 			result = search(node->children[maxNode], (player == 1) ? 2 : 1);
 			node->sim_count++;

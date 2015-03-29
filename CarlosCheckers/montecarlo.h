@@ -19,8 +19,10 @@ public:
 	~MonteCarlo();
 	Board search(double maxtime, int* playnow, char str[255]);
 	void clearTree();
+	int size(){ return s; };
 private:
 	NodePtr root;
+	int s;
 	double evaluationUCB1(NodePtr node);
 	int search(NodePtr node, short player);
 	int simulation(Board board, short player);
