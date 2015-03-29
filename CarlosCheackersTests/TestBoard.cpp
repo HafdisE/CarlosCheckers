@@ -88,5 +88,11 @@ namespace CarlosCheckersTests
 			b.setPiece(15, FREE);
 			Assert::AreEqual((short)FREE, b.getPiece(15));
 		}
+
+		TEST_METHOD(Printboard)
+		{
+			Board b;
+			std::string board = boardToString(b);
+		}
 	};
 }
