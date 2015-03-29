@@ -24,6 +24,7 @@ private:
 	int simulation(Board board, short player);
 	void selectNode(int node);
 	void clearTree(NodePtr node);
+	void updateTree();
 	
 	int tsim_count;
 };

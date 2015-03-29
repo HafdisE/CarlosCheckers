@@ -34,12 +34,27 @@ double MonteCarlo::evaluationUCB1(NodePtr node){
 	return (node->win_count / (double)node->sim_count) + C * (sqrt(log(tsim_count) / (double)node->sim_count));
 }
 
+void MonteCarlo::updateTree() {
+	if (root) {
+		Board curr = Checkers::getBoard();
+		//find the node containing the current board
+		for (int i = 0; i < root->children.size(); i++) {
+			if (root->children[i]->board == curr) {
+				//select it and return
+				selectNode(i);
+				return;
+			}
+		}
+	}
+	
+	//if root is null or current board wasn't one of the children
+	root = new Node(0, 0, Checkers::getBoard());
+}
+
 
 Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	double start = clock();
-	//clearTree();
-	root = new Node(0, 0, Checkers::getBoard());
-	//temporary hack
+	updateTree();
 	int calls = 0;
 	while (true) {
 		//sprintf(str, "Searching. Time is: %lf", (clock() - start));
