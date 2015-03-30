@@ -9,7 +9,7 @@ using namespace std;
 
 struct Node
 {
-	Node(int sim_count, int win_count, Board board, double worth) : sim_count(sim_count), win_count(win_count), board(board), has_goal(false), has_loss(false) { };
+	Node(int sim_count, int win_count, Board board) : sim_count(sim_count), win_count(win_count), board(board), has_goal(false), has_loss(false) { };
 	int sim_count, win_count;
 	vector<Node*> children;
 	Board board;
