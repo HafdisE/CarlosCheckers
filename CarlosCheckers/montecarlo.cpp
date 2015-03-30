@@ -93,6 +93,7 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	while (true) {
 		if (((clock() - start) >= maxtime*1000)) break;
 		search(root, Checkers::getPlayer());
+		tsim_count++;
 #if LOGGING
 		calls++;
 #endif
@@ -115,6 +116,7 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	return root->board;
 }
 
+
 int MonteCarlo::search(NodePtr node, short player){
 	int result;
 	NodePtr temp;
@@ -129,7 +131,6 @@ int MonteCarlo::search(NodePtr node, short player){
 		node->children.push(temp);
 		s++;
 	} else {
-
 		if ((!node->moves_left.empty()) && (evaluationUCB1(NULL) > node->children.top()->worth)){
 			result = simulation(node->moves_left.back(), (player == 1) ? 2 : 1);
 			temp = new Node(1, result, node->moves_left.back(), 0, node);
