@@ -108,7 +108,7 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 
 	/* Logging search results for each search set up */
 #if LOGGING
-	ss << "Search complete with " << calls << " calls to search over " << (clock() - start) / 1000 << "seconds";
+	ss << "Search complete with " << calls << " calls to search over " << (clock() - start) / 1000 << " sec. Tree is of size " << size() << ".";
 	mclog.log("Search", ss.str());
 	stringstream().swap(ss);
 #endif
