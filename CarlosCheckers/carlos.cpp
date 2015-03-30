@@ -2,6 +2,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "carlos.h"
+#define RANDOM 0
+
 
 BOOL WINAPI DllEntryPoint(HANDLE hDLL, DWORD dwReason, LPVOID lpReserved)
 {
@@ -41,13 +43,21 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 
 	if (strcmp(command, "name") == 0)
 	{
+#if RANDOM
+		sprintf(reply, "Random Carlos Montorazzo");
+#else
 		sprintf(reply, "Carlos Montorazzo");
+#endif
 		return 1;
 	}
 
 	if (strcmp(command, "about") == 0)
 	{
+#if RANDOM
+		sprintf(reply, "Random Carlos Montorazzo 0.0.0");
+#else
 		sprintf(reply, "Carlos Montorazzo 0.0.0");
+#endif
 		return 1;
 	}
 
@@ -106,16 +116,24 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	assert(color == original_color);
 	Checkers::setPlayer(color);
 	Checkers::setBoard(b);
-	/*vector<Board> moves = Checkers::getLegalBoards(Checkers::getBoard(), color);
+
+
+	//random
+#if RANDOM
+	vector<Board> moves = Checkers::getLegalBoards(Checkers::getBoard(), color);
 	if (moves.size() == 0) return LOSS;
 	random_device  rand_dev;
 	mt19937 generator(rand_dev());
 	uniform_int_distribution<int> distr(0, moves.size() - 1);
 	int index = distr(generator);
-	Checkers::setBoard(moves[index]);
+	Board m = moves[index];
+	Checkers::setBoard(m);
 	sprintf(str, "Selected move %d of %d", index+1, moves.size());*/
-
+#else
+	//monte carlo
 	Board m = mc.search(maxtime, playnow, str);
+#endif
+
 	int goal = Checkers::goalTest(m, Checkers::getPlayer());
 	if (m == Checkers::getBoard()) goal = DRAW;
 	Checkers::setBoard(m);
@@ -129,7 +147,9 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 		b[c.x][c.y] = piece;
 	}
 
+#if !RANDOM
 	sprintf(str, "%u %u %u", m.blackbit, m.whitebit, m.kingbit);
+#endif
 
 	
 
