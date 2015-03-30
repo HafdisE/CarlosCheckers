@@ -1,7 +1,7 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#define VERSION 0.0
+#define VERSION 0
 #include <string>
 #include <iostream>
 #include <sstream>

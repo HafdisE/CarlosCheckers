@@ -106,9 +106,10 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	if (moves.size() == 0) return LOSS;
 	random_device  rand_dev;
 	mt19937 generator(rand_dev());
-	uniform_int_distribution<int> distr(0, moves.size() - 1);*/
-
-	//sprintf(str, "board 15: %d", Checkers::getBoard().getPiece(15));
+	uniform_int_distribution<int> distr(0, moves.size() - 1);
+	int index = distr(generator);
+	Checkers::setBoard(moves[index]);
+	sprintf(str, "Selected move %d of %d", index+1, moves.size());*/
 
 	Board m = mc.search(maxtime, playnow, str);
 	Checkers::setBoard(m);

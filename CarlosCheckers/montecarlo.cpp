@@ -106,7 +106,7 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 			}
 		}
 
-	selectNode(i);
+	selectNode(i-1);
 	
 #if LOGGING
 	ss << "Returning board" << endl << boardToString(root->board) << endl << root->board.blackbit << " " << root->board.whitebit << " " << root->board.kingbit;
@@ -152,15 +152,15 @@ int MonteCarlo::search(NodePtr node, short player){
 			}
 		}
 		if ((moves.size() > node->children.size()) && evaluationUCB1(NULL) > maxValue){
-			result = simulation(node->children[i + 1]->board, (player == 1) ? 2 : 1);
-			temp = new Node(0, 0, node->children[i + 1]->board);
+			result = simulation(moves[i], (player == 1) ? 2 : 1);
+			temp = new Node(0, 0, moves[i]);
 			updateNode(temp, player, result);
 			node->children.push_back(temp);
 			s++;
 		} else {
-			temp = node->children[i];
+			temp = node->children[i-1];
 			result = search(temp, (player == 1) ? 2 : 1);
-			assert(result < 2);
+			//assert(result < 2);
 			updateNode(temp, player, result);
 		}
 	}
