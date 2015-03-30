@@ -13,8 +13,8 @@
 #include "logger.h"
 #define LOGGING 1
 #define INFMIN  -300000000
-#define SIMULATION_LENGTH 50
-static double C  = sqrt(2.5);
+#define SIMULATION_LENGTH 70
+static double C  = sqrt(3);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo {
 public:
