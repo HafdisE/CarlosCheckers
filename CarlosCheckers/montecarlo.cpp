@@ -140,8 +140,8 @@ int MonteCarlo::search(NodePtr node, short player){
 			s++;
 		} else {
 			temp = node->children.top();
-			result = search(temp, (player == 1) ? 2 : 1);
 			node->children.pop();
+			result = search(temp, (player == 1) ? 2 : 1);
 			temp->sim_count++;
 			temp->win_count += result;
 			temp->worth = evaluationUCB1(temp);
