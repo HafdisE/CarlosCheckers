@@ -20,6 +20,7 @@ public:
 	Board search(double maxtime, int* playnow, char str[255]);
 	void clearTree();
 	int size(){ return s; };
+	void postorder(NodePtr p, int indent);
 private:
 	NodePtr root;
 	int s;
