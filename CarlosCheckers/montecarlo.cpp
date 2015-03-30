@@ -69,7 +69,7 @@ void MonteCarlo::updateTree() {
 	clearTree();
 	tsim_count = 0;
 	//if root is null or current board wasn't one of the children
-	root = new Node(0, 0, Checkers::getBoard(), 0, NULL);	
+	root = new Node(0, 0, Checkers::getBoard(), 0);
 }
 
 
@@ -136,7 +136,7 @@ int MonteCarlo::search(NodePtr node, short player){
 		}
 		if (!(node->has_goal || node->has_loss)) result = simulation(move, (player == 1) ? 2 : 1);		
 		else result = INT_MAX;
-		temp = new Node(1, result, moves.front(), 0, node);
+		temp = new Node(1, result, moves.front(), 0);
 		node->children.push_back(temp);
 		s++;
 	} else {
@@ -152,7 +152,7 @@ int MonteCarlo::search(NodePtr node, short player){
 		}
 		if ((moves.size() > node->children.size()) && evaluationUCB1(NULL) > maxValue){
 			result = simulation(node->children[i + 1]->board, (player == 1) ? 2 : 1);
-			temp = new Node(1, result, node->children[i + 1]->board, 0, node);
+			temp = new Node(1, result, node->children[i + 1]->board, 0);
 			node->children.push_back(temp);
 			s++;
 		} else {
