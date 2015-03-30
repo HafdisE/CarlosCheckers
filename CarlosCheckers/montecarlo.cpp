@@ -89,7 +89,6 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	/* Logging header for each search set up */
 #if LOGGING
 	stringstream ss;
-	stringstream().swap(ss);
 	ss << "Starting search as " << (Checkers::getPlayer() == WHITE ? "white" : "black") << endl << boardToString(root->board) << endl << root->board.blackbit << " " << root->board.whitebit << " " << root->board.kingbit;
 	mclog.log("Search", ss.str());
 	stringstream().swap(ss);

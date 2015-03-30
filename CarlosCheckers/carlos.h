@@ -32,9 +32,11 @@ struct CBmove            	/* all the information you need about a move */
 	int delpiece[12];    /* what is on these squares */
 } GCBmove;
 
-
+#if !RANDOM
 MonteCarlo mc;
-
+#else
+Logger randlog;
+#endif
 BOOL WINAPI DllEntryPoint(HANDLE hDLL, DWORD dwReason, LPVOID lpReserved);
 
 /* required functions */

@@ -3,7 +3,7 @@
 //logging or nay
 #define LOGGING 1
 //random agent or nay
-#define RANDOM 0
+#define RANDOM 1
 //version number
 #if !RANDOM
 #define VERSION 0

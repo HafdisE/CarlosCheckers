@@ -120,6 +120,13 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 
 	//random
 #if RANDOM
+#if LOGGING
+	if (!randlog.isSet()) randlog.setFile("random");
+	stringstream ss;
+	ss << "Starting random move select as " << (Checkers::getPlayer() == WHITE ? "white" : "black") << endl << boardToString(Checkers::getBoard()) << endl << Checkers::getBoard().blackbit << " " << Checkers::getBoard().whitebit << " " << Checkers::getBoard().kingbit;
+	randlog.log("Start", ss.str());
+	stringstream().swap(ss);
+#endif
 	vector<Board> moves = Checkers::getLegalBoards(Checkers::getBoard(), color);
 	if (moves.size() == 0) return LOSS;
 	random_device  rand_dev;
@@ -128,7 +135,12 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	int index = distr(generator);
 	Board m = moves[index];
 	Checkers::setBoard(m);
-	sprintf(str, "Selected move %d of %d", index+1, moves.size());*/
+#if LOGGING
+	ss << "Chose to do the following as " << (Checkers::getPlayer() == WHITE ? "white" : "black") << endl << boardToString(Checkers::getBoard()) << endl << Checkers::getBoard().blackbit << " " << Checkers::getBoard().whitebit << " " << Checkers::getBoard().kingbit;
+	randlog.log("End", ss.str());
+	stringstream().swap(ss);
+#endif
+	sprintf(str, "Selected move %d of %d", index+1, moves.size());
 #else
 	//monte carlo
 	Board m = mc.search(maxtime, playnow, str);

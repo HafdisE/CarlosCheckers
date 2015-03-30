@@ -16,10 +16,12 @@ public:
 	/* log a message from an identifying location */
 	void log(string location, string message);
 	void setFile(string file);
+	bool isSet() const;
 private:
 	char fname[128];
 	ofstream file;
 	char buf[255];
+	bool set = false;
 };
 
 #endif

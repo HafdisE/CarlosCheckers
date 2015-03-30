@@ -8,7 +8,12 @@
 
 using namespace std;
 
+bool Logger::isSet() const {
+	return set;
+}
+
 void Logger::setFile(string filename) {
+	set = true;
 	stringstream ss;
 	time_t rawtime;
 	struct tm * timeinfo;
