@@ -26,9 +26,7 @@ void Checkers::setBoard(Board board) {
 	current_board = board;
 }
 
-
-/* Get the player */
-int Checkers::getPlayer() {
+short Checkers::getPlayer() {
 	return player;
 }
 

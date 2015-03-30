@@ -32,6 +32,7 @@ private:
 	void selectNode(int index);
 	void clearTree(NodePtr node);
 	void updateTree();
+	void updateNode(NodePtr node, short player, short result);
 	
 
 	random_device rand_dev;

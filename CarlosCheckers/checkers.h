@@ -20,7 +20,7 @@
 /* return values */
 #define DRAW 0
 #define WIN 1
-#define LOSS 0
+#define LOSS 2
 #define UNKNOWN 3
 
 using namespace std;
@@ -81,7 +81,7 @@ public:
 	/* Get pointer to the current state */
 	//static State getState();
 	/* Get the player */
-	static int getPlayer();
+	static short getPlayer();
 	static void setPlayer(short player);
 
 	
