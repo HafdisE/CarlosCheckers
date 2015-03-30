@@ -100,7 +100,7 @@ vector<Board> Checkers::getLegalBoards(Board &board, short player) {
 	vector<movp> path;
 	bool captured = false;
 	for (int i = 1; i <= 32; i++) {
-		if (!(current_board.getPiece(i) & player)) continue;
+		if (!(board.getPiece(i) & player)) continue;
 		generateMoves(board, i, player, normal, captures, path, captured);
 	}
 	return (captured ? captures : normal);

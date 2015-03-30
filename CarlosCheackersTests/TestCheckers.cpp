@@ -274,6 +274,15 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)4, moves.size());
 		}
 
+		TEST_METHOD(TestWhiteMoveSixthBlackToSeventh) {
+			//pls don't do this pls pls
+			Board start(8391677, 2004353024, 0);
+			Board wrong(134220797, 2004353024, 0);
+			vector<Board> moves = Checkers::getLegalBoards(start, WHITE);
+			for (size_t i = 0; i < moves.size(); i++) {
+				Assert::IsFalse(wrong == moves[i]);
+			}
+		}
 		
 	};
 	
