@@ -47,6 +47,19 @@ private:
 	friend struct ::CarlosCheckersTests::BoardTester;
 };
 
+namespace std {
+
+	template <>
+	struct hash<Board>
+	{
+		std::size_t operator()(const Board& k) const
+		{
+			return k.hash();
+		}
+	};
+
+}
+
 std::string boardToString(Board& b);
 std::string pieceToString(short piece);
 #endif

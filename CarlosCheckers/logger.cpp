@@ -10,7 +10,7 @@ using namespace std;
 void Logger::setFile(string filename) {
 	stringstream ss;
 
-	ss << "C:/Users/Hafdís/Dropbox/School/ARTI/logs/" << filename << "_" << VERSION << ".log";
+	ss << "C:/logs/" << filename << "_" << VERSION << ".log";
 	ss >> fname;
 	file.open(fname, std::ios::out | std::ios::trunc);
 	

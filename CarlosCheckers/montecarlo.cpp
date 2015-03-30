@@ -116,11 +116,23 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	return root->board;
 }
 
+vector<Board> MonteCarlo::getLegalBoards(Board& board, short player) {
+	if (transposition_table.count(board)) {
+		return transposition_table[board];
+	}
+	else {
+		//make an entry
+		vector<Board> ret = Checkers::getLegalBoards(board, player);
+		transposition_table[board] = ret;
+		return ret;
+	}
+
+}
 
 int MonteCarlo::search(NodePtr node, short player){
 	if (node->has_goal) return WIN;
 	else if (node->has_loss) return LOSS;
-	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
+	vector<Board> moves = getLegalBoards(node->board, player);
 	int result;
 	NodePtr temp;
 	if (node->children.empty()){
