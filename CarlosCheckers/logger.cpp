@@ -4,13 +4,21 @@
 #include "logger.h"
 #include <cstdio>
 #include <assert.h>
+#include <time.h>
 
 using namespace std;
 
 void Logger::setFile(string filename) {
 	stringstream ss;
+	time_t rawtime;
+	struct tm * timeinfo;
+	char buffer[80];
 
-	ss << PATH << filename << "_" << VERSION << ".log";
+	time(&rawtime);
+	timeinfo = localtime(&rawtime);
+
+	strftime(buffer, 80, "%d%m%y%H%M%S", timeinfo);
+	ss << PATH << filename << "_" << VERSION << "_" <<  buffer << ".log";
 	ss >> fname;
 	file.open(fname, std::ios::out | std::ios::trunc);
 	

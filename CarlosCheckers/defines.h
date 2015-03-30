@@ -5,7 +5,7 @@
 //random agent or nay
 #define RANDOM 0
 //version number
-#if RANDOM
+#if !RANDOM
 #define VERSION 0
 #else
 #define VERSION 9999
