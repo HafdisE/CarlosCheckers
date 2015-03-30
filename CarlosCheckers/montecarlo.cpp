@@ -141,7 +141,8 @@ int MonteCarlo::search(NodePtr node, short player){
 		}
 		if (!(node->has_goal || node->has_loss)) result = simulation(move, (player == 1) ? 2 : 1);		
 		else result = INT_MAX;
-		temp = new Node(1, result, moves.front(), 0);
+		temp = new Node(0, 0, moves.front(), 0);
+		updateNode(temp, player, result);
 		node->children.push_back(temp);
 		s++;
 	} else {
@@ -157,20 +158,39 @@ int MonteCarlo::search(NodePtr node, short player){
 		}
 		if ((moves.size() > node->children.size()) && evaluationUCB1(NULL) > maxValue){
 			result = simulation(node->children[i + 1]->board, (player == 1) ? 2 : 1);
-			temp = new Node(1, result, node->children[i + 1]->board, 0);
+			temp = new Node(0, 0, node->children[i + 1]->board, 0);
+			updateNode(temp, player, result);
 			node->children.push_back(temp);
 			s++;
 		} else {
 			temp = node->children[i];
 			result = search(temp, (player == 1) ? 2 : 1);
 			assert(result < 2);
-			temp->sim_count++;
-			temp->win_count += result;
+			updateNode(temp, player, result);
 		}
 	}
 		return result;
 
 }
+
+void MonteCarlo::updateNode(NodePtr node, short player, short result){
+	node->sim_count++;
+	switch (result)
+	{
+	case WIN:
+		if (player == Checkers::getPlayer()){
+			node->win_count++;
+		}
+	case LOSS:
+		if (!(player == Checkers::getPlayer())){
+			node->win_count++;
+		}
+	default:
+		break;
+	}
+
+}
+
 int MonteCarlo::simulation(Board board, short player){
 	short me = Checkers::getPlayer();
 	Board currMove = board;

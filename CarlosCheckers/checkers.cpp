@@ -31,7 +31,7 @@ void Checkers::setBoard(Board board) {
 	current_board = board;
 }
 
-int Checkers::getPlayer() {
+short Checkers::getPlayer() {
 	return player;
 }
 
