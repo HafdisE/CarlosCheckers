@@ -118,12 +118,21 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 
 
 int MonteCarlo::search(NodePtr node, short player){
+	if (node->is_goal) return WIN;
 	int result;
 	NodePtr temp;
 	if (node->children.empty()){
 		vector<Board> moves = Checkers::getLegalBoards(node->board, player);
 		if (moves.size() == 0) return LOSS;
-		result = simulation(moves.back(), (player == 1) ? 2 : 1);		
+		Board move = moves.back();
+		for (size_t i = 0; i < moves.size(); i++) {
+			if (Checkers::goalTest(moves[i], player)) {
+				move = moves[i];
+				node->is_goal = true;
+				break;
+			}
+		}
+		result = simulation(move, (player == 1) ? 2 : 1);		
 		temp = new Node(1, result, moves.back(), 0, node);
 		moves.pop_back();
 		temp->moves_left = moves;
