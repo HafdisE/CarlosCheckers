@@ -1,11 +1,11 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 
-#define VERSION 0
 #include <string>
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include "defines.h"
 
 using namespace std;
 

@@ -7,16 +7,7 @@
 #include <windows.h>
 #include <random>
 #include "montecarlo.h"
-
-
-
-/*----------> compile options  */
-#undef MUTE
-#undef VERBOSE
-#define STATISTICS
-
-
-
+#include "defines.h"
 
 /*----------> structure definitions  */
 struct move2

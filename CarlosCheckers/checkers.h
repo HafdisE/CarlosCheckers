@@ -6,22 +6,7 @@
 //#include "state.h"
 #include "board.h"
 #include <utility>
-
-#define NW(x) (!(((x-1)/4)%2) ? x + 5 : x + 4)
-#define NE(x) (!(((x-1)/4)%2) ? x + 4 : x + 3)
-#define SW(x) (!(((x-1)/4)%2) ? x - 3 : x - 4)
-#define SE(x) (!(((x-1)/4)%2) ? x - 4 : x - 5)
-
-#define NORTHWEST 0
-#define NORTHEAST 1
-#define SOUTHWEST 2
-#define SOUTHEAST 3
-
-/* return values */
-#define DRAW 0
-#define WIN 1
-#define LOSS 2
-#define UNKNOWN 3
+#include "defines.h"
 
 using namespace std;
 

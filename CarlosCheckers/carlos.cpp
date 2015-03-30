@@ -2,7 +2,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 #include "carlos.h"
-#define RANDOM 0
+
 
 
 BOOL WINAPI DllEntryPoint(HANDLE hDLL, DWORD dwReason, LPVOID lpReserved)

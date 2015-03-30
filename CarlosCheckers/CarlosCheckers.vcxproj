@@ -79,6 +79,7 @@
     <ClInclude Include="board.h" />
     <ClInclude Include="carlos.h" />
     <ClInclude Include="checkers.h" />
+    <ClInclude Include="defines.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="montecarlo.h" />
     <ClInclude Include="node.h">

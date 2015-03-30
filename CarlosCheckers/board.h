@@ -4,16 +4,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-
-#define OCCUPIED 0
-#define WHITE 1
-#define BLACK 2
-#define MAN 4
-#define KING 8
-#define FREE 16
-#define CHANGECOLOR 3
-#define MAXDEPTH 99
-#define MAXMOVES 28
+#include "defines.h"
 
 namespace CarlosCheckersTests {
 	struct BoardTester;
