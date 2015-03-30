@@ -20,9 +20,10 @@ public:
 	Board search(double maxtime, int* playnow, char str[255]);
 	void clearTree();
 	int size(){ return s; };
-	void postorder(NodePtr p, int indent);
 private:
 	NodePtr root;
+	int tsim_count;
+	short player;
 	int s;
 	double evaluationUCB1(NodePtr node);
 	int search(NodePtr node, short player);
@@ -31,7 +32,6 @@ private:
 	void clearTree(NodePtr node);
 	void updateTree();
 	
-	int tsim_count;
 
 	random_device rand_dev;
 	mt19937 generator;

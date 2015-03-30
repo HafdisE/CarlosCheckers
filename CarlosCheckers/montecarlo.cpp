@@ -46,7 +46,7 @@ void MonteCarlo::selectNode(){
 
 double MonteCarlo::evaluationUCB1(NodePtr node){
 	if (!node) return (C * (sqrt(log(tsim_count))));
-	return (node->win_count / (double)node->sim_count) + C * (sqrt(log(tsim_count) / (double)node->sim_count));
+	return (node->win_count / static_cast<double>(node->sim_count)) + C * (sqrt(log(tsim_count) / static_cast<double>(node->sim_count)));
 }
 
 void MonteCarlo::updateTree() {
@@ -118,7 +118,8 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 
 
 int MonteCarlo::search(NodePtr node, short player){
-	if (node->is_goal) return WIN;
+	if (node->has_goal) return WIN;
+	else if (node->has_loss) return LOSS;
 	int result;
 	NodePtr temp;
 	if (node->children.empty()){
@@ -128,11 +129,13 @@ int MonteCarlo::search(NodePtr node, short player){
 		for (size_t i = 0; i < moves.size(); i++) {
 			if (Checkers::goalTest(moves[i], player)) {
 				move = moves[i];
-				node->is_goal = true;
+				if (player == Checkers::getPlayer()) node->has_goal = true;
+				else node->has_loss = true;
 				break;
 			}
 		}
-		result = simulation(move, (player == 1) ? 2 : 1);		
+		if (!(node->has_goal || node->has_loss)) result = simulation(move, (player == 1) ? 2 : 1);		
+		else result = INT_MAX;
 		temp = new Node(1, result, moves.back(), 0, node);
 		moves.pop_back();
 		temp->moves_left = moves;
@@ -161,7 +164,7 @@ int MonteCarlo::search(NodePtr node, short player){
 }
 
 int MonteCarlo::simulation(Board board, short player){
-	short me = player;
+	short me = Checkers::getPlayer();
 	Board currMove = board;
 	int isGoal = 0;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){

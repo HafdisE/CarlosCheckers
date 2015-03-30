@@ -16,14 +16,14 @@ struct Node
 			return l->worth < r->worth;
 		}
 	};
-	Node(int sim_count, int win_count, Board board, double worth, Node* parent) : sim_count(sim_count), win_count(win_count), board(board), worth(worth), parent(parent), is_goal(false) { };
+	Node(int sim_count, int win_count, Board board, double worth, Node* parent) : sim_count(sim_count), win_count(win_count), board(board), worth(worth), parent(parent), has_goal(false), has_loss(false) { };
 	int sim_count, win_count;
 	double worth;
 	vector<Board> moves_left;
 	priority_queue<Node*, vector<Node*>, compare> children;
 	Node* parent;
 	Board board;
-	bool is_goal;
+	bool has_goal, has_loss;
 };
 
 typedef Node* NodePtr;
