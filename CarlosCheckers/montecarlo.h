@@ -29,7 +29,7 @@ private:
 	double evaluationUCB1(NodePtr node);
 	int search(NodePtr node, short player);
 	int simulation(Board board, short player);
-	void selectNode();
+	void selectNode(int index);
 	void clearTree(NodePtr node);
 	void updateTree();
 	
