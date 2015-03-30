@@ -1,21 +1,15 @@
 #include "checkers.h"
-/*
-bool CBmove2::operator==(const CBmove2 &other) const {
-	bool res = (from == other.from) && (to == other.to) && (newpiece == other.newpiece) && (oldpiece == other.oldpiece);
-	for (int i = 0; i < 12; i++) {
-		if (!res) break;
-		res &= (path[i] == other.path[i]) && (del[i] == other.del[i]) && (delpiece[i] == other.delpiece[i]);
-	}
-	return res;
-}
-*/
+
 short Checkers::player = WHITE;
 Board Checkers::current_board = Board();
 
+/* Returns the current board */
 Board Checkers::getBoard() {
 	return current_board;
 }
 
+
+/* Set the board with an 8 by 8 array */
 void Checkers::setBoard(int board[8][8]) {
 	Board b(0, 0, 0);
 	coord c;
@@ -27,20 +21,24 @@ void Checkers::setBoard(int board[8][8]) {
 	current_board = b;
 }
 
+/* Set the board with a board... */
 void Checkers::setBoard(Board board) {
 	current_board = board;
 }
 
+
+/* Get the player */
 int Checkers::getPlayer() {
 	return player;
 }
 
+/* Update the player */
 void Checkers::setPlayer(short newplayer) {
 	player = newplayer;
 }
 
+/* Takes in a board and player and tells you whether said player has won or lost or neither */
 short Checkers::goalTest(Board &board, short player) {
-	//counter c = countPieces(board);
 	if ((board.blackbit == 0 && player == BLACK) || (board.whitebit == 0 && player == WHITE)) {
 		return LOSS;
 	}
@@ -49,11 +47,10 @@ short Checkers::goalTest(Board &board, short player) {
 		return WIN;
 	}
 
-	//MISSING DRAW THINGS
-
 	return UNKNOWN;
 }
 
+/* Takes in a board and returns a counter struct with the black piece and white piece count */
 counter Checkers::countPieces(Board &board) {
 	counter count;
 	short piece;
@@ -66,47 +63,25 @@ counter Checkers::countPieces(Board &board) {
 	return count;
 }
 
+/* Takes in coordinates and returns cell ID. Not used. Possibly incorrect. */
 short Checkers::toCellID(coord co) {
 	if (co.x == -1) return 0;
 	return (3 - co.x / 2) + (co.y * 4) + 1;
 }
 
-/*void Checkers::applyMove(CBmove2 move) {
-	if (move.delpiece[0] != FREE) {
-		for (int i = 0; i < 12; i++) {
-			if (move.del[i].x == -1) break;
-			current_board.setPiece(toCellID(move.del[i]), FREE);
-		}
-	}
-	current_board.setPiece(toCellID(move.from), FREE);
-	current_board.setPiece(toCellID(move.to), move.newpiece);
-}
-
-void Checkers::undoMove(CBmove2 move) {
-	if (move.delpiece[0] != FREE) {
-		for (int i = 0; i < 12; i++) {
-			if (move.del[i].x == -1) break;
-			current_board.setPiece(toCellID(move.del[i]), move.delpiece[i]);
-		}
-	}
-	current_board.setPiece(toCellID(move.to), FREE);
-	current_board.setPiece(toCellID(move.from), move.newpiece);
-}
-*/
-
-
+/* Returns legal boards resulting from moves made by the given player on the given board */
 vector<Board> Checkers::getLegalBoards(Board &board, short player) {
 	vector<Board> normal, captures;
 	vector<movp> path;
 	bool captured = false;
 	for (int i = 1; i <= 32; i++) {
 		if (!(board.getPiece(i) & player)) continue;
-		generateMoves(board, i, player, normal, captures, path, captured);
+		generateMoves(board, i, normal, captures, path, captured);
 	}
 	return (captured ? captures : normal);
 }
 
-void Checkers::generateMoves(Board board,  short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, bool promoted, int depth) {
+void Checkers::generateMoves(Board board,  short cell, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, bool promoted, int depth) {
 	vector<movp> moves;
 	if (!promoted) {
 		if (depth == 0 || captured)  {
@@ -119,7 +94,7 @@ void Checkers::generateMoves(Board board,  short cell, short player, vector<Boar
 
 		for (size_t i = 0; i < moves.size(); i++) {
 			path.push_back(moves[i]);
-			generateMoves(applySingleMove(board, moves[i]), moves[i].to, player, normal, capture, path, captured, moves[i].promotion, depth + 1);
+			generateMoves(applySingleMove(board, moves[i]), moves[i].to, normal, capture, path, captured, moves[i].promotion, depth + 1);
 			path.pop_back();
 		}
 	}
