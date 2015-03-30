@@ -125,7 +125,7 @@ Board Checkers::applySingleMove(Board board, movp& move) {
 	board.setPiece(move.from, FREE);
 
 	if (move.capture) board.setPiece(move.capture, FREE);
-	if (promotionCheck(move.to, piece)) {
+	if (promotionCheck(move.to, piece) && (piece & MAN)) {
 		move.promotion = true;
 		piece &= ~MAN;
 		piece |= KING;
