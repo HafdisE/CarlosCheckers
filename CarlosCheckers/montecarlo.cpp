@@ -190,9 +190,15 @@ int MonteCarlo::simulation(Board board, short player){
 	short me = Checkers::getPlayer();
 	Board currMove = board;
 	int isGoal = 0;
+	int count = Checkers::count();
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		isGoal = Checkers::goalTest(currMove, player);
 		if (isGoal == WIN || isGoal == LOSS) break;
+		if ((i % 10) == 0) {
+			int temp = Checkers::count();
+			if (temp == count) break;
+			count = temp;
+		}
 		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
 		if (moves.size() == 0) {
 			isGoal = LOSS;
