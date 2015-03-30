@@ -94,7 +94,7 @@ public:
 	static short goalTest(Board& board, short player);
 
 	static coord toCoord(short cell_id);
-	static int count();
+	static int count(Board board);
 
 private:
 	static short player; //WHITE or BLACK

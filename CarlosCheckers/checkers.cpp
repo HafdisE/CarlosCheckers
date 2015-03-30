@@ -61,14 +61,15 @@ counter Checkers::countPieces(Board &board) {
 	return count;
 }
 
-int Checkers::count() {
-	Board temp = getBoard();
+int Checkers::count(Board board) {
+	Board temp = board;
 	int count = 0;
-	unsigned int mixBoard = temp.blackbit || temp.whitebit || temp.kingbit;
+	unsigned int mixBoard = temp.blackbit | temp.whitebit | temp.kingbit;
 	while (mixBoard) {
 		count += (mixBoard & 1);
 		mixBoard >>= 1;
 	}
+	return count;
 }
 
 /* Takes in coordinates and returns cell ID. Not used. Possibly incorrect. */
