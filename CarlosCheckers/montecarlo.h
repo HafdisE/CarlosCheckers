@@ -42,6 +42,8 @@ private:
 	
 	
 	unordered_map<Board, vector<Board>> transposition_table;
+	unordered_map<Board, short> draw_check;
+	unordered_map<Board, int> simulation_draw_check;
 
 	random_device rand_dev;
 	mt19937 generator;
