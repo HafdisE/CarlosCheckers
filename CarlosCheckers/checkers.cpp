@@ -106,7 +106,7 @@ vector<Board> Checkers::getLegalBoards(Board &board, short player) {
 	return (captured ? captures : normal);
 }
 
-void Checkers::generateMoves(Board board, short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, bool promoted, int depth) {
+void Checkers::generateMoves(Board board,  short cell, short player, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captured, bool promoted, int depth) {
 	vector<movp> moves;
 	if (!promoted) {
 		if (depth == 0 || captured)  {

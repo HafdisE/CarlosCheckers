@@ -88,9 +88,6 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	ss << "Starting search as " << (Checkers::getPlayer() == WHITE ? "white" : "black") << endl << boardToString(root->board) << endl << root->board.blackbit << " " << root->board.whitebit << " " << root->board.kingbit;
 	mclog.log("Search", ss.str());
 	stringstream().swap(ss);
-
-#endif
-#if LOGGING
 	int calls = 0;
 #endif
 	while (true) {
@@ -124,9 +121,9 @@ int MonteCarlo::search(NodePtr node, short player){
 	if (node->children.empty()){
 		vector<Board> moves = Checkers::getLegalBoards(node->board, player);
 		if (moves.size() == 0) return LOSS;
-		result = simulation(moves.back(), (player == 1) ? 2 : 1);
-		moves.pop_back();
+		result = simulation(moves.back(), (player == 1) ? 2 : 1);		
 		temp = new Node(1, result, moves.back(), 0, node);
+		moves.pop_back();
 		temp->moves_left = moves;
 		temp->worth = evaluationUCB1(temp);
 		node->children.push(temp);
@@ -146,7 +143,7 @@ int MonteCarlo::search(NodePtr node, short player){
 			node->children.pop();
 			node->children.push(temp);
 			node->sim_count++;
-			node->win_count =+ result;
+			node->win_count += result;
 			node->worth = evaluationUCB1(node);
 		}
 	}
