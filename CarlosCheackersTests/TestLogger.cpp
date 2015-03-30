@@ -7,7 +7,6 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace CarlosCheckersTests
 {
-	
 
 	TEST_CLASS(TestLogger)
 	{
@@ -23,7 +22,16 @@ namespace CarlosCheckersTests
 			MonteCarlo mc;
 			int playnow = 0;
 			char str[125];
-			mc.search(100000, &playnow, str);
+			//mc.search(100000, &playnow, str);
 		}
+
+		TEST_METHOD(TestTranspositionTable) {
+			MonteCarlo mc;
+			Board b;
+			vector<Board> m1 = mc.getLegalBoards(b, WHITE);
+			vector<Board> m2 = mc.getLegalBoards(b, WHITE);
+			Assert::AreEqual(m1.size(), m2.size());
+		}
+
 	};
 }

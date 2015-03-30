@@ -98,8 +98,12 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 	return 0;
 }
 
+int original_color = 0;
+
 int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *playnow, int info, int unused, struct CBmove *move)
 {
+	if (!original_color) original_color = color;
+	assert(color == original_color);
 	Checkers::setPlayer(color);
 	Checkers::setBoard(b);
 	/*vector<Board> moves = Checkers::getLegalBoards(Checkers::getBoard(), color);
@@ -112,6 +116,8 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	sprintf(str, "Selected move %d of %d", index+1, moves.size());*/
 
 	Board m = mc.search(maxtime, playnow, str);
+	int goal = Checkers::goalTest(m, Checkers::getPlayer());
+	if (m == Checkers::getBoard()) goal = DRAW;
 	Checkers::setBoard(m);
 	
 	coord c;
@@ -125,7 +131,7 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 
 	sprintf(str, "%u %u %u", m.blackbit, m.whitebit, m.kingbit);
 
-	int goal = Checkers::goalTest(Checkers::getBoard(), Checkers::getPlayer());
+	
 
 	return goal;
 }

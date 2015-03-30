@@ -10,6 +10,8 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace CarlosCheckersTests
 {
+
+
 	struct CheckersTester
 	{
 		static coord toCoord(short cell_id) {
