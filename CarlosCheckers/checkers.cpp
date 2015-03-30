@@ -119,13 +119,14 @@ void Checkers::generateMoves(Board board,  short cell, vector<Board> &normal, ve
 	}
 }
 
-Board Checkers::applySingleMove(Board board, movp move) {
+Board Checkers::applySingleMove(Board board, movp& move) {
 	short piece = board.getPiece(move.from);
 
 	board.setPiece(move.from, FREE);
 
 	if (move.capture) board.setPiece(move.capture, FREE);
 	if (promotionCheck(move.to, piece)) {
+		move.promotion = true;
 		piece &= ~MAN;
 		piece |= KING;
 	}
