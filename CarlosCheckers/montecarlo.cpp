@@ -52,29 +52,24 @@ void MonteCarlo::updateTree() {
 	if (root) {
 		Board curr = Checkers::getBoard();
 		//find the node containing the current board
-		while (!root->children.empty()) {
-			
-			if (root->children.top()->board == curr) {
+		for (size_t i = 0; i < root->children.size(); i++) {
+			if (root->children[i]->board == curr) {
 				//select it and return
 #if LOGGING
 				mclog.log("Update tree", "Found node with corresponding board in children. Node selected.");
 #endif
-				selectNode();
+				selectNode(i);
 				return;
 			}
-			NodePtr temp = root->children.top();
-			root->children.pop();
-			clearTree(temp);
 		}
 	}
-	
 #if LOGGING
 	mclog.log("Update tree", "Failed to find board in children, clearing tree and changing root.");
 #endif
 	clearTree();
 	tsim_count = 0;
 	//if root is null or current board wasn't one of the children
-	root = new Node(0, 0, Checkers::getBoard(), 0, NULL);
+	root = new Node(0, 0, Checkers::getBoard(), 0, NULL);	
 }
 
 
