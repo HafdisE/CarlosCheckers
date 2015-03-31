@@ -46,7 +46,6 @@ private:
 	
 	HashMap transposition_table;
 	
-	unordered_map<Board, vector<Board>> transposition_table;
 
 	//draw things
 	int moves_since_last_capture = 0;
