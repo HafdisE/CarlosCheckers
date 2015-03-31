@@ -46,6 +46,7 @@ void MonteCarlo::selectNode(int index){
 	root->children[index] = NULL;
 	clearTree();
 	root = temp;
+	tsim_count = root->sim_count;
 }
 
 /* Just a UCB evaluation function */
@@ -92,7 +93,6 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	ss << "Starting search as " << (Checkers::getPlayer() == WHITE ? "white" : "black") << endl << boardToString(root->board) << endl << root->board.blackbit << " " << root->board.whitebit << " " << root->board.kingbit;
 	mclog.log("Search", ss.str());
 	stringstream().swap(ss);
-	int calls = 0;
 #endif
 
 	/* The basic search loop, checks the time, searches and increments tsim_count for use in the UCB */
@@ -100,15 +100,11 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 		if (((clock() - start) >= maxtime * 1000)) break;
 		search(root, Checkers::getPlayer());
 		tsim_count++;
-		/* Not entirely sure why we need calls when we have tsim_count */
-#if LOGGING
-		calls++;
-#endif
 	}
 
 	/* Logging search results for each search set up */
 #if LOGGING
-	ss << "Search complete with " << calls << " calls to search over " << (clock() - start) / 1000 << " sec. Tree is of size " << size() << ".";
+	ss << "Search complete with " << tsim_count << " simulations over " << (clock() - start) / 1000 << " sec. Tree is of size " << size() << ".";
 	mclog.log("Search", ss.str());
 	stringstream().swap(ss);
 #endif
@@ -132,6 +128,9 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 	stringstream().swap(ss);
 #endif
 	/* We return the root board */
+
+	sprintf(str, "size: %d sims: %d", size(), tsim_count);
+
 	return root->board;
 }
 

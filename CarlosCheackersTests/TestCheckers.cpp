@@ -55,6 +55,14 @@ namespace CarlosCheckersTests
 			Assert::AreEqual(2, res.y);
 		}
 
+		TEST_METHOD(TestMANYLEGAL)
+		{
+			Board b;
+			for (int i = 0; i < 2000; i++) {
+				Checkers::getLegalBoards(b, WHITE);
+			}
+		}
+
 		TEST_METHOD(TestToCellid)
 		{
 			coord cell(4,1);

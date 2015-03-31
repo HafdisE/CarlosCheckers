@@ -160,7 +160,7 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	}
 
 #if !RANDOM
-	sprintf(str, "%u %u %u", m.blackbit, m.whitebit, m.kingbit);
+	//sprintf(str, "%u %u %u", m.blackbit, m.whitebit, m.kingbit);
 #endif
 
 	
