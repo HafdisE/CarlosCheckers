@@ -121,9 +121,9 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 	while (true){
 		if (((clock() - start) >= maxtime * 1000)) break;
 		search(root, Checkers::getPlayer());
-		//if(tsim_count > 1000) {
-		//	tsim_count += 0;
-		//}
+		if(tsim_count > 1000) {
+			tsim_count += 0;
+		}
 		tsim_count++;
 	}
 
@@ -277,9 +277,14 @@ int MonteCarlo::simulation(Board board, short player){
 		if (i % 3 == 2) {
 			if (!isCapture) {
 				counter count = Checkers::countPieces(currMove);
-				if (count.black < 4 && count.white < 4){
+				// We need to fuck around with using conditional and unconditional.  I think maybe we should just always run unconditional
+				if (count.black < 4 && count.white < 4 && (count.white + count.black > 4)){
+					isGoal = dbLookUp(currMove, player, 1);
+					if (isGoal) break;
+
+				} else if (count.black < 3 && count.white < 3){
 					isGoal = dbLookUp(currMove, player, 0);
-					break;
+					if (isGoal) break;
 				}
 			}
 
