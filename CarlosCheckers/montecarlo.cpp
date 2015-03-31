@@ -136,10 +136,10 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 }
 
 vector<Board> MonteCarlo::getLegalBoards(Board& board, short player){
-	if (transposition_table.find(board) == transposition_table.end()) {
-		transposition_table[board] = Checkers::getLegalBoards(board, player);
-	}
-	return transposition_table[board];
+	//if (transposition_table.find(board) == transposition_table.end()) {
+		//transposition_table[board] = Checkers::getLegalBoards(board, player);
+	//}
+	return Checkers::getLegalBoards(board, player);
 }
 
 /* The search function takes in a node and a player and recursively moves down the search tree until it hits a unexpanded node.  There it expands it, runs a simulation

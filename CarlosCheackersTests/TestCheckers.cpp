@@ -80,9 +80,9 @@ namespace CarlosCheckersTests
 		{
 			Board b;
 			vector<movp> moves;
-			for (int many = 0; many < 1000; many++) {
+			for (int many = 0; many < 2000; many++) {
 				for (int i = 1; i <= 32; i++) {
-					CheckersTester::getMoves(moves, i, b);
+					if (b.getPiece(i) != FREE) CheckersTester::getMoves(moves, i, b);
 				}
 			}
 		}
@@ -244,6 +244,21 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)262144, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t) 0, BoardTester::getKingbit(b));
 			Assert::AreEqual((size_t)1, Checkers::getLegalBoards(b, BLACK).size());
+		}
+
+		TEST_METHOD(TestMANYGetCaptures)
+		{
+			Board b(0, 0, 0);
+			b.setPiece(14, BLACK | MAN);
+			b.setPiece(15, BLACK | MAN);
+			b.setPiece(19, WHITE | MAN);
+			vector<movp> m;
+			for (int i = 0; i < 1000; ++i) {
+				m.clear();
+				for (int cell = 1; cell <= 32; ++cell) {
+					if (b.getPiece(cell) != FREE) CheckersTester::getCaptures(m, cell, b);
+				}
+			}
 		}
 
 		TEST_METHOD(TestSuperBasicMoveGoddamn)
