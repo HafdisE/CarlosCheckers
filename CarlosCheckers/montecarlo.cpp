@@ -11,6 +11,7 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	s = 0;
 	transposition_table = unordered_map<Board, vector<Board>>(1000);
 	//transposition_table.reserve(100000);
+	//db_init(128, str);
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -29,6 +30,11 @@ MonteCarlo::~MonteCarlo(){
 void MonteCarlo::clearTree(){
 	clearTree(root);
 	root = NULL;
+}
+
+short MonteCarlo::dbLookUp(Board &board, short player) {
+	//dblookup()
+	return 0;
 }
 
 /* Clear tree helper function */
@@ -94,7 +100,7 @@ void MonteCarlo::updateTree(){
 
 
 /* The base search function.  Calls the helper function while it has time to construct the search tree */
-Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
+Board MonteCarlo::search(double maxtime, int* playnow){
 	/* We start of by setting the clock and updating the tree based on the opponents move*/
 	double start = clock();
 	updateTree();

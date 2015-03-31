@@ -16,7 +16,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -71,6 +71,7 @@
     <ClCompile Include="board.cpp" />
     <ClCompile Include="carlos.cpp" />
     <ClCompile Include="checkers.cpp" />
+    <ClCompile Include="dblookup.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="montecarlo.cpp" />
     <ClCompile Include="node.cpp" />
@@ -79,6 +80,7 @@
     <ClInclude Include="board.h" />
     <ClInclude Include="carlos.h" />
     <ClInclude Include="checkers.h" />
+    <ClInclude Include="dblookup.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="montecarlo.h" />

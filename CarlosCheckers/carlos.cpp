@@ -76,7 +76,7 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 		}
 		if (strcmp(param1, "book") == 0)
 		{
-			sprintf(reply, "?");
+			sprintf(reply, "1");
 			return 0;
 		}
 	}
@@ -90,7 +90,7 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 		}
 		if (strcmp(param1, "book") == 0)
 		{
-			sprintf(reply, "?");
+			sprintf(reply, "1");
 			return 0;
 		}
 		if (strcmp(param1, "protocolversion") == 0)
@@ -143,8 +143,10 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	sprintf(str, "Selected move %d of %d", index+1, moves.size());
 #else
 	//monte carlo
-	Board m = mc.search(maxtime, playnow, str);
+	mc.str = str;
+	Board m = mc.search(maxtime, playnow);
 	bool draw = mc.drawCheck();
+	
 #endif
 
 	int goal = Checkers::goalTest(m, Checkers::getPlayer());

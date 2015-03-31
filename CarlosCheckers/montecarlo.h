@@ -12,6 +12,7 @@
 #include "node.h"
 #include "logger.h"
 #include "defines.h"
+#include "dblookup.h"
 
 static double C  = sqrt(3);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
@@ -19,12 +20,13 @@ class MonteCarlo {
 public:
 	MonteCarlo();
 	~MonteCarlo();
-	Board search(double maxtime, int* playnow, char str[255]);
+	Board search(double maxtime, int* playnow);
 	void clearTree();
 	int size(){ return s; };
 
 	bool drawCheck();
 
+	char *str;
 	//er að vera með stæla. Doesn't want to be tested.
 	vector<Board> getLegalBoards(Board& board, short player);
 private:
@@ -39,7 +41,7 @@ private:
 	void clearTree(NodePtr node);
 	void updateTree();
 	void updateNode(NodePtr node, short player, short result);
-	
+	short dbLookUp(Board& b, short player);
 	
 	unordered_map<Board, vector<Board>> transposition_table;
 

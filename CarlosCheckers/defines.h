@@ -18,10 +18,10 @@
 #define SIMULATION_LENGTH 70
 
 //checkers defines
-#define NW(x) (!(((x-1)/4)%2) ? x + 5 : x + 4)
-#define NE(x) (!(((x-1)/4)%2) ? x + 4 : x + 3)
-#define SW(x) (!(((x-1)/4)%2) ? x - 3 : x - 4)
-#define SE(x) (!(((x-1)/4)%2) ? x - 4 : x - 5)
+#define NW(x) (!(((x-1)/4)%2) ? x + 3 : x + 4)
+#define NE(x) (!(((x-1)/4)%2) ? x + 4 : x + 5)
+#define SW(x) (!(((x-1)/4)%2) ? x - 5 : x - 4)
+#define SE(x) (!(((x-1)/4)%2) ? x - 4 : x - 3)
 
 #define NORTHWEST 8
 #define NORTHEAST 4

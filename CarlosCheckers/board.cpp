@@ -72,10 +72,10 @@ std::string boardToString(Board& b) {
 		if (i % 2 == 1) {
 			ss << "  ";
 		}
-		ss << pieceToString(b.getPiece(i * 4 + 4)) << "  ";
-		ss << pieceToString(b.getPiece(i * 4 + 3)) << "  ";
+		ss << pieceToString(b.getPiece(i * 4 + 1)) << "  ";
 		ss << pieceToString(b.getPiece(i * 4 + 2)) << "  ";
-		ss << pieceToString(b.getPiece(i * 4 + 1));
+		ss << pieceToString(b.getPiece(i * 4 + 3)) << "  ";
+		ss << pieceToString(b.getPiece(i * 4 + 4));
 		if (i % 2 == 0) {
 			ss << "  ";
 		}
