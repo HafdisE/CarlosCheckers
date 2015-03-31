@@ -132,7 +132,7 @@ short Checkers::eval(Board &board, short cell_id, bool promotion) {
 		if (piece & color) val++;
 		else val--;
 	}
-	if (boundaryCheck(NE(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(NE(cell_id))) != FREE) {
+	if (boundaryCheck(NE(cell_id)) && !isRightPiece(cell_id) && (piece = board.getPiece(NE(cell_id))) != FREE) {
 		if (piece & color) val++;
 		else val--;
 	}
@@ -140,7 +140,7 @@ short Checkers::eval(Board &board, short cell_id, bool promotion) {
 		if (piece & color) val++;
 		else val--;
 	}
-	if (boundaryCheck(SE(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(SE(cell_id))) != FREE) {
+	if (boundaryCheck(SE(cell_id)) && !isRightPiece(cell_id) && (piece = board.getPiece(SE(cell_id))) != FREE) {
 		if (piece & color) val++;
 		else val--;
 	}
