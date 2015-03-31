@@ -88,7 +88,7 @@ private:
 	static Board current_board;
 
 	
-	static short eval(Board &board, short cell_id, short capture_count, bool promotion);
+	static short eval(Board &board, short cell_id, bool promotion);
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
 	an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
 	in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */

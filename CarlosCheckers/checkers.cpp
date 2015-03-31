@@ -101,14 +101,16 @@ void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, v
 
 		for (size_t i = 0; i < moves.size(); i++) {
 			applySingleMove(board, moves[i]);
+			if (moves[i].capture) board.bias++;
 			generateMoves(board, moves[i].to, normal, capture, captured, moves[i].promotion, depth + 1);
+			if (moves[i].capture) board.bias--;
 			undoSingleMove(board, moves[i]);
 		}
 	}
 
 	//we can move no more
 	if (moves.size() == 0 && depth > 0) {
-		board.bias = eval(board, cell, (moves[0].capture ? depth - 1 : 0), promoted);
+		board.bias = eval(board, cell, promoted);
 		if (captured) {
 			capture.push_back(board);
 		}
@@ -122,11 +124,10 @@ void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, v
 
 //terrible
 inline
-short Checkers::eval(Board &board, short cell_id, short capture_count, bool promotion) {
+short Checkers::eval(Board &board, short cell_id, bool promotion) {
 	short color = board.getPiece(cell_id) & (WHITE | BLACK);
 	short val = 0;
 	short piece;
-	val += capture_count;
 	if (promotion) val++;
 	if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(NW(cell_id))) != FREE) {
 		if (piece & color) val++;
