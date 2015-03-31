@@ -1,9 +1,9 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 //logging or nay
-#define LOGGING 0
+#define LOGGING 1
 //random agent or nay
-#define RANDOM 0
+#define RANDOM 1
 //version number
 #if !RANDOM
 #define VERSION 0

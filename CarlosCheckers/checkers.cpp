@@ -119,14 +119,13 @@ void Checkers::generateMoves(Board board,  short cell, vector<Board> &normal, ve
 	}
 }
 
-Board Checkers::applySingleMove(Board board, movp& move) {
+Board Checkers::applySingleMove(Board board, movp move) {
 	short piece = board.getPiece(move.from);
 
 	board.setPiece(move.from, FREE);
 
 	if (move.capture) board.setPiece(move.capture, FREE);
-	if (promotionCheck(move.to, piece)) {
-		move.promotion = true;
+	if (move.promotion) {
 		piece &= ~MAN;
 		piece |= KING;
 	}
@@ -203,22 +202,22 @@ vector<movp> Checkers::getCaptures(short cell_id, Board& board) {
 		switch (directions[i]) {
 		case NORTHWEST:
 			if (boundaryCheck(NW(NW(cell_id))) && !isLeftPiece(NW(cell_id)) && board.getPiece(NW(NW(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id)));
+				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id), promotionCheck(NW(NW(cell_id)), piece)));
 			}
 			break;
 		case NORTHEAST:
 			if (boundaryCheck(NE(NE(cell_id))) && !isRightPiece(NE(cell_id)) && board.getPiece(NE(NE(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, NE(NE(cell_id)), NE(cell_id)));
+				moves.push_back(movp(cell_id, NE(NE(cell_id)), NE(cell_id), promotionCheck(NE(NE(cell_id)), piece)));
 			}
 			break;
 		case SOUTHWEST:
 			if (boundaryCheck(SW(SW(cell_id))) && !isLeftPiece(SW(cell_id)) && board.getPiece(SW(SW(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id)));
+				moves.push_back(movp(cell_id, SW(SW(cell_id)), SW(cell_id), promotionCheck(SW(SW(cell_id)), piece)));
 			}
 			break;
 		case SOUTHEAST:
 			if (boundaryCheck(SE(SE(cell_id))) && !isRightPiece(SE(cell_id)) && board.getPiece(SE(SE(cell_id))) == FREE) {
-				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id)));
+				moves.push_back(movp(cell_id, SE(SE(cell_id)), SE(cell_id), promotionCheck(SE(SE(cell_id)), piece)));
 			}
 			break;
 		}
@@ -255,16 +254,16 @@ vector<movp> Checkers::getMoves(short cell_id, Board &board) {
 	for (size_t i = 0; i < directions.size(); i++) {
 		switch (directions[i]) {
 		case NORTHWEST:
-			moves.push_back(movp(cell_id, NW(cell_id)));
+			moves.push_back(movp(cell_id, NW(cell_id), 0, promotionCheck(NW(cell_id), piece)));
 			break;
 		case NORTHEAST:
-			moves.push_back(movp(cell_id, NE(cell_id)));
+			moves.push_back(movp(cell_id, NE(cell_id), 0, promotionCheck(NE(cell_id), piece)));
 			break;
 		case SOUTHWEST:
-			moves.push_back(movp(cell_id, SW(cell_id)));
+			moves.push_back(movp(cell_id, SW(cell_id), 0, promotionCheck(SW(cell_id), piece)));
 			break;
 		case SOUTHEAST:
-			moves.push_back(movp(cell_id, SE(cell_id)));
+			moves.push_back(movp(cell_id, SE(cell_id), 0, promotionCheck(SE(cell_id), piece)));
 			break;
 		}
 	}

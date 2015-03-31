@@ -92,7 +92,7 @@ private:
 	in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
 	static void generateMoves(Board board, short cell, vector<Board> &normal, vector<Board> &capture, vector<movp> &path, bool &captures, bool promoted = false, int depth = 0);
 	/* applies a 'single move', of the simplified move notation to the board and returns a new board */
-	static Board applySingleMove(Board board, movp& move);
+	static Board applySingleMove(Board board, movp move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass
 	north and south boolean values to tell it whether it should check north and/or south */
 	static vector<short> getDirectionsWhereType(short cell_id, Board &board, short type, bool north, bool south);
