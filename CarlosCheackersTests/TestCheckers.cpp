@@ -177,7 +177,7 @@ namespace CarlosCheckersTests
 			Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
 		}*/
 
-		/*TEST_METHOD(TestApplyCBMoveUndoCBmoveGetLegalBlackKillTwoWhite)
+		TEST_METHOD(TestApplyCBMoveUndoCBmoveGetLegalBlackKillTwoWhite)
 		{
 			Board start(0, 0, 0);
 			start.setPiece(11, BLACK | MAN);
@@ -186,15 +186,15 @@ namespace CarlosCheckersTests
 			Board result(0, 0, 0);
 			result.setPiece(27, BLACK | MAN);
 			Checkers::setBoard(start);
-			vector<Board> moves = Checkers::getLegalBoards(BLACK);
-			Assert::AreEqual((size_t) 1, moves.size());
+			vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
+			Assert::AreEqual((size_t)1, moves.size());
 			//Checkers::applyMove(moves[0]);
-			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(Checkers::getBoard()));
-			Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(Checkers::getBoard()));
+			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(moves[0]));
+			Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(moves[0]));
 			//Checkers::undoMove(moves[0]);
-			Assert::AreEqual(BoardTester::getBlackbit(start), BoardTester::getBlackbit(Checkers::getBoard()));
-			Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
-		}*/
+			//Assert::AreEqual(BoardTester::getBlackbit(start), BoardTester::getBlackbit(Checkers::getBoard()));
+			//Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
+		}
 
 		TEST_METHOD(TestApplySingleMoveDefaultBoard)
 		{
@@ -294,6 +294,39 @@ namespace CarlosCheckersTests
 			}
 		}
 		
+		TEST_METHOD(TestPromoteBlackPieceToKing)
+			{
+				Board start(0, 0, 0);
+				start.setPiece(26, BLACK | MAN);
+				Board resultOne(0, 0, 0);
+				resultOne.setPiece(31, BLACK | KING);
+				Board resultTwo(0, 0, 0);
+				resultTwo.setPiece(30, BLACK | KING);
+				Checkers::setBoard(start);
+				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
+				Assert::AreEqual((size_t)2, moves.size());
+				Assert::AreEqual(BoardTester::getBlackbit(resultOne), BoardTester::getBlackbit(moves[0]));
+				Assert::AreEqual(BoardTester::getBlackbit(resultTwo), BoardTester::getBlackbit(moves[1]));
+				Assert::AreEqual(BoardTester::getKingbit(resultOne), BoardTester::getKingbit(moves[0]));
+				Assert::AreEqual(BoardTester::getKingbit(resultTwo), BoardTester::getKingbit(moves[1]));
+			}
+
+		TEST_METHOD(TestPromoteBlackPieceToKingByKillingWhitePieceAndBlackKingStaysPut)
+			{
+				Board start(0, 0, 0);
+				start.setPiece(23, BLACK | MAN);
+				start.setPiece(25, WHITE | MAN);
+				start.setPiece(26, WHITE | MAN);
+				Board result(0, 0, 0);
+				result.setPiece(30, BLACK | KING);
+				result.setPiece(25, WHITE | MAN);
+				Checkers::setBoard(start);
+				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
+				Assert::AreEqual((size_t)1, moves.size());
+				Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(moves[0]));
+				Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(moves[0]));
+				Assert::AreEqual(BoardTester::getKingbit(result), BoardTester::getKingbit(moves[0]));
+			}	
 	};
 	
 }
