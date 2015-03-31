@@ -32,6 +32,8 @@ public:
 	unsigned int kingbit;
 	unsigned int whitebit;
 	unsigned int blackbit;
+	
+	unsigned short bias = 0;
 
 private:
 	

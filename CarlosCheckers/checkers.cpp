@@ -89,6 +89,7 @@ vector<Board> Checkers::getLegalBoards(Board &board, short player) {
 
 void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, vector<Board> &capture, bool &captured, bool promoted, int depth) {
 	vector<movp> moves;
+
 	if (!promoted) {
 		if (depth == 0 || captured)  {
 			getCaptures(moves, cell, board);
@@ -107,35 +108,75 @@ void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, v
 
 	//we can move no more
 	if (moves.size() == 0 && depth > 0) {
+		board.bias = eval(board, cell, (moves[0].capture ? depth - 1 : 0), promoted);
 		if (captured) {
 			capture.push_back(board);
 		}
 		else {
 			normal.push_back(board);
 		}
+		board.bias = 0;
 	}
 }
 
+
+//terrible
+inline
+short Checkers::eval(Board &board, short cell_id, short capture_count, bool promotion) {
+	short color = board.getPiece(cell_id) & (WHITE | BLACK);
+	short val = 0;
+	short piece;
+	val += capture_count;
+	if (promotion) val++;
+	if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(NW(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	if (boundaryCheck(NE(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(NE(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	if (boundaryCheck(SW(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(SW(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	if (boundaryCheck(SE(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(SE(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	return val;
+}
+
+inline
 void Checkers::applySingleMove(Board &board, movp &move) {
 	short piece = board.getPiece(move.from);
 
 	board.setPiece(move.from, FREE);
 
-	if (move.capture) board.setPiece(move.capture, FREE);
+	if (move.capture) {
+		board.setPiece(move.capture, FREE);
+	}
+
 	if (move.promotion) {
 		piece &= ~MAN;
 		piece |= KING;
 	}
 
+
+
 	board.setPiece(move.to, piece);
 }
 
+inline
 void Checkers::undoSingleMove(Board &board, movp &move) {
 	short piece = board.getPiece(move.to);
 
 	board.setPiece(move.to, FREE);
 
-	if (move.capture) board.setPiece(move.capture, move.capture_piece);
+	if (move.capture) {
+		board.setPiece(move.capture, move.capture_piece);
+	}
+
 	if (move.promotion) {
 		piece |= MAN;
 		piece &= ~KING;
@@ -289,7 +330,7 @@ coord Checkers::toCoord(short cell_id) {
 	return select[cell_id - 1];
 }
 
-
+inline
 bool Checkers::promotionCheck(short cell_id, short piece) {
 	return ((piece & MAN) && (((piece & WHITE) && (cell_id < 5)) || ((piece & BLACK) && (cell_id > 28))));
 }
