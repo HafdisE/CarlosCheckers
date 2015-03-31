@@ -117,6 +117,9 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 	while (true){
 		if (((clock() - start) >= maxtime * 1000)) break;
 		search(root, Checkers::getPlayer());
+		if(tsim_count > 1000) {
+			tsim_count += 0;
+		}
 		tsim_count++;
 	}
 
@@ -131,7 +134,7 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 	size_t i;
 	double maxValue = -1, currValue;
 	for (i = 0; i < root->children.size(); i++){
-		if ((currValue = evaluationUCB1(root->children[i])) > maxValue){
+		if ((currValue = root->children[i]->win_count/root->children[i]->sim_count) > maxValue){
 			maxValue = currValue;
 		}
 	}
@@ -147,18 +150,18 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 #endif
 	/* We return the root board */
 
-	sprintf(str, "size: %d sims: %d", size(), tsim_count);
+	//sprintf(str, "size: %d sims: %d", size(), tsim_count);
 
 	return root->board;
 }
 
 vector<Board> MonteCarlo::getLegalBoards(Board& board, short player){
-	if (transposition_table.contains(board)) {
-		transposition_table.put(Checkers::getLegalBoards(board, player), board);
-	}
-	vector<Board> moves;
-	transposition_table.get(board, moves);
-	return moves;
+	//if (transposition_table.contains(board)) {
+	//	transposition_table.put(Checkers::getLegalBoards(board, player), board);
+	//}
+	//vector<Board> moves;
+	//transposition_table.get(board, moves);
+	return Checkers::getLegalBoards(board, player);
 }
 
 /* The search function takes in a node and a player and recursively moves down the search tree until it hits a unexpanded node.  There it expands it, runs a simulation
@@ -169,7 +172,7 @@ int MonteCarlo::search(NodePtr node, short player){
 	else if (node->has_loss) return LOSS;
 
 	/* We get the legal moves for this board */
-	vector<Board> moves = getLegalBoards(node->board, player);
+	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
 	int result;
 	NodePtr temp;
 	
@@ -272,7 +275,7 @@ int MonteCarlo::simulation(Board board, short player){
 			}
 		}
 		/* We get the legal moves and return a draw if there are none. */
-		vector<Board> moves = getLegalBoards(currMove, player);
+		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
 		if (moves.size() == 0){
 			isGoal = LOSS;
 			break;
