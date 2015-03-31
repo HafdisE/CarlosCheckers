@@ -9,7 +9,7 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	root = NULL;
 	generator = mt19937(rand_dev());
 	s = 0;
-	transposition_table = unordered_map<Board, vector<Board>>(1000);
+	//transposition_table = unordered_map<Board, vector<Board>>(100);
 	//transposition_table.reserve(100000);
 #if LOGGING
 	mclog.setFile("montecarlo");
@@ -137,10 +137,12 @@ Board MonteCarlo::search(double maxtime, int* playnow, char str[255]){
 }
 
 vector<Board> MonteCarlo::getLegalBoards(Board& board, short player){
-	if (transposition_table.find(board) == transposition_table.end()) {
-		transposition_table[board] = Checkers::getLegalBoards(board, player);
+	if (transposition_table.contains(board)) {
+		transposition_table.put(Checkers::getLegalBoards(board, player), board);
 	}
-	return transposition_table[board];
+	vector<Board> moves;
+	transposition_table.get(board, moves);
+	return moves;
 }
 
 /* The search function takes in a node and a player and recursively moves down the search tree until it hits a unexpanded node.  There it expands it, runs a simulation

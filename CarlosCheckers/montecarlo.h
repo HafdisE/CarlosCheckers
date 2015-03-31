@@ -12,6 +12,7 @@
 #include "node.h"
 #include "logger.h"
 #include "defines.h"
+#include "HashMap.h"
 
 static double C  = sqrt(3);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
@@ -39,10 +40,11 @@ private:
 	void updateTree();
 	void updateNode(NodePtr node, short player, short result);
 	
+	HashMap transposition_table;
 	
-	unordered_map<Board, vector<Board>> transposition_table;
-	unordered_map<Board, short> draw_check;
-	unordered_map<Board, int> simulation_draw_check;
+	//unordered_map<Board, vector<Board>> transposition_table;
+	//unordered_map<Board, short> draw_check;
+	//unordered_map<Board, int> simulation_draw_check;
 
 	random_device rand_dev;
 	mt19937 generator;
