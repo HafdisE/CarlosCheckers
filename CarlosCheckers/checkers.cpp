@@ -78,13 +78,12 @@ short Checkers::toCellID(coord &co) {
 }
 
 /* Returns legal boards resulting from moves made by the given player on the given board */
-vector<Board> Checkers::getLegalBoards(Board &board, short player) {
-	vector<Board> normal, captures;
+bool Checkers::getLegalBoards(Board &board, short player, vector<Board> &normal, vector<Board> &captures) {
 	bool captured = false;
 	for (int i = 1; i <= 32; i++) {
 		if ((board.getPiece(i) & player)) generateMoves(board, i, normal, captures, captured);
 	}
-	return (captured ? captures : normal);
+	return captured;
 }
 
 void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, vector<Board> &capture, bool &captured, bool promoted, int depth) {

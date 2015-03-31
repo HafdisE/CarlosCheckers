@@ -76,7 +76,7 @@ public:
 	/* Static public functions for use in conjunction with MCTS */
 
 	/* Returns a vector of all the legal moves in the given state for the given player */
-	static vector<Board> getLegalBoards(Board& board, short player);
+	static bool getLegalBoards(Board& board, short player, vector<Board> &normal, vector<Board> &captures);
 	/* Returns WIN, LOSE, DRAW or UNKNOWN for the current state from the given player's POV */
 	static short goalTest(Board& board, short player);
 

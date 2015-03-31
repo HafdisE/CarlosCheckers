@@ -157,13 +157,16 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 	return root->board;
 }
 
-vector<Board> MonteCarlo::getLegalBoards(Board& board, short player){
+bool MonteCarlo::getLegalBoards(Board& board, short player, vector<Board>& ret){
 	//if (transposition_table.contains(board)) {
 	//	transposition_table.put(Checkers::getLegalBoards(board, player), board);
 	//}
 	//vector<Board> moves;
 	//transposition_table.get(board, moves);
-	return Checkers::getLegalBoards(board, player);
+	vector<Board> cap, norm;
+	bool which = Checkers::getLegalBoards(board, player, norm, cap);
+	ret = (which ? cap : norm);
+	return which;
 }
 
 /* The search function takes in a node and a player and recursively moves down the search tree until it hits a unexpanded node.  There it expands it, runs a simulation
@@ -174,7 +177,8 @@ int MonteCarlo::search(NodePtr node, short player){
 	else if (node->has_loss) return LOSS;
 
 	/* We get the legal moves for this board */
-	vector<Board> moves = Checkers::getLegalBoards(node->board, player);
+	vector<Board> moves;
+	bool isCapture = getLegalBoards(node->board, player, moves);
 	int result;
 	NodePtr temp;
 	
@@ -277,7 +281,8 @@ int MonteCarlo::simulation(Board board, short player){
 			}
 		}
 		/* We get the legal moves and return a draw if there are none. */
-		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
+		vector<Board> moves;
+		bool isCapture = getLegalBoards(currMove, player, moves);
 		if (moves.size() == 0){
 			isGoal = LOSS;
 			break;
