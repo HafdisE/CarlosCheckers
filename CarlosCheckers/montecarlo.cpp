@@ -8,9 +8,9 @@
 MonteCarlo::MonteCarlo() : tsim_count(0){
 	root = NULL;
 	generator = mt19937(rand_dev());
+	rgenerator = default_random_engine(rand_dev());
 	s = 0;
-	char str[256];
-	db_init(512, str);
+	initDB();
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -74,7 +74,7 @@ void MonteCarlo::selectNode(int index){
 /* Just a UCB evaluation function */
 double MonteCarlo::evaluationUCB1(NodePtr node){
 	if (!node) return (C * (sqrt(log(tsim_count))));
-	return (node->win_count / static_cast<double>(node->sim_count)) + static_cast<double>(C * (sqrt(log(tsim_count) / static_cast<double>(node->sim_count))));
+	return (node->win_count / static_cast<double>(node->sim_count)) + static_cast<double>(C * (sqrt(log(tsim_count) / static_cast<double>(node->sim_count))) + (W * node->board.bias) / static_cast<double>(tsim_count));
 }
 
 /* Finds the given move in the opponents list and updates the tree to that move */
@@ -297,8 +297,22 @@ int MonteCarlo::simulation(Board board, short player){
 			break;
 		}
 		/* We pick a number uniformly at random */
-		distr = uniform_int_distribution<int>(0, moves.size() - 1);
-		currMove = moves[distr(generator)];
+		rdistr = uniform_real_distribution<double>(0.0, 1.0);
+		if (rdistr(rgenerator) < E){
+			int max = INFMIN;
+			Board maxMove;
+			for (size_t i = 0; i < moves.size(); ++i){
+				if (moves[i].bias > max){
+					max = moves[i].bias;
+					maxMove = moves[i];
+				}
+			}
+			currMove = maxMove;
+		} else{
+
+			distr = uniform_int_distribution<int>(0, moves.size() - 1);
+			currMove = moves[distr(generator)];
+		}
 		player = (player == 1) ? 2 : 1; //And then we swap players
 	}
 
@@ -310,7 +324,8 @@ int MonteCarlo::simulation(Board board, short player){
 
 void MonteCarlo::initDB() {
 	if (!db_initialised) {
-		db_init(128, str);
+	char str[256];
+		db_init(256, str);
 		db_initialised = true;
 	}
 }

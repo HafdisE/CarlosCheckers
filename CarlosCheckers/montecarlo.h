@@ -16,6 +16,8 @@
 #include "HashMap.h"
 
 static double C  = sqrt(2);
+static double W  = sqrt(2);//Should probably be higher.  Set as zero to nullify progressive bias
+static double E  = 0.7;//
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo {
 public:
@@ -52,7 +54,9 @@ private:
 
 	random_device rand_dev;
 	mt19937 generator;
+	default_random_engine rgenerator; 
 	uniform_int_distribution<int> distr;
+	uniform_real_distribution<double> rdistr;
 #if LOGGING
 	::Logger mclog;
 #endif
