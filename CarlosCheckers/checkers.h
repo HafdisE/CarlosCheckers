@@ -17,7 +17,7 @@ namespace CarlosCheckersTests {
 struct movp {
 	movp(short from, short to) : from(from), to(to) {}
 	movp(short from, short to, short capture) : from(from), to(to), capture(capture) {}
-	movp(short from, short to, short capture, bool promotion) : from(from), to(to), capture(capture) {}
+	movp(short from, short to, short capture, bool promotion) : from(from), to(to), capture(capture), promotion(promotion) {}
 	short to; //move to cell_id
 	short from; //move from cell_id
 	short capture = 0; //cell_id of captured piece if any (0 if not)

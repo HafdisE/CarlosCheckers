@@ -177,21 +177,19 @@ namespace CarlosCheckersTests
 			Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
 		}*/
 
-		TEST_METHOD(TestApplyCBMoveUndoCBmoveGetLegalBlackKillTwoWhite)
+		TEST_METHOD(TestBlackKillJumpToOtherSide)
 		{
 			Board start(0, 0, 0);
-			start.setPiece(11, BLACK | MAN);
-			start.setPiece(15, WHITE | MAN);
+			start.setPiece(16, BLACK | MAN);
+			start.setPiece(20, WHITE | MAN);
 			start.setPiece(23, WHITE | MAN);
-			Board result(0, 0, 0);
-			result.setPiece(27, BLACK | MAN);
-			Checkers::setBoard(start);
+			start.setPiece(19, WHITE | MAN);
+			start.setPiece(11, WHITE | MAN);
+			start.setPiece(7, WHITE | MAN);
+			start.setPiece(12, WHITE | MAN);
 			vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
-			Assert::AreEqual((size_t)1, moves.size());
-			//Checkers::applyMove(moves[0]);
-			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(moves[0]));
-			Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(moves[0]));
-			//Checkers::undoMove(moves[0]);
+			Assert::AreEqual((size_t)0, moves.size());
+
 			//Assert::AreEqual(BoardTester::getBlackbit(start), BoardTester::getBlackbit(Checkers::getBoard()));
 			//Assert::AreEqual(BoardTester::getWhitebit(start), BoardTester::getWhitebit(Checkers::getBoard()));
 		}
@@ -302,7 +300,6 @@ namespace CarlosCheckersTests
 				resultOne.setPiece(31, BLACK | KING);
 				Board resultTwo(0, 0, 0);
 				resultTwo.setPiece(30, BLACK | KING);
-				Checkers::setBoard(start);
 				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
 				Assert::AreEqual((size_t)2, moves.size());
 				Assert::AreEqual(BoardTester::getBlackbit(resultOne), BoardTester::getBlackbit(moves[0]));
@@ -320,7 +317,6 @@ namespace CarlosCheckersTests
 				Board result(0, 0, 0);
 				result.setPiece(30, BLACK | KING);
 				result.setPiece(25, WHITE | MAN);
-				Checkers::setBoard(start);
 				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
 				Assert::AreEqual((size_t)1, moves.size());
 				Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(moves[0]));
