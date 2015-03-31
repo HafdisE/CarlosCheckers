@@ -15,7 +15,7 @@
 #include "dblookup.h"
 #include "HashMap.h"
 
-static double C  = sqrt(3);
+static double C  = sqrt(2);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo {
 public:
