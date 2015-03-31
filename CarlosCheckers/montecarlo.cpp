@@ -11,7 +11,7 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	s = 0;
 	transposition_table = unordered_map<Board, vector<Board>>(1000);
 	//transposition_table.reserve(100000);
-	//db_init(128, str);
+	db_init(128, str);
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif

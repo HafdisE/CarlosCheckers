@@ -92,31 +92,31 @@ private:
 	/* generates moves given a pointer to the board it is generated from, a copy of the board, the cell_id to generate moves from, the player's colour, a reference to
 	an empty vector of moves without captures, and empty vector of  moves with captures, and empty vector containing a simplified move notation
 	in order to keep track of the path of the move, and a boolean reference which lets it know whether a capture move has been detected or not */
-	static void generateMoves(Board &board, short cell, vector<Board> &normal, vector<Board> &capture, bool &captures, bool promoted = false, int depth = 0);
+	inline static void generateMoves(Board &board, short cell, vector<Board> &normal, vector<Board> &capture, bool &captures, bool promoted = false, int depth = 0);
 	/* applies a 'single move', of the simplified move notation to the board and returns a new board */
-	static void applySingleMove(Board &board, movp &move);
-	static void undoSingleMove(Board &board, movp &move);
+	inline static void applySingleMove(Board &board, movp &move);
+	inline static void undoSingleMove(Board &board, movp &move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass
 	north and south boolean values to tell it whether it should check north and/or south */
-	static void getDirectionsWhereType(short &directions, short cell_id, Board &board, short type, bool north, bool south);
+	inline static void getDirectionsWhereType(short &directions, short cell_id, Board &board, short type, bool north, bool south);
 	/* checks if a piece has reached a promotion row and returns true if that is the case */
-	static bool promotionCheck(short cell_id, short piece);
-	static bool boundaryCheck(short cell_id);
+	inline static bool promotionCheck(short cell_id, short piece);
+	inline static bool boundaryCheck(short cell_id);
 	/* converts cell_id to coord */
 
 	/* converts coord to cell_id (doesn't actually do this yet)*/
-	static short toCellID(coord &co);
+	inline static short toCellID(coord &co);
 	/* gets all simplified notation moves for a single piece that is a capture move */
-	static void getCaptures(vector<movp> &moves, short cell_id, Board &board);
+	inline static void getCaptures(vector<movp> &moves, short cell_id, Board &board);
 	/* gets all simplified notation moves for a single piece that are simple moves */
-	static void getMoves(vector<movp> &moves, short cell_id, Board &board);
+	inline static void getMoves(vector<movp> &moves, short cell_id, Board &board);
 	/* checks if a state has occurred three times, should be moved to montecarlo */
-	static void tieCheck(short count, short new_count);
+	inline static void tieCheck(short count, short new_count);
 	/* helper function for goaltest, counts the pieces of both colours on the board */
-	static counter countPieces(Board &board);
+	inline static counter countPieces(Board &board);
 
-	static bool isLeftPiece(short cell_id);
-	static bool isRightPiece(short cell_id);
+	inline static bool isLeftPiece(short cell_id);
+	inline static bool isRightPiece(short cell_id);
 
 	static friend struct ::CarlosCheckersTests::CheckersTester;
 };
