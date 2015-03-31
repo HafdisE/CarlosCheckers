@@ -281,13 +281,14 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)1, Checkers::getLegalBoards(b, BLACK).size());
 		}
 
-		TEST_METHOD(TestWhenBlackHasToKillOneWhiteWithAKing)
+		TEST_METHOD(TestWhenBlackHasToKillOneWhiteWithTwoPossibleKills)
 		{
-			Board b(20478, 2948730880, 0);
+			//Board b(20478, 2948730880, 0);
+			Board b(12279, 1597276160, 0);
 			Checkers::setBoard(b);
 			vector<Board> moves = Checkers::getLegalBoards(b, BLACK);
-			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
-			Assert::AreEqual((size_t)2948730880, BoardTester::getWhitebit(b));
+			Assert::AreEqual((size_t)12279, BoardTester::getBlackbit(b));
+			Assert::AreEqual((size_t)1597276160, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
 			/*Assert::IsTrue((coord(3, 7) == moves[0].to));
 			Assert::IsTrue((coord(7, 7) == moves[1].to));
@@ -312,10 +313,10 @@ namespace CarlosCheckersTests
 
 		TEST_METHOD(TestTheWhiteKingKillingTwoInRow)
 		{
-			Board b(16384, 151389696, 16384);
-			Assert::AreEqual((size_t)16384, BoardTester::getBlackbit(b));
+			Board b(8192, 151389696, 8192);
+			Assert::AreEqual((size_t)8192, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)151389696, BoardTester::getWhitebit(b));
-			Assert::AreEqual((size_t)16384, BoardTester::getKingbit(b));
+			Assert::AreEqual((size_t)8192, BoardTester::getKingbit(b));
 			vector<Board> moves = Checkers::getLegalBoards(b, BLACK);
 			/*Assert::IsTrue((coord(3, 3) == moves[0].from));
 			Assert::IsTrue((coord(1, 5) == moves[0].to));
@@ -340,7 +341,7 @@ namespace CarlosCheckersTests
 				Board start(0, 0, 0);
 				start.setPiece(26, BLACK | MAN);
 				Board resultOne(0, 0, 0);
-				resultOne.setPiece(31, BLACK | KING);
+				resultOne.setPiece(29, BLACK | KING);
 				Board resultTwo(0, 0, 0);
 				resultTwo.setPiece(30, BLACK | KING);
 				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
