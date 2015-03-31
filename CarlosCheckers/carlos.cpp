@@ -127,7 +127,8 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 	randlog.log("Start", ss.str());
 	stringstream().swap(ss);
 #endif
-	vector<Board> moves = Checkers::getLegalBoards(Checkers::getBoard(), color);
+	vector<Board> cap, norm, moves;
+	moves = (Checkers::getLegalBoards(Checkers::getBoard(), color, norm, cap) ? cap : norm);
 	if (moves.size() == 0) return LOSS;
 	random_device  rand_dev;
 	mt19937 generator(rand_dev());

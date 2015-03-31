@@ -368,10 +368,10 @@ namespace CarlosCheckersTests
 				bool which = Checkers::getLegalBoards(start, BLACK, norm, cap);
 				moves = (which ? cap : norm);
 				Assert::AreEqual((size_t)2, moves.size());
-				Assert::AreEqual(BoardTester::getBlackbit(resultOne), BoardTester::getBlackbit(moves[0]));
-				Assert::AreEqual(BoardTester::getBlackbit(resultTwo), BoardTester::getBlackbit(moves[1]));
-				Assert::AreEqual(BoardTester::getKingbit(resultOne), BoardTester::getKingbit(moves[0]));
-				Assert::AreEqual(BoardTester::getKingbit(resultTwo), BoardTester::getKingbit(moves[1]));
+				Assert::AreEqual(BoardTester::getBlackbit(resultOne), BoardTester::getBlackbit(moves[1]));
+				Assert::AreEqual(BoardTester::getBlackbit(resultTwo), BoardTester::getBlackbit(moves[0]));
+				Assert::AreEqual(BoardTester::getKingbit(resultOne), BoardTester::getKingbit(moves[1]));
+				Assert::AreEqual(BoardTester::getKingbit(resultTwo), BoardTester::getKingbit(moves[0]));
 			}
 
 		TEST_METHOD(TestPromoteBlackPieceToKingByKillingWhitePieceAndBlackKingStaysPut)

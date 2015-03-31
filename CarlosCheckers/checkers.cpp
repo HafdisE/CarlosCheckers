@@ -162,8 +162,6 @@ void Checkers::applySingleMove(Board &board, movp &move) {
 		piece |= KING;
 	}
 
-
-
 	board.setPiece(move.to, piece);
 }
 
@@ -185,6 +183,7 @@ void Checkers::undoSingleMove(Board &board, movp &move) {
 	board.setPiece(move.from, piece);
 }
 
+/*inline
 void Checkers::getDirectionsWhereType(short &directions, short cell_id, Board &board, short type, bool north, bool south) {
 	if (north) {
 		if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (board.getPiece(NW(cell_id)) & type) == type) {
@@ -202,17 +201,20 @@ void Checkers::getDirectionsWhereType(short &directions, short cell_id, Board &b
 			directions |= SOUTHEAST;
 		}
 	}
-}
+}*/
 
+inline
 bool Checkers::boundaryCheck(short cell_id) {
 	return (cell_id > 0 && cell_id < 33);
 }
 
+inline
 bool Checkers::isLeftPiece(short cell_id) {
 	return cell_id == 1 || cell_id == 9 ||
 		cell_id == 25 || cell_id == 17;
 }
 
+inline
 bool Checkers::isRightPiece(short cell_id) {
 	return 	cell_id == 8 || cell_id == 16 ||
 		cell_id == 24 || cell_id == 32;
@@ -220,17 +222,53 @@ bool Checkers::isRightPiece(short cell_id) {
 
 void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 	short piece;
-	short directions = 0;
-	bool north;
-	bool south;
-	short type;
+	//short directions = 0;
+	bool north = false;
+	bool south = false;
+	//short type;
 
 	piece = board.getPiece(cell_id);
-	north = south = false;
+	if (piece & (WHITE|KING)) south = true;
+	if (piece & (BLACK | KING)) north = true;
 
 	if (piece == FREE) return; //what are you doin mate
+	static unsigned int right_edge = 0x88888888;
+	static unsigned int left_edge = 0x11111111;
+	unsigned int bit = 1 << (cell_id - 1);
+	short to_cell;
+	unsigned int occupied = board.whitebit | board.blackbit;
+	unsigned int opponent = (piece & BLACK) ? board.whitebit : board.blackbit;
+	if (!(right_edge & bit)) { //east is ok
+		if (cell_id < 25 && north) { //northeast check is good to go
+			to_cell = NE(NE(cell_id));
+			if ((opponent & (1 << (NE(cell_id) - 1))) && !(occupied & (1 << (to_cell-1)))) {
+				moves.push_back(movp(cell_id, to_cell, NE(cell_id), board.getPiece(NE(cell_id)), promotionCheck(to_cell, piece)));
+			}
+		}
+		if (cell_id > 8 && south) { //southeast check is good to go
+			to_cell = SE(SE(cell_id));
+			if ((opponent & (1 << (SE(cell_id) - 1))) && !(occupied & (1 << (to_cell-1)))) {
+				moves.push_back(movp(cell_id, to_cell, SE(cell_id), board.getPiece(SE(cell_id)), promotionCheck(to_cell, piece)));
+			}
+		}
+	}
+	if (!(left_edge & bit)) { //west is ok
+		if (cell_id < 25 && north) { //northwest check is good to go
+			to_cell = NW(NW(cell_id));
+			if ((opponent & (1 << (NW(cell_id) - 1))) && !(occupied & (1 << (to_cell - 1)))) {
+				moves.push_back(movp(cell_id, to_cell, NW(cell_id), board.getPiece(NW(cell_id)), promotionCheck(to_cell, piece)));
+			}
+		}
+		if (cell_id > 8 && south) { //southwest check is good to go
+			to_cell = SW(SW(cell_id));
+			if ((opponent & (1 << (SW(cell_id) - 1))) && !(occupied & (1 << (to_cell - 1)))) {
+				moves.push_back(movp(cell_id, to_cell, SW(cell_id), board.getPiece(SW(cell_id)), promotionCheck(to_cell, piece)));
+			}
+		}
+	}
+	
 
-	if (piece & KING) {
+	/*if (piece & KING) {
 		north = true;
 		south = true;
 	}
@@ -242,9 +280,9 @@ void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 	else {
 		north = true;
 		type = WHITE;
-	}
+	}*/
 
-	getDirectionsWhereType(directions, cell_id, board, type, north, south);
+	/*getDirectionsWhereType(directions, cell_id, board, type, north, south);
 
 	for (int i = 3; i >= 0; --i) {
 		switch (directions & (1 << i)) {
@@ -269,12 +307,12 @@ void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 			}
 			break;
 		}
-	}
+	}*/
 
 }
 
 void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
-	short piece;
+	/*short piece;
 	short directions = 0;
 	bool north;
 	bool south;
@@ -295,7 +333,7 @@ void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
 		north = true;
 	}
 
-	getDirectionsWhereType(directions, cell_id, board, FREE, north, south);
+	//getDirectionsWhereType(directions, cell_id, board, FREE, north, south);
 
 	for (int i = 3; i >= 0; --i) {
 		switch (directions & (1 << i)) {
@@ -311,6 +349,51 @@ void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
 		case SOUTHEAST:
 			moves.push_back(movp(cell_id, SE(cell_id), 0, promotionCheck(SE(cell_id), piece)));
 			break;
+		}
+	}*/
+
+	short piece;
+	//short directions = 0;
+	bool north = false;
+	bool south = false;
+	//short type;
+
+	piece = board.getPiece(cell_id);
+	if (piece & (WHITE | KING)) south = true;
+	if (piece & (BLACK | KING)) north = true;
+
+	if (piece == FREE) return; //what are you doin mate
+	static unsigned int right_edge = 0x80808080;
+	static unsigned int left_edge = 0x01010101;
+	unsigned int bit = 1 << (cell_id - 1);
+	unsigned int occupied = board.whitebit | board.blackbit;
+	short to_cell;
+	if (!(right_edge & bit)) { //east is ok
+		if (cell_id < 29 && north) { //northeast check is good to go
+			to_cell = NE(cell_id);
+			if (!(occupied & (1 << (to_cell - 1)))) {
+				moves.push_back(movp(cell_id, to_cell, 0, FREE, promotionCheck(to_cell, piece)));
+			}
+		}
+		if (cell_id > 4 && south) { //southeast check is good to go
+			to_cell = SE(cell_id);
+			if (!(occupied & (1 << (to_cell - 1)))) {
+				moves.push_back(movp(cell_id, to_cell, 0, FREE, promotionCheck(to_cell, piece)));
+			}
+		}
+	}
+	if (!(left_edge & bit)) { //west is ok
+		if (cell_id < 29 && north) { //northwest check is good to go
+			to_cell = NW(cell_id);
+			if (!(occupied & (1 << (to_cell - 1)))) {
+				moves.push_back(movp(cell_id, to_cell, 0, FREE, promotionCheck(to_cell, piece)));
+			}
+		}
+		if (cell_id > 4 && south) { //southwest check is good to go
+			to_cell = SW(cell_id);
+			if (!(occupied & (1 << (to_cell - 1)))) {
+				moves.push_back(movp(cell_id, to_cell, 0, FREE, promotionCheck(to_cell, piece)));
+			}
 		}
 	}
 
