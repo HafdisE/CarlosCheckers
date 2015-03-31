@@ -9,9 +9,6 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	root = NULL;
 	generator = mt19937(rand_dev());
 	s = 0;
-	//transposition_table = unordered_map<Board, vector<Board>>(100);
-	//transposition_table.reserve(100000);
-	db_init(128, str);
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -32,9 +29,14 @@ void MonteCarlo::clearTree(){
 	root = NULL;
 }
 
-short MonteCarlo::dbLookUp(Board &board, short player) {
-	//dblookup()
-	return 0;
+short MonteCarlo::dbLookUp(Board &board, short player, int conditional) {
+	POSITION p;
+	p.bk = board.blackbit & board.kingbit;
+	p.bm = board.blackbit ^ board.kingbit;
+	p.wk = board.whitebit & board.kingbit;
+	p.wm = board.whitebit ^ board.kingbit;
+	p.color = player;
+	return dblookup(&p, conditional);;
 }
 
 /* Clear tree helper function */
@@ -290,4 +292,11 @@ int MonteCarlo::simulation(Board board, short player){
 	if (isGoal == WIN) return (me == player ? WIN : LOSS);
 	if (isGoal == LOSS) return(me == player ? LOSS : WIN);
 	else return isGoal;
+}
+
+void MonteCarlo::initDB() {
+	if (!db_initialised) {
+		db_init(128, str);
+		db_initialised = true;
+	}
 }

@@ -26,7 +26,7 @@ public:
 	int size(){ return s; };
 
 	bool drawCheck();
-
+	void initDB();
 	char *str;
 	//er að vera með stæla. Doesn't want to be tested.
 	vector<Board> getLegalBoards(Board& board, short player);
@@ -42,7 +42,8 @@ private:
 	void clearTree(NodePtr node);
 	void updateTree();
 	void updateNode(NodePtr node, short player, short result);
-	short dbLookUp(Board& b, short player);
+	short dbLookUp(Board& b, short player, int conditional);
+	bool db_initialised = false;
 	
 
 	//draw things

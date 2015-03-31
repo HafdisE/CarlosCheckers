@@ -20,7 +20,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -80,6 +80,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Optimise|Win32'">
     <ClCompile>
       <DebugInformationFormat>None</DebugInformationFormat>
+      <MinimalRebuild>true</MinimalRebuild>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -87,6 +88,7 @@
     <ClCompile Include="carlos.cpp" />
     <ClCompile Include="checkers.cpp" />
     <ClCompile Include="dblookup.cpp" />
+    <ClCompile Include="HashMap.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="montecarlo.cpp" />
     <ClCompile Include="node.cpp" />
@@ -97,6 +99,7 @@
     <ClInclude Include="checkers.h" />
     <ClInclude Include="dblookup.h" />
     <ClInclude Include="defines.h" />
+    <ClInclude Include="HashMap.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="montecarlo.h" />
     <ClInclude Include="node.h">
