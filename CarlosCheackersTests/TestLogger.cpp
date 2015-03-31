@@ -35,7 +35,7 @@ namespace CarlosCheckersTests
 			for (int i = 0; i < 20000; i++) {
 				mc.getLegalBoards(b, WHITE, m1);
 
-			//}
+			}
 			//Assert::AreEqual(m1.size(), m2.size());
 		}
 
