@@ -38,8 +38,8 @@ namespace CarlosCheckersTests
 			return Checkers::getMoves(cell_id, board);
 		}
 
-		static Board applySingleMove(Board board, movp move) {
-			return Checkers::applySingleMove(board, move);
+		static void applySingleMove(Board &board, movp move) {
+			Checkers::applySingleMove(board, move);
 		}
 	};
 
@@ -62,6 +62,30 @@ namespace CarlosCheckersTests
 				Checkers::getLegalBoards(b, WHITE);
 			}
 		}
+
+		TEST_METHOD(TestMANYSETGETPIECE)
+		{
+			Board b(0,0,0);
+			for (int i = 0; i < 2000; i++) {
+				for (int i = 1; i <= 32; i++) {
+					b.setPiece(i, MAN | WHITE);
+				}
+				for (int i = 1; i <= 32; i++) {
+					b.setPiece(i, FREE);
+				}
+			}
+		}
+
+		TEST_METHOD(TestMANYGETMOVES)
+		{
+			Board b;
+			for (int many = 0; many < 1000; many++) {
+				for (int i = 1; i <= 32; i++) {
+					CheckersTester::getMoves(i, b);
+				}
+			}
+		}
+
 
 		TEST_METHOD(TestToCellid)
 		{
@@ -199,7 +223,8 @@ namespace CarlosCheckersTests
 			Board start(1024, 0, 0);
 			Board result(16384, 0, 0);
 			movp mov(11, 15);
-			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(CheckersTester::applySingleMove(start, mov)));
+			CheckersTester::applySingleMove(start, mov);
+			Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(start));
 		}
 
 		TEST_METHOD(TestCheckIfAnyLegalMovesDefaultBoard)
