@@ -278,6 +278,7 @@ int MonteCarlo::simulation(Board board, short player){
 			if (!isCapture) {
 				counter count = Checkers::countPieces(currMove);
 				// We need to fuck around with using conditional and unconditional.  I think maybe we should just always run unconditional
+#if AGGRESSIVEDBDIVE
 				if (count.black < 4 && count.white < 4 && (count.white + count.black > 4)){
 					isGoal = dbLookUp(currMove, player, 1);
 					if (isGoal) break;
@@ -286,6 +287,14 @@ int MonteCarlo::simulation(Board board, short player){
 					isGoal = dbLookUp(currMove, player, 0);
 					if (isGoal) break;
 				}
+#else 
+				if (count.black < 4 && count.white < 4 )){
+					isGoal = dbLookUp(currMove, player, 1);
+					if (isGoal) break;
+
+				} 
+#endif
+				
 			}
 
 		}
