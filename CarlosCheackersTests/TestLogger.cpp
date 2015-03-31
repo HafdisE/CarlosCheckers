@@ -22,7 +22,7 @@ namespace CarlosCheckersTests
 			MonteCarlo mc;
 			int playnow = 0;
 			char str[125];
-			//mc.search(100000, &playnow, str);
+			mc.search(5, &playnow);
 		}
 
 		TEST_METHOD(TestTranspositionTable) {

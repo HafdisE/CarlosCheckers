@@ -44,7 +44,6 @@ private:
 	void updateNode(NodePtr node, short player, short result);
 	short dbLookUp(Board& b, short player);
 	
-	HashMap transposition_table;
 
 	//draw things
 	int moves_since_last_capture = 0;
