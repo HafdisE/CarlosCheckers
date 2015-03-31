@@ -144,6 +144,7 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 #else
 	//monte carlo
 	Board m = mc.search(maxtime, playnow, str);
+	bool draw = mc.drawCheck();
 #endif
 
 	int goal = Checkers::goalTest(m, Checkers::getPlayer());
@@ -159,11 +160,11 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 		b[c.x][c.y] = piece;
 	}
 
-#if !RANDOM
-	//sprintf(str, "%u %u %u", m.blackbit, m.whitebit, m.kingbit);
-#endif
+
 
 	
-
+#if !RANDOM
+	if (draw) return DRAW;
+#endif
 	return goal;
 }

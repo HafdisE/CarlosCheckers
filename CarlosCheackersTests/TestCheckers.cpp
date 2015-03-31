@@ -84,7 +84,7 @@ namespace CarlosCheckersTests
 			vector<movp> moves;
 			for (int many = 0; many < 2000; many++) {
 				for (int i = 1; i <= 32; i++) {
-					if (b.getPiece(i) != FREE) CheckersTester::getMoves(moves, i, b);
+					if (b.getPiece(i) & WHITE) CheckersTester::getMoves(moves, i, b);
 				}
 			}
 		}

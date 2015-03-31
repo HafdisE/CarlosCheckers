@@ -42,6 +42,16 @@ void MonteCarlo::clearTree(NodePtr node){
 	}
 }
 
+
+bool MonteCarlo::drawCheck() {
+	int count = Checkers::count(Checkers::getBoard());
+	if (count != last_count) {
+		moves_since_last_capture = 0;
+		last_count = count;
+	}
+	return moves_since_last_capture >= 50;
+}
+
 /* Blanks out the given node to save it from completion, calls clear tree on whats left then resets the root of the tree as the blanked out node*/
 void MonteCarlo::selectNode(int index){
 	NodePtr temp = root->children[index];
@@ -237,20 +247,26 @@ int MonteCarlo::simulation(Board board, short player){
 	short me = Checkers::getPlayer(); //We get which is the player
 	Board currMove = board; 
 	int isGoal = 0;
-	int count = Checkers::count(board); //We initialize the count variable for the draw check
+	int count = last_count; //We initialize the count variable for the draw check
+	int new_count = count;
+	int last_cap = moves_since_last_capture;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		/* We start off by checking if there is a goal and every ten turns we check for a draw */
 		isGoal = Checkers::goalTest(currMove, player);
 		if (isGoal == WIN || isGoal == LOSS) break;
-		if ((i % 10) == 9){
-			int temp = Checkers::count(currMove);
-			if (temp == count) break;
-			count = temp;
+		if (i % 10 == 9) {			
+			if ((new_count = Checkers::count(currMove)) == count){
+				last_cap += 10;
+			}
+			if (last_cap >= 50) {
+				isGoal = DRAW;
+				break;
+			}
 		}
 		/* We get the legal moves and return a draw if there are none. */
 		vector<Board> moves = getLegalBoards(currMove, player);
 		if (moves.size() == 0){
-			isGoal = DRAW;
+			isGoal = LOSS;
 			break;
 		}
 		/* We pick a number uniformly at random */

@@ -23,6 +23,7 @@ public:
 	void clearTree();
 	int size(){ return s; };
 
+	bool drawCheck();
 
 	//er að vera með stæla. Doesn't want to be tested.
 	vector<Board> getLegalBoards(Board& board, short player);
@@ -41,6 +42,10 @@ private:
 	
 	
 	unordered_map<Board, vector<Board>> transposition_table;
+
+	//draw things
+	int moves_since_last_capture = 0;
+	int last_count = 24;
 	unordered_map<Board, short> draw_check;
 	unordered_map<Board, int> simulation_draw_check;
 
