@@ -27,12 +27,13 @@ namespace CarlosCheckersTests
 
 		TEST_METHOD(TestTranspositionTable) {
 			MonteCarlo mc;
-			//Board b;
-			//vector<Board> m1 = mc.getLegalBoards(b, WHITE);
-			//vector<Board> m2 = mc.getLegalBoards(b, WHITE);			
+			Board b;
+			vector<Board> m1, m2;
+			mc.getLegalBoards(b, WHITE, m1);
+			mc.getLegalBoards(b, WHITE, m2);			
 
-			//for (int i = 0; i < 20000; i++) {
-			//	mc.getLegalBoards(b, WHITE);
+			for (int i = 0; i < 20000; i++) {
+				mc.getLegalBoards(b, WHITE, m1);
 
 			//}
 			//Assert::AreEqual(m1.size(), m2.size());

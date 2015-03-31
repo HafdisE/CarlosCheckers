@@ -78,17 +78,17 @@ short Checkers::toCellID(coord &co) {
 }
 
 /* Returns legal boards resulting from moves made by the given player on the given board */
-vector<Board> Checkers::getLegalBoards(Board &board, short player) {
-	vector<Board> normal, captures;
+bool Checkers::getLegalBoards(Board &board, short player, vector<Board> &normal, vector<Board> &captures) {
 	bool captured = false;
 	for (int i = 1; i <= 32; i++) {
 		if ((board.getPiece(i) & player)) generateMoves(board, i, normal, captures, captured);
 	}
-	return (captured ? captures : normal);
+	return captured;
 }
 
 void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, vector<Board> &capture, bool &captured, bool promoted, int depth) {
 	vector<movp> moves;
+
 	if (!promoted) {
 		if (depth == 0 || captured)  {
 			getCaptures(moves, cell, board);
@@ -100,42 +100,83 @@ void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, v
 
 		for (size_t i = 0; i < moves.size(); i++) {
 			applySingleMove(board, moves[i]);
+			if (moves[i].capture) board.bias++;
 			generateMoves(board, moves[i].to, normal, capture, captured, moves[i].promotion, depth + 1);
+			if (moves[i].capture) board.bias--;
 			undoSingleMove(board, moves[i]);
 		}
 	}
 
 	//we can move no more
 	if (moves.size() == 0 && depth > 0) {
+		board.bias = eval(board, cell, promoted);
 		if (captured) {
 			capture.push_back(board);
 		}
 		else {
 			normal.push_back(board);
 		}
+		board.bias = 0;
 	}
 }
 
+
+//terrible
+inline
+short Checkers::eval(Board &board, short cell_id, bool promotion) {
+	short color = board.getPiece(cell_id) & (WHITE | BLACK);
+	short val = 0;
+	short piece;
+	if (promotion) val++;
+	if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(NW(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	if (boundaryCheck(NE(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(NE(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	if (boundaryCheck(SW(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(SW(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	if (boundaryCheck(SE(cell_id)) && !isLeftPiece(cell_id) && (piece = board.getPiece(SE(cell_id))) != FREE) {
+		if (piece & color) val++;
+		else val--;
+	}
+	return val;
+}
+
+inline
 void Checkers::applySingleMove(Board &board, movp &move) {
 	short piece = board.getPiece(move.from);
 
 	board.setPiece(move.from, FREE);
 
-	if (move.capture) board.setPiece(move.capture, FREE);
+	if (move.capture) {
+		board.setPiece(move.capture, FREE);
+	}
+
 	if (move.promotion) {
 		piece &= ~MAN;
 		piece |= KING;
 	}
 
+
+
 	board.setPiece(move.to, piece);
 }
 
+inline
 void Checkers::undoSingleMove(Board &board, movp &move) {
 	short piece = board.getPiece(move.to);
 
 	board.setPiece(move.to, FREE);
 
-	if (move.capture) board.setPiece(move.capture, move.capture_piece);
+	if (move.capture) {
+		board.setPiece(move.capture, move.capture_piece);
+	}
+
 	if (move.promotion) {
 		piece |= MAN;
 		piece &= ~KING;
@@ -289,7 +330,7 @@ coord Checkers::toCoord(short cell_id) {
 	return select[cell_id - 1];
 }
 
-
+inline
 bool Checkers::promotionCheck(short cell_id, short piece) {
 	return ((piece & MAN) && (((piece & WHITE) && (cell_id < 5)) || ((piece & BLACK) && (cell_id > 28))));
 }

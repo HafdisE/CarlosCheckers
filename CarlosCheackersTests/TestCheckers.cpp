@@ -58,8 +58,9 @@ namespace CarlosCheckersTests
 		TEST_METHOD(TestMANYLEGAL)
 		{
 			Board b;
+			vector<Board> norm, cap;
 			for (int i = 0; i < 2000; i++) {
-				Checkers::getLegalBoards(b, WHITE);
+				Checkers::getLegalBoards(b, WHITE, norm, cap);
 
 			}
 
@@ -215,7 +216,9 @@ namespace CarlosCheckersTests
 			start.setPiece(9, WHITE | MAN);
 			start.setPiece(10, WHITE | MAN);
 			start.setPiece(6, WHITE | MAN);
-			vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(start, BLACK, norm, moves);
+			moves = (which ? cap : norm);
 			Assert::AreEqual((size_t)0, moves.size());
 
 			//Assert::AreEqual(BoardTester::getBlackbit(start), BoardTester::getBlackbit(Checkers::getBoard()));
@@ -233,7 +236,10 @@ namespace CarlosCheckersTests
 
 		TEST_METHOD(TestCheckIfAnyLegalMovesDefaultBoard)
 		{
-			Assert::AreEqual((size_t)7, Checkers::getLegalBoards(Board(), BLACK).size());
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(Board(), BLACK, norm, cap);
+			moves = (which ? cap : norm);
+			Assert::AreEqual((size_t)7, moves.size());
 		}
 		TEST_METHOD(TestWhenWhiteHasToKillBlackThreePieces)
 		{
@@ -241,10 +247,10 @@ namespace CarlosCheckersTests
 			b.setPiece(14, BLACK | MAN);
 			b.setPiece(22, BLACK | MAN);
 			b.setPiece(26, WHITE | MAN);
-			//Assert::AreEqual((size_t)24576, BoardTester::getBlackbit(b));
-			//Assert::AreEqual((size_t)262144, BoardTester::getWhitebit(b));
-			//Assert::AreEqual((size_t) 0, BoardTester::getKingbit(b));
-			Assert::AreEqual((size_t)1, Checkers::getLegalBoards(b, BLACK).size());
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(b, BLACK, norm, cap);
+			moves = (which ? cap : norm);
+			Assert::AreEqual((size_t)1, moves.size());
 		}
 
 		TEST_METHOD(TestMANYGetCaptures)
@@ -267,8 +273,10 @@ namespace CarlosCheckersTests
 			Board b(0, 0, 0);
 			b.setPiece(14, WHITE | MAN);
 			b.setPiece(18, WHITE | MAN);
-			Checkers::setBoard(b);
-			Assert::AreEqual((size_t)3, Checkers::getLegalBoards(b, WHITE).size());
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(b, WHITE, norm, cap);
+			moves = (which ? cap : norm);
+			Assert::AreEqual((size_t)3, moves.size());
 		}
 		
 		TEST_METHOD(TestWhenWhiteHasToKillBlackFullBoard)
@@ -278,7 +286,10 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)20478, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)4290908160, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
-			Assert::AreEqual((size_t)1, Checkers::getLegalBoards(b, BLACK).size());
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(b, BLACK, norm, cap);
+			moves = (which ? cap : norm);
+			Assert::AreEqual((size_t)1, moves.size());
 		}
 
 		TEST_METHOD(TestWhenBlackHasToKillOneWhiteWithTwoPossibleKills)
@@ -286,7 +297,9 @@ namespace CarlosCheckersTests
 			//Board b(20478, 2948730880, 0);
 			Board b(12279, 1597276160, 0);
 			Checkers::setBoard(b);
-			vector<Board> moves = Checkers::getLegalBoards(b, BLACK);
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(b, BLACK, norm, cap);
+			moves = (which ? cap : norm);
 			Assert::AreEqual((size_t)12279, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)1597276160, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)0, BoardTester::getKingbit(b));
@@ -308,7 +321,10 @@ namespace CarlosCheckersTests
 			//Assert::AreEqual((size_t)131072, BoardTester::getBlackbit(b));
 			//Assert::AreEqual((size_t)4210688, BoardTester::getWhitebit(b));
 			//Assert::AreEqual((size_t)131072, BoardTester::getKingbit(b));
-			Assert::AreEqual((size_t)2, Checkers::getLegalBoards(b, BLACK).size());
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(b, BLACK, norm, cap);
+			moves = (which ? cap : norm);
+			Assert::AreEqual((size_t)2, moves.size());
 		}
 
 		TEST_METHOD(TestTheWhiteKingKillingTwoInRow)
@@ -317,7 +333,9 @@ namespace CarlosCheckersTests
 			Assert::AreEqual((size_t)8192, BoardTester::getBlackbit(b));
 			Assert::AreEqual((size_t)151389696, BoardTester::getWhitebit(b));
 			Assert::AreEqual((size_t)8192, BoardTester::getKingbit(b));
-			vector<Board> moves = Checkers::getLegalBoards(b, BLACK);
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(b, BLACK, norm, cap);
+			moves = (which ? cap : norm);
 			/*Assert::IsTrue((coord(3, 3) == moves[0].from));
 			Assert::IsTrue((coord(1, 5) == moves[0].to));
 			Assert::IsTrue((coord(7, 7) == moves[1].to));
@@ -330,9 +348,11 @@ namespace CarlosCheckersTests
 			//pls don't do this pls pls
 			Board start(8391677, 2004353024, 0);
 			Board wrong(134220797, 2004353024, 0);
-			vector<Board> moves = Checkers::getLegalBoards(start, WHITE);
-			for (size_t i = 0; i < moves.size(); i++) {
-				Assert::IsFalse(wrong == moves[i]);
+			vector<Board> cap, norm;
+			bool which = Checkers::getLegalBoards(start, WHITE, norm, cap);
+
+			for (size_t i = 0; i < (which ? cap.size() : norm.size()); i++) {
+				Assert::IsFalse(wrong == (which ? cap[i] : norm[i]));
 			}
 		}
 		
@@ -344,7 +364,9 @@ namespace CarlosCheckersTests
 				resultOne.setPiece(29, BLACK | KING);
 				Board resultTwo(0, 0, 0);
 				resultTwo.setPiece(30, BLACK | KING);
-				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
+				vector<Board> cap, norm, moves;
+				bool which = Checkers::getLegalBoards(start, BLACK, norm, cap);
+				moves = (which ? cap : norm);
 				Assert::AreEqual((size_t)2, moves.size());
 				Assert::AreEqual(BoardTester::getBlackbit(resultOne), BoardTester::getBlackbit(moves[0]));
 				Assert::AreEqual(BoardTester::getBlackbit(resultTwo), BoardTester::getBlackbit(moves[1]));
@@ -361,7 +383,9 @@ namespace CarlosCheckersTests
 				Board result(0, 0, 0);
 				result.setPiece(31, BLACK | KING);
 				result.setPiece(28, WHITE | MAN);
-				vector<Board> moves = Checkers::getLegalBoards(start, BLACK);
+				vector<Board> cap, norm, moves;
+				bool which = Checkers::getLegalBoards(start, BLACK, norm, cap);
+				moves = (which ? cap : norm);
 				Assert::AreEqual((size_t)1, moves.size());
 				Assert::AreEqual(BoardTester::getBlackbit(result), BoardTester::getBlackbit(moves[0]));
 				Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(moves[0]));

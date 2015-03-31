@@ -29,7 +29,7 @@ public:
 	void initDB();
 	char *str;
 	//er að vera með stæla. Doesn't want to be tested.
-	vector<Board> getLegalBoards(Board& board, short player);
+	bool getLegalBoards(Board& board, short player, vector<Board> &ret);
 private:
 	NodePtr root;
 	int tsim_count;
