@@ -13,6 +13,7 @@
 #include "logger.h"
 #include "defines.h"
 #include "dblookup.h"
+#include "HashMap.h"
 
 static double C  = sqrt(3);
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
@@ -42,6 +43,8 @@ private:
 	void updateTree();
 	void updateNode(NodePtr node, short player, short result);
 	short dbLookUp(Board& b, short player);
+	
+	HashMap transposition_table;
 	
 	unordered_map<Board, vector<Board>> transposition_table;
 
