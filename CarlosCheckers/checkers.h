@@ -98,7 +98,7 @@ private:
 	static void undoSingleMove(Board &board, movp &move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass
 	north and south boolean values to tell it whether it should check north and/or south */
-	static vector<short> getDirectionsWhereType(short cell_id, Board &board, short type, bool north, bool south);
+	static void getDirectionsWhereType(vector<short> &directions, short cell_id, Board &board, short type, bool north, bool south);
 	/* checks if a piece has reached a promotion row and returns true if that is the case */
 	static bool promotionCheck(short cell_id, short piece);
 	static bool boundaryCheck(short cell_id);
@@ -107,9 +107,9 @@ private:
 	/* converts coord to cell_id (doesn't actually do this yet)*/
 	static short toCellID(coord &co);
 	/* gets all simplified notation moves for a single piece that is a capture move */
-	static vector<movp> getCaptures(short cell_id, Board &board);
+	static void getCaptures(vector<movp> &moves, short cell_id, Board &board);
 	/* gets all simplified notation moves for a single piece that are simple moves */
-	static vector<movp> getMoves(short cell_id, Board &board);
+	static void getMoves(vector<movp> &moves, short cell_id, Board &board);
 	/* checks if a state has occurred three times, should be moved to montecarlo */
 	static void tieCheck(short count, short new_count);
 	/* helper function for goaltest, counts the pieces of both colours on the board */

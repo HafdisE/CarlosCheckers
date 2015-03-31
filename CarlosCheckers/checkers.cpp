@@ -92,11 +92,11 @@ void Checkers::generateMoves(Board &board,  short cell, vector<Board> &normal, v
 	vector<movp> moves;
 	if (!promoted) {
 		if (depth == 0 || captured)  {
-			moves = getCaptures(cell, board);
+			getCaptures(moves, cell, board);
 			if (moves.size() > 0) captured = true;
 		}
 		if (depth == 0 && !captured) {
-			moves = getMoves(cell, board);
+			getMoves(moves, cell, board);
 		}
 
 		for (size_t i = 0; i < moves.size(); i++) {
@@ -145,8 +145,7 @@ void Checkers::undoSingleMove(Board &board, movp &move) {
 	board.setPiece(move.from, piece);
 }
 
-vector<short> Checkers::getDirectionsWhereType(short cell_id, Board &board, short type, bool north, bool south) {
-	vector<short> directions;
+void Checkers::getDirectionsWhereType(vector<short> &directions, short cell_id, Board &board, short type, bool north, bool south) {
 	if (north) {
 		if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (board.getPiece(NW(cell_id)) & type) == type) {
 			directions.push_back(NORTHWEST);
@@ -163,7 +162,6 @@ vector<short> Checkers::getDirectionsWhereType(short cell_id, Board &board, shor
 			directions.push_back(SOUTHEAST);
 		}
 	}
-	return directions;
 }
 
 bool Checkers::boundaryCheck(short cell_id) {
@@ -179,10 +177,10 @@ bool Checkers::isRightPiece(short cell_id) {
 	return 	cell_id == 5 || cell_id == 13 ||
 		cell_id == 21 || cell_id == 29;
 }
-vector<movp> Checkers::getCaptures(short cell_id, Board& board) {
+
+void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 	short piece;
 	vector<short> directions;
-	vector<movp> moves;
 	bool north;
 	bool south;
 	short type;
@@ -190,7 +188,7 @@ vector<movp> Checkers::getCaptures(short cell_id, Board& board) {
 	piece = board.getPiece(cell_id);
 	north = south = false;
 
-	if (piece == FREE) return moves; //what are you doin mate
+	if (piece == FREE) return; //what are you doin mate
 
 	if (piece & KING) {
 		north = true;
@@ -206,7 +204,7 @@ vector<movp> Checkers::getCaptures(short cell_id, Board& board) {
 		type = WHITE;
 	}
 
-	directions = getDirectionsWhereType(cell_id, board, type, north, south);
+	getDirectionsWhereType(directions, cell_id, board, type, north, south);
 
 	for (size_t i = 0; i < directions.size(); i++) {
 		switch (directions[i]) {
@@ -233,20 +231,18 @@ vector<movp> Checkers::getCaptures(short cell_id, Board& board) {
 		}
 	}
 
-	return moves;
 }
 
-vector<movp> Checkers::getMoves(short cell_id, Board &board) {
+void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
 	short piece;
 	vector<short> directions;
-	vector<movp> moves;
 	bool north;
 	bool south;
 
 	piece = board.getPiece(cell_id);
 	north = south = false;
 
-	if (piece == FREE) return moves; //what are you doin mate
+	if (piece == FREE) return; //what are you doin mate
 
 	if (piece & KING) {
 		north = true;
@@ -259,7 +255,7 @@ vector<movp> Checkers::getMoves(short cell_id, Board &board) {
 		north = true;
 	}
 
-	directions = getDirectionsWhereType(cell_id, board, FREE, north, south);
+	getDirectionsWhereType(directions, cell_id, board, FREE, north, south);
 
 	for (size_t i = 0; i < directions.size(); i++) {
 		switch (directions[i]) {
@@ -278,7 +274,6 @@ vector<movp> Checkers::getMoves(short cell_id, Board &board) {
 		}
 	}
 
-	return moves;
 }
 
 /* TODO: compare with simple checkers code to see where the fuck 0,0 is */
