@@ -42,7 +42,7 @@ private:
 	void clearTree(NodePtr node);
 	void updateTree();
 	void updateNode(NodePtr node, short player, short result);
-	short dbLookUp(Board& b, short player);
+	short dbLookUp(Board& b, short player, int conditional);
 	bool db_initialised = false;
 	
 

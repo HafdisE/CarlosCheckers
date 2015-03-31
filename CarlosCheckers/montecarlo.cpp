@@ -29,9 +29,14 @@ void MonteCarlo::clearTree(){
 	root = NULL;
 }
 
-short MonteCarlo::dbLookUp(Board &board, short player) {
-	//dblookup()
-	return 0;
+short MonteCarlo::dbLookUp(Board &board, short player, int conditional) {
+	POSITION p;
+	p.bk = board.blackbit & board.kingbit;
+	p.bm = board.blackbit ^ board.kingbit;
+	p.wk = board.whitebit & board.kingbit;
+	p.wm = board.whitebit ^ board.kingbit;
+	p.color = player;
+	return dblookup(&p, conditional);;
 }
 
 /* Clear tree helper function */
