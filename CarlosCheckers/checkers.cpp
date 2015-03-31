@@ -82,8 +82,7 @@ vector<Board> Checkers::getLegalBoards(Board &board, short player) {
 	vector<Board> normal, captures;
 	bool captured = false;
 	for (int i = 1; i <= 32; i++) {
-		if (!(board.getPiece(i) & player)) continue;
-		generateMoves(board, i, normal, captures, captured);
+		if ((board.getPiece(i) & player)) generateMoves(board, i, normal, captures, captured);
 	}
 	return (captured ? captures : normal);
 }

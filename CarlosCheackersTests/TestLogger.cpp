@@ -29,8 +29,13 @@ namespace CarlosCheckersTests
 			MonteCarlo mc;
 			Board b;
 			vector<Board> m1 = mc.getLegalBoards(b, WHITE);
-			vector<Board> m2 = mc.getLegalBoards(b, WHITE);
-			Assert::AreEqual(m1.size(), m2.size());
+			vector<Board> m2 = mc.getLegalBoards(b, WHITE);			
+
+			for (int i = 0; i < 20000; i++) {
+				mc.getLegalBoards(b, WHITE);
+
+			}
+			//Assert::AreEqual(m1.size(), m2.size());
 		}
 
 	};

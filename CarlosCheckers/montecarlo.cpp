@@ -9,7 +9,8 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	root = NULL;
 	generator = mt19937(rand_dev());
 	s = 0;
-	transposition_table.reserve(100000);
+	transposition_table = unordered_map<Board, vector<Board>>(1000);
+	//transposition_table.reserve(100000);
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif

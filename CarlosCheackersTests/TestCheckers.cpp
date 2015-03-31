@@ -60,7 +60,9 @@ namespace CarlosCheckersTests
 			Board b;
 			for (int i = 0; i < 2000; i++) {
 				Checkers::getLegalBoards(b, WHITE);
+
 			}
+
 		}
 
 		TEST_METHOD(TestMANYSETGETPIECE)
@@ -80,7 +82,7 @@ namespace CarlosCheckersTests
 		{
 			Board b;
 			vector<movp> moves;
-			for (int many = 0; many < 1000; many++) {
+			for (int many = 0; many < 2000; many++) {
 				for (int i = 1; i <= 32; i++) {
 					CheckersTester::getMoves(moves, i, b);
 				}
