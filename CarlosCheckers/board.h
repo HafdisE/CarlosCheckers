@@ -53,4 +53,6 @@ namespace std {
 
 std::string boardToString(Board& b);
 std::string pieceToString(short piece);
+Board flipLinesForDB(Board &b);
+
 #endif

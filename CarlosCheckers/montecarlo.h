@@ -12,6 +12,7 @@
 #include "node.h"
 #include "logger.h"
 #include "defines.h"
+#include "dblookup.h"
 #include "HashMap.h"
 
 static double C  = sqrt(3);
@@ -20,11 +21,13 @@ class MonteCarlo {
 public:
 	MonteCarlo();
 	~MonteCarlo();
-	Board search(double maxtime, int* playnow, char str[255]);
+	Board search(double maxtime, int* playnow);
 	void clearTree();
 	int size(){ return s; };
 
+	bool drawCheck();
 
+	char *str;
 	//er að vera með stæla. Doesn't want to be tested.
 	vector<Board> getLegalBoards(Board& board, short player);
 private:
@@ -39,12 +42,17 @@ private:
 	void clearTree(NodePtr node);
 	void updateTree();
 	void updateNode(NodePtr node, short player, short result);
+	short dbLookUp(Board& b, short player);
 	
 	HashMap transposition_table;
 	
-	//unordered_map<Board, vector<Board>> transposition_table;
-	//unordered_map<Board, short> draw_check;
-	//unordered_map<Board, int> simulation_draw_check;
+	unordered_map<Board, vector<Board>> transposition_table;
+
+	//draw things
+	int moves_since_last_capture = 0;
+	int last_count = 24;
+	unordered_map<Board, short> draw_check;
+	unordered_map<Board, int> simulation_draw_check;
 
 	random_device rand_dev;
 	mt19937 generator;

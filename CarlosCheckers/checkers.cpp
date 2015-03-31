@@ -168,13 +168,13 @@ bool Checkers::boundaryCheck(short cell_id) {
 }
 
 bool Checkers::isLeftPiece(short cell_id) {
-	return cell_id == 4 || cell_id == 12 ||
-		cell_id == 20 || cell_id == 28;
+	return cell_id == 1 || cell_id == 9 ||
+		cell_id == 25 || cell_id == 17;
 }
 
 bool Checkers::isRightPiece(short cell_id) {
-	return 	cell_id == 5 || cell_id == 13 ||
-		cell_id == 21 || cell_id == 29;
+	return 	cell_id == 8 || cell_id == 16 ||
+		cell_id == 24 || cell_id == 32;
 }
 
 void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
@@ -278,14 +278,14 @@ void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
 /* TODO: compare with simple checkers code to see where the fuck 0,0 is */
 coord Checkers::toCoord(short cell_id) {
 	if (cell_id < 1 || cell_id > 32) return coord(-1, -1);
-	static coord select[] = { coord(6, 0), coord(4, 0), coord(2, 0), coord(0, 0),
-		coord(7, 1), coord(5, 1), coord(3, 1), coord(1, 1),
-		coord(6, 2), coord(4, 2), coord(2, 2), coord(0, 2),
-		coord(7, 3), coord(5, 3), coord(3, 3), coord(1, 3),
-		coord(6, 4), coord(4, 4), coord(2, 4), coord(0, 4),
-		coord(7, 5), coord(5, 5), coord(3, 5), coord(1, 5),
-		coord(6, 6), coord(4, 6), coord(2, 6), coord(0, 6),
-		coord(7, 7), coord(5, 7), coord(3, 7), coord(1, 7), };
+	static coord select[] = { coord(0, 0), coord(2, 0), coord(4, 0), coord(6, 0),
+							  coord(1, 1), coord(3, 1), coord(5, 1), coord(7, 1),
+							  coord(0, 2), coord(2, 2), coord(4, 2), coord(6, 2),
+							  coord(1, 3), coord(3, 3), coord(5, 3), coord(7, 3),
+							  coord(0, 4), coord(2, 4), coord(4, 4), coord(6, 4),
+							  coord(1, 5), coord(3, 5), coord(5, 5), coord(7, 5),
+							  coord(0, 6), coord(2, 6), coord(4, 6), coord(6, 6),
+							  coord(1, 7), coord(3, 7), coord(5, 7), coord(7, 7), };
 	return select[cell_id - 1];
 }
 
