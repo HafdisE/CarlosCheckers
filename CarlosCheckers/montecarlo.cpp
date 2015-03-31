@@ -9,9 +9,6 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	root = NULL;
 	generator = mt19937(rand_dev());
 	s = 0;
-	//transposition_table = unordered_map<Board, vector<Board>>(100);
-	//transposition_table.reserve(100000);
-	db_init(128, str);
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -153,12 +150,12 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 }
 
 vector<Board> MonteCarlo::getLegalBoards(Board& board, short player){
-	if (transposition_table.contains(board)) {
-		transposition_table.put(Checkers::getLegalBoards(board, player), board);
-	}
-	vector<Board> moves;
-	transposition_table.get(board, moves);
-	return moves;
+//	if (transposition_table.contains(board)) {
+//		transposition_table.put(Checkers::getLegalBoards(board, player), board);
+	//}
+//	vector<Board> moves;
+//	transposition_table.get(board, moves);
+	return Checkers::getLegalBoards(board, player);
 }
 
 /* The search function takes in a node and a player and recursively moves down the search tree until it hits a unexpanded node.  There it expands it, runs a simulation
@@ -287,4 +284,11 @@ int MonteCarlo::simulation(Board board, short player){
 	if (isGoal == WIN) return (me == player ? WIN : LOSS);
 	if (isGoal == LOSS) return(me == player ? LOSS : WIN);
 	else return isGoal;
+}
+
+void MonteCarlo::initDB() {
+	if (!db_initialised) {
+		db_init(128, str);
+		db_initialised = true;
+	}
 }

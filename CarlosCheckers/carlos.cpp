@@ -63,7 +63,7 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 
 	if (strcmp(command, "help") == 0)
 	{
-		sprintf(reply, "simplechhelp.htm");
+		sprintf(reply, "?");
 		return 1;
 	}
 
@@ -144,15 +144,16 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 #else
 	//monte carlo
 	mc.str = str;
+	mc.initDB();
 	Board m = mc.search(maxtime, playnow);
 	bool draw = mc.drawCheck();
-	
+
 #endif
 
 	int goal = Checkers::goalTest(m, Checkers::getPlayer());
 	if (m == Checkers::getBoard()) goal = DRAW;
 	Checkers::setBoard(m);
-	
+
 	coord c;
 	short piece;
 	for (int i = 1; i <= 32; i++) {
@@ -162,7 +163,15 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 		b[c.x][c.y] = piece;
 	}
 
-
+#if RANDOM
+#if LOGGING
+	if(goal == WIN || goal == LOSS) {
+		ss << "I have " << (goal == WIN ? "won :D" : "lost :(");
+		randlog.log("End", ss.str());
+		stringstream().swap(ss);
+	}
+#endif
+#endif
 
 	
 #if !RANDOM
