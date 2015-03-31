@@ -60,7 +60,9 @@ namespace CarlosCheckersTests
 			Board b;
 			for (int i = 0; i < 2000; i++) {
 				Checkers::getLegalBoards(b, WHITE);
+
 			}
+
 		}
 
 		TEST_METHOD(TestMANYSETGETPIECE)
