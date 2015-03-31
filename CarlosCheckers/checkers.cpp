@@ -145,21 +145,21 @@ void Checkers::undoSingleMove(Board &board, movp &move) {
 	board.setPiece(move.from, piece);
 }
 
-void Checkers::getDirectionsWhereType(vector<short> &directions, short cell_id, Board &board, short type, bool north, bool south) {
+void Checkers::getDirectionsWhereType(short &directions, short cell_id, Board &board, short type, bool north, bool south) {
 	if (north) {
 		if (boundaryCheck(NW(cell_id)) && !isLeftPiece(cell_id) && (board.getPiece(NW(cell_id)) & type) == type) {
-			directions.push_back(NORTHWEST);
+			directions |= NORTHWEST;
 		}
 		if (boundaryCheck(NE(cell_id)) && !isRightPiece(cell_id) && (board.getPiece(NE(cell_id)) & type) == type) {
-			directions.push_back(NORTHEAST);
+			directions |= NORTHEAST;
 		}
 	}
 	if (south) {
 		if (boundaryCheck(SW(cell_id)) && !isLeftPiece(cell_id) && (board.getPiece(SW(cell_id)) & type) == type) {
-			directions.push_back(SOUTHWEST);
+			directions |= SOUTHWEST;
 		}
 		if (boundaryCheck(SE(cell_id)) && !isRightPiece(cell_id) && (board.getPiece(SE(cell_id)) & type) == type) {
-			directions.push_back(SOUTHEAST);
+			directions |= SOUTHEAST;
 		}
 	}
 }
@@ -180,7 +180,7 @@ bool Checkers::isRightPiece(short cell_id) {
 
 void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 	short piece;
-	vector<short> directions;
+	short directions = 0;
 	bool north;
 	bool south;
 	short type;
@@ -206,8 +206,8 @@ void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 
 	getDirectionsWhereType(directions, cell_id, board, type, north, south);
 
-	for (size_t i = 0; i < directions.size(); i++) {
-		switch (directions[i]) {
+	for (int i = 3; i >= 0; --i) {
+		switch (directions & (1 << i)) {
 		case NORTHWEST:
 			if (boundaryCheck(NW(NW(cell_id))) && !isLeftPiece(NW(cell_id)) && board.getPiece(NW(NW(cell_id))) == FREE) {
 				moves.push_back(movp(cell_id, NW(NW(cell_id)), NW(cell_id), board.getPiece(NW(cell_id)), promotionCheck(NW(NW(cell_id)), piece)));
@@ -235,7 +235,7 @@ void Checkers::getCaptures(vector<movp> &moves, short cell_id, Board& board) {
 
 void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
 	short piece;
-	vector<short> directions;
+	short directions = 0;
 	bool north;
 	bool south;
 
@@ -257,8 +257,8 @@ void Checkers::getMoves(vector<movp> &moves, short cell_id, Board &board) {
 
 	getDirectionsWhereType(directions, cell_id, board, FREE, north, south);
 
-	for (size_t i = 0; i < directions.size(); i++) {
-		switch (directions[i]) {
+	for (int i = 3; i >= 0; --i) {
+		switch (directions & (1 << i)) {
 		case NORTHWEST:
 			moves.push_back(movp(cell_id, NW(cell_id), 0, promotionCheck(NW(cell_id), piece)));
 			break;

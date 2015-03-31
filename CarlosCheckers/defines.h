@@ -3,7 +3,7 @@
 //logging or nay
 #define LOGGING 1
 //random agent or nay
-#define RANDOM 1
+#define RANDOM 0
 //version number
 #if !RANDOM
 #define VERSION 0
@@ -23,10 +23,10 @@
 #define SW(x) (!(((x-1)/4)%2) ? x - 3 : x - 4)
 #define SE(x) (!(((x-1)/4)%2) ? x - 4 : x - 5)
 
-#define NORTHWEST 0
-#define NORTHEAST 1
+#define NORTHWEST 8
+#define NORTHEAST 4
 #define SOUTHWEST 2
-#define SOUTHEAST 3
+#define SOUTHEAST 1
 
 #define DRAW 0
 #define WIN 1

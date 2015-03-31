@@ -98,7 +98,7 @@ private:
 	static void undoSingleMove(Board &board, movp &move);
 	/* returns directions in which there are cells containing type type from the cell at cell_id. Pass
 	north and south boolean values to tell it whether it should check north and/or south */
-	static void getDirectionsWhereType(vector<short> &directions, short cell_id, Board &board, short type, bool north, bool south);
+	static void getDirectionsWhereType(short &directions, short cell_id, Board &board, short type, bool north, bool south);
 	/* checks if a piece has reached a promotion row and returns true if that is the case */
 	static bool promotionCheck(short cell_id, short piece);
 	static bool boundaryCheck(short cell_id);
