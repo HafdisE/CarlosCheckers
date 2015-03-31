@@ -33,7 +33,7 @@ public:
 	unsigned int whitebit;
 	unsigned int blackbit;
 	
-	unsigned short bias = 0;
+	short bias = 0;
 
 private:
 	
