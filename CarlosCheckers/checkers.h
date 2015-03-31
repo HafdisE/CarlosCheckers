@@ -82,6 +82,8 @@ public:
 
 	static coord toCoord(short cell_id);
 	static int count(Board& board);
+	/* helper function for goaltest, counts the pieces of both colours on the board */
+	 static counter countPieces(Board &board);
 
 private:
 	static short player; //WHITE or BLACK
@@ -112,8 +114,6 @@ private:
 	 static void getMoves(vector<movp> &moves, short cell_id, Board &board);
 	/* checks if a state has occurred three times, should be moved to montecarlo */
 	 static void tieCheck(short count, short new_count);
-	/* helper function for goaltest, counts the pieces of both colours on the board */
-	 static counter countPieces(Board &board);
 
 	 static bool isLeftPiece(short cell_id);
 	 static bool isRightPiece(short cell_id);

@@ -22,7 +22,8 @@ namespace CarlosCheckersTests
 			MonteCarlo mc;
 			int playnow = 0;
 			char str[125];
-			mc.search(5, &playnow);
+			mc.search(5000, &playnow);
+			mc.size();
 		}
 
 		TEST_METHOD(TestTranspositionTable) {
@@ -35,7 +36,7 @@ namespace CarlosCheckersTests
 			for (int i = 0; i < 20000; i++) {
 				mc.getLegalBoards(b, WHITE, m1);
 
-			//}
+			}
 			//Assert::AreEqual(m1.size(), m2.size());
 		}
 
