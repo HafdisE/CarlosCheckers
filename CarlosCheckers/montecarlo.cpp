@@ -9,6 +9,8 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	root = NULL;
 	generator = mt19937(rand_dev());
 	s = 0;
+	char str[256];
+	db_init(512, str);
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -275,6 +277,10 @@ int MonteCarlo::simulation(Board board, short player){
 				isGoal = DRAW;
 				break;
 			}
+		}
+		if (new_count < 6) {
+			isGoal = dbLookUp(currMove, player, 0);
+			break;
 		}
 		/* We get the legal moves and return a draw if there are none. */
 		vector<Board> moves = Checkers::getLegalBoards(currMove, player);
