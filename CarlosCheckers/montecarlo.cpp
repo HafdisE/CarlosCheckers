@@ -121,9 +121,9 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 	while (true){
 		if (((clock() - start) >= maxtime * 1000)) break;
 		search(root, Checkers::getPlayer());
-		if(tsim_count > 1000) {
-			tsim_count += 0;
-		}
+		//if(tsim_count > 1000) {
+		//	tsim_count += 0;
+		//}
 		tsim_count++;
 	}
 
@@ -268,27 +268,25 @@ int MonteCarlo::simulation(Board board, short player){
 	int isGoal = 0;
 	int count = last_count; //We initialize the count variable for the draw check
 	int new_count = count;
+	bool isCapture = false;
 	int last_cap = moves_since_last_capture;
 	for (size_t i = 0; i < SIMULATION_LENGTH; i++){
 		/* We start off by checking if there is a goal and every ten turns we check for a draw */
 		isGoal = Checkers::goalTest(currMove, player);
 		if (isGoal == WIN || isGoal == LOSS) break;
-		if (i % 10 == 9) {			
-			if ((new_count = Checkers::count(currMove)) == count){
-				last_cap += 10;
+		if (i % 3 == 2) {
+			if (!isCapture) {
+				counter count = Checkers::countPieces(currMove);
+				if (count.black < 4 && count.white < 4){
+					isGoal = dbLookUp(currMove, player, 0);
+					break;
+				}
 			}
-			if (last_cap >= 50) {
-				isGoal = DRAW;
-				break;
-			}
-		}
-		if (new_count < 6) {
-			isGoal = dbLookUp(currMove, player, 0);
-			break;
+
 		}
 		/* We get the legal moves and return a draw if there are none. */
 		vector<Board> moves;
-		bool isCapture = getLegalBoards(currMove, player, moves);
+		isCapture = getLegalBoards(currMove, player, moves);
 		if (moves.size() == 0){
 			isGoal = LOSS;
 			break;

@@ -22,7 +22,8 @@ namespace CarlosCheckersTests
 			MonteCarlo mc;
 			int playnow = 0;
 			char str[125];
-			mc.search(5, &playnow);
+			mc.search(5000, &playnow);
+			mc.size();
 		}
 
 		TEST_METHOD(TestTranspositionTable) {

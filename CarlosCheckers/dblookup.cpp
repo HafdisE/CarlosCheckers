@@ -983,12 +983,12 @@ int db_init(int suggestedMB, char out[256])
 	// set the ispresent flag to zero for all databases, because it later gets set to 1, and
 	// it is not quite clear that this will not accidentally be one!
 	memset(cprsubdatabase, 0, (MAXPIECE+1)*(MAXPIECE+1)*(MAXPIECE+1)*(MAXPIECE+1)*98*sizeof(cprsubdb));
-	
+	 
 
 	// detect largest present database and put the number of pieces in variable pieces:
 	for(n=2;n<SPLITSIZE;n++)
 		{
-		sprintf(dbname,"db\\db%i.idx",n);
+		sprintf(dbname,"C:\\Users\\Andri\\Source\\Repos\\CarlosCheckers\\CarlosCheckers\\Debug\\db%i.idx",n);
 		fp = fopen(dbname,"rb");
 		if(fp)
 			{
@@ -999,7 +999,7 @@ int db_init(int suggestedMB, char out[256])
 			break;
         }
 
-	// continue detection on 8-piece db
+	// continue detection on 8-piece db 
 	// it seems like this is the only change necessary to be able to run
 	// incomplete set of endgame databases!
 	for(n=SPLITSIZE;n<=8;n++)
