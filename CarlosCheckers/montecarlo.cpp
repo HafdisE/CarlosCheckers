@@ -286,7 +286,8 @@ int MonteCarlo::simulation(Board board, short player){
 					if (isGoal) break;
 
 				} 
-#else 
+#elif NODBDIVE 
+#else
 				if (count.black < 4 && count.white < 4 && (count.white + count.black > 4)){
 					isGoal = dbLookUp(currMove, player, 1);
 					if (isGoal) break;
