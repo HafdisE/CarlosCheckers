@@ -988,7 +988,7 @@ int db_init(int suggestedMB, char out[256])
 	// detect largest present database and put the number of pieces in variable pieces:
 	for(n=2;n<SPLITSIZE;n++)
 		{
-		sprintf(dbname,"C:\\Users\\Andri\\Source\\Repos\\CarlosCheckers\\CarlosCheckers\\Debug\\db%i.idx",n);
+		sprintf(dbname,"%sdb%i.idx",DB_PATH,n);
 		fp = fopen(dbname,"rb");
 		if(fp)
 			{
@@ -1093,7 +1093,7 @@ int db_init(int suggestedMB, char out[256])
 		{
 		if(n>=8)
 			continue;
-		sprintf(dbname,"C:\\Users\\Andri\\Source\\Repos\\CarlosCheckers\\CarlosCheckers\\Debug\\db%i.idx",n);
+		sprintf(dbname,"%sdb%i.idx", DB_PATH, n);
 		sprintf(out,"parsing %s",dbname);
 		fp = fopen(dbname,"rb");
 		// another new change 
@@ -1244,7 +1244,7 @@ int db_init(int suggestedMB, char out[256])
 	fpcount=0;
 	for(n=2;n<SPLITSIZE;n++)
 		{
-		sprintf(dbname, "C:\\Users\\Andri\\Source\\Repos\\CarlosCheckers\\CarlosCheckers\\Debug\\db%i.cpr",n);
+		sprintf(dbname, "%sdb%i.cpr",DB_PATH, n);
 		dbfp[fpcount] = fopen(dbname,"rb");
 		sprintf(dbnames[fpcount],"%s",dbname);
 		if(dbfp[fpcount]==NULL)
@@ -1308,7 +1308,7 @@ static int preload(char out[256])
 
 	for(n=2;n<SPLITSIZE;n++)
 		{
-		sprintf(dbname, "C:\\Users\\Andri\\Source\\Repos\\CarlosCheckers\\CarlosCheckers\\Debug\\db%i.cpr",n);
+		sprintf(dbname, "%sdb%i.cpr", DB_PATH, n);
 		fp = fopen(dbname,"rb");
 		if(fp==NULL)
 			break;

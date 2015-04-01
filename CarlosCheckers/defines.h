@@ -11,7 +11,9 @@
 #define VERSION 9999
 #endif
 //logging path
-#define PATH "C:/logs/"
+#define PATH "C:/AI/logs/"
+//db path
+#define DB_PATH "C:\\AI\\db\\"
 
 //monte carlo defines
 #define INFMIN  -300000000

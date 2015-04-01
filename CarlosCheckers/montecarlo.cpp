@@ -10,7 +10,7 @@ MonteCarlo::MonteCarlo() : tsim_count(0){
 	generator = mt19937(rand_dev());
 	rgenerator = default_random_engine(rand_dev());
 	s = 0;
-	initDB();
+	
 #if LOGGING
 	mclog.setFile("montecarlo");
 #endif
@@ -333,7 +333,6 @@ int MonteCarlo::simulation(Board board, short player){
 
 void MonteCarlo::initDB() {
 	if (!db_initialised) {
-	char str[256];
 		db_init(256, str);
 		db_initialised = true;
 	}
