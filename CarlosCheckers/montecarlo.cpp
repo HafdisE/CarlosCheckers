@@ -246,13 +246,13 @@ void MonteCarlo::updateNode(NodePtr node, short player, short result){
 	switch (result){
 	case WIN:
 		/* If there is a win for the player we increment his win counter*/
-		if (player != Checkers::getPlayer()){
+		if (player == Checkers::getPlayer()){
 			node->win_count++;
 		}
 		break;
 	case LOSS:
 		/* If there is a win for the opponent we increment his win counter*/
-		if ((player == Checkers::getPlayer())){
+		if ((player != Checkers::getPlayer())){
 			node->win_count++;
 		}
 		break;
