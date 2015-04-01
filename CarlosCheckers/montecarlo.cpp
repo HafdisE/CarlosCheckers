@@ -136,15 +136,17 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 
 	/* We find the best node in the tree and pick that */
 	size_t i;
+	int index = 0;
 	double maxValue = -1, currValue;
 	for (i = 0; i < root->children.size(); i++){
-		if ((currValue = root->children[i]->win_count/root->children[i]->sim_count) > maxValue){
+		if ((currValue = root->children[i]->win_count/static_cast<double>(root->children[i]->sim_count)) > maxValue){
 			maxValue = currValue;
+			index = i;
 		}
 	}
 
 	/*We pick the best node we found */
-	selectNode(i - 1);
+	selectNode(index);
 
 	/* Logging footer for each search*/
 #if LOGGING
