@@ -145,7 +145,9 @@ int WINAPI getmove(int b[8][8], int color, double maxtime, char str[255], int *p
 #else
 	//monte carlo
 	mc.str = str;
+#if NODBDIVE
 	mc.initDB();
+#endif
 	Board m = mc.search(maxtime, playnow);
 	bool draw = mc.drawCheck();
 
