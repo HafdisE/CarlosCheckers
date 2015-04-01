@@ -8,7 +8,7 @@
 #include <windows.h>
 #include <winbase.h>
 #include <assert.h>
-
+#include "defines.h"
 
 typedef __int64 int64;
 #define int32 unsigned int

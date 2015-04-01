@@ -77,7 +77,7 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 		if (strcmp(param1, "book") == 0)
 		{
 			sprintf(reply, "1");
-			return 0;
+			return 1;
 		}
 	}
 
@@ -91,7 +91,7 @@ int  WINAPI enginecommand(char str[256], char reply[256])
 		if (strcmp(param1, "book") == 0)
 		{
 			sprintf(reply, "1");
-			return 0;
+			return 1;
 		}
 		if (strcmp(param1, "protocolversion") == 0)
 		{
