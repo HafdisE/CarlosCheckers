@@ -18,6 +18,8 @@
 //monte carlo defines
 #define INFMIN  -300000000
 #define SIMULATION_LENGTH 70
+#define AGGRESSIVEDB 0
+#define USE_DB 1
 
 //checkers defines
 #define NW(x) (!(((x-1)/4)%2) ? x + 3 : x + 4)

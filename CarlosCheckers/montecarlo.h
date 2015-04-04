@@ -13,11 +13,10 @@
 #include "defines.h"
 #include "dblookup.h"
 
+
 static double C = sqrt(2); //Expansion factor
-static double W = sqrt(2);//Progressive bias factor, Should probably be higher.  Set as zero to nullify progressive bias
-static double E = 0.7;//How often we use the heuristic value in the playout
-#define AGGRESSIVEDBDIVE 0
-#define NODBDIVE 1
+static double W = sqrt(10);//Progressive bias factor, Should probably be higher.  Set as zero to nullify progressive bias
+static double E = 0.8;//How often we use the heuristic value in the playout
 
 /* Uses the checkers checker board logic tools to generate moves and use them in its search */
 class MonteCarlo

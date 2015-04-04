@@ -121,9 +121,6 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 	while (true){
 		if (((clock() - start) >= maxtime * 1000)) break;
 		search(root, Checkers::getPlayer());
-		if(tsim_count > 1000) {
-			tsim_count += 0;
-		}
 		tsim_count++;
 	}
 
@@ -162,11 +159,6 @@ Board MonteCarlo::search(double maxtime, int* playnow){
 }
 
 bool MonteCarlo::getLegalBoards(Board& board, short player, vector<Board>& ret){
-	//if (transposition_table.contains(board)) {
-	//	transposition_table.put(Checkers::getLegalBoards(board, player), board);
-	//}
-	//vector<Board> moves;
-	//transposition_table.get(board, moves);
 	vector<Board> cap, norm;
 	bool which = Checkers::getLegalBoards(board, player, norm, cap);
 	ret = (which ? cap : norm);
@@ -196,7 +188,6 @@ int MonteCarlo::search(NodePtr node, short player){
 			return LOSS;
 		}
 	}
-	/*
 
 	/* If the node has no children we expand the first one if it has no winning move */
 	if (node->children.empty()){
@@ -243,7 +234,6 @@ int MonteCarlo::search(NodePtr node, short player){
 			/* An old node is selected */
 			temp = maxNode;
 			result = search(temp, (player == 1) ? 2 : 1);
-			//assert(result < 2);
 			updateNode(temp, player, result);
 		}
 	}
@@ -291,13 +281,13 @@ int MonteCarlo::simulation(Board board, short player){
 			if (!isCapture) {
 				counter count = Checkers::countPieces(currMove);
 				// We need to fuck around with using conditional and unconditional.  I think maybe we should just always run unconditional
+#if USE_DB 
 #if AGGRESSIVEDBDIVE
 				if (count.black < 4 && count.white < 4 ){
 					isGoal = dbLookUp(currMove, player, 1);
 					if (isGoal) break;
 
 				} 
-#elif NODBDIVE 
 #else
 				if (count.black < 4 && count.white < 4 && (count.white + count.black > 4)){
 					isGoal = dbLookUp(currMove, player, 1);
@@ -307,6 +297,7 @@ int MonteCarlo::simulation(Board board, short player){
 					isGoal = dbLookUp(currMove, player, 0);
 					if (isGoal) break;
 				}
+#endif
 #endif
 				
 			}
@@ -321,6 +312,7 @@ int MonteCarlo::simulation(Board board, short player){
 		}
 		/* We pick a number uniformly at random */
 		rdistr = uniform_real_distribution<double>(0.0, 1.0);
+			bool isBias = false;
 		if (rdistr(rgenerator) < E){
 			int max = INFMIN;
 			Board maxMove;
@@ -331,7 +323,9 @@ int MonteCarlo::simulation(Board board, short player){
 				}
 			}
 			currMove = maxMove;
-		} else{
+			isBias = (max ? true : false);
+			}
+		if (!isBias){
 
 			distr = uniform_int_distribution<int>(0, moves.size() - 1);
 			currMove = moves[distr(generator)];
