@@ -391,6 +391,19 @@ namespace CarlosCheckersTests
 				Assert::AreEqual(BoardTester::getWhitebit(result), BoardTester::getWhitebit(moves[0]));
 				Assert::AreEqual(BoardTester::getKingbit(result), BoardTester::getKingbit(moves[0]));
 			}	
+		TEST_METHOD(TestIFBeingStuckCountsAsAWin)
+		{
+			Board start(0, 0, 0);
+			start.setPiece(17, BLACK | MAN);
+			start.setPiece(21, WHITE | MAN);
+			start.setPiece(26, WHITE | MAN);
+			vector<Board> cap, norm, moves;
+			bool which = Checkers::getLegalBoards(start, BLACK, norm, cap);
+			moves = (which ? cap : norm);
+			Assert::AreEqual((size_t)0, moves.size());
+			Assert::AreEqual(Checkers::goalTest(start, BLACK), (short)2);
+		}
+		
 	};
 	
 }
