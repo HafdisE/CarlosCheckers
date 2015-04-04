@@ -186,9 +186,20 @@ int MonteCarlo::search(NodePtr node, short player){
 	int result;
 	NodePtr temp;
 	
+	if (moves.size() == 0) {
+		if (player != Checkers::getPlayer()) {
+			node->has_goal = true;
+			return WIN;
+		}
+		else {
+			node->has_loss = true;
+			return LOSS;
+		}
+	}
+	/*
+
 	/* If the node has no children we expand the first one if it has no winning move */
 	if (node->children.empty()){
-		if (moves.size() == 0) return LOSS;
 		Board move = moves.front();
 		for (size_t i = 0; i < moves.size(); i++){
 			/* If it has a winning move we find it and turn it into a win or a loss node */
